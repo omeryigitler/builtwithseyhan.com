@@ -210,7 +210,7 @@ const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
                         <div className="relative w-64 h-80 bg-gray-900 dark:bg-white rounded-r-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500 border-l-4 border-gray-700 dark:border-gray-200 flex flex-col justify-between p-6">
                             <div className="text-white dark:text-gray-900">
                                 <p className="text-xs font-bold tracking-widest uppercase opacity-50 mb-2">Mustafa Seyhan</p>
-                                <h3 className="text-3xl font-black leading-tight italic whitespace-pre-line">{t.newsletter.coverTitle}</h3>
+                                <h3 className="text-3xl font-black leading-tight italic whitespace-pre-line">{t.coverTitle}</h3>
                             </div>
                             <div className="mt-auto">
                                 <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center">
