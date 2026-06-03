@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Video, Users, Zap, Briefcase, Star, ArrowUpRight, Linkedin, Twitter, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, Plus, Minus, ChevronDown, ArrowRight, BookOpen, Check, Moon, Sun, HelpCircle, Play } from 'lucide-react';
+import { Menu, X, Video, Zap, Star, Linkedin, Twitter, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, BookOpen, Check, Moon, Sun, HelpCircle, Play } from 'lucide-react';
 import { Button } from './components/Button';
 import { BookingModal } from './components/BookingModal';
 import { VideoModal } from './components/VideoModal';
@@ -28,6 +28,24 @@ const CLIENT_AVATARS = [
   "https://randomuser.me/api/portraits/women/44.jpg",
   "https://randomuser.me/api/portraits/men/32.jpg",
   "https://randomuser.me/api/portraits/women/68.jpg"
+];
+
+const SOCIAL_LINKS = [
+  {
+    key: 'linkedin' as const,
+    href: 'https://www.linkedin.com/in/mustafaseyhan/',
+    icon: <Linkedin size={20} />
+  },
+  {
+    key: 'twitter' as const,
+    href: 'https://x.com/mustafaseyhan',
+    icon: <Twitter size={20} />
+  },
+  {
+    key: 'email' as const,
+    href: 'mailto:info@mustafaseyhancoaching.com',
+    icon: <Mail size={20} />
+  }
 ];
 
 // Updated Static Data for Fitness Transformations
@@ -192,7 +210,7 @@ const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
                         <div className="relative w-64 h-80 bg-gray-900 dark:bg-white rounded-r-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500 border-l-4 border-gray-700 dark:border-gray-200 flex flex-col justify-between p-6">
                             <div className="text-white dark:text-gray-900">
                                 <p className="text-xs font-bold tracking-widest uppercase opacity-50 mb-2">Mustafa Seyhan</p>
-                                <h3 className="text-3xl font-black leading-tight italic">{lang === 'tr' ? 'DEFINASYON' : 'FAT LOSS'} <br/><span className="text-brand dark:text-brand-hover">BLUEPRINT</span></h3>
+                                <h3 className="text-3xl font-black leading-tight italic whitespace-pre-line">{t.newsletter.coverTitle}</h3>
                             </div>
                             <div className="mt-auto">
                                 <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center">
@@ -239,7 +257,7 @@ const App: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-  const [selectedServiceTitle, setSelectedServiceTitle] = useState("Discovery Call");
+  const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.tr.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   
   // Theme State - Default to false (Light Mode)
@@ -270,7 +288,7 @@ const App: React.FC = () => {
   // Construct Testimonials dynamically based on language
   const testimonials: Testimonial[] = STATIC_TESTIMONIAL_DATA.map((item, index) => ({
     ...item,
-    name: t.testimonials.items[index]?.name || "Client",
+    name: t.testimonials.items[index]?.name || t.ui.clientFallback,
     timeframe: t.testimonials.items[index]?.timeframe || "",
     result: t.testimonials.items[index]?.result || "",
     quote: t.testimonials.items[index]?.quote || ""
@@ -294,6 +312,10 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
 
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   // Safe smooth scrolling function
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
     e.preventDefault(); 
@@ -305,7 +327,7 @@ const App: React.FC = () => {
     }
   };
 
-  const openBooking = (title: string = "Discovery Call") => {
+  const openBooking = (title: string = t.ui.defaultServiceTitle) => {
     setSelectedServiceTitle(title);
     setBookingModalOpen(true);
   };
@@ -321,7 +343,7 @@ const App: React.FC = () => {
   const shouldUseDarkNav = isScrolled || isNavHovered;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-white cursor-none selection:bg-brand selection:text-black transition-colors duration-300">
+    <div id="top" className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-white cursor-none selection:bg-brand selection:text-black transition-colors duration-300">
       <CustomCursor />
       <ScrollProgress />
       
@@ -339,7 +361,7 @@ const App: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <a 
-            href="#" 
+            href="#top"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
             className={`text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer transition-colors ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`}
           >
@@ -364,13 +386,15 @@ const App: React.FC = () => {
                 <button 
                 onClick={() => setIsDarkMode(!isDarkMode)}
                 className={`p-2 rounded-full transition-colors ${shouldUseDarkNav ? 'text-gray-400 hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'}`}
-                title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                title={isDarkMode ? t.ui.theme.toLight : t.ui.theme.toDark}
+                aria-label={isDarkMode ? t.ui.theme.toLight : t.ui.theme.toDark}
                 >
                     {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
 
                 <button 
                 onClick={toggleLanguage}
+                aria-label={t.ui.language.label}
                 className={`flex items-center gap-1 text-sm font-medium transition-colors px-3 py-1.5 rounded-full cursor-pointer ${shouldUseDarkNav ? 'text-gray-400 hover:bg-white/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10'}`}
                 >
                 <Languages size={16} />
@@ -382,7 +406,12 @@ const App: React.FC = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button className={`md:hidden ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button
+            className={`md:hidden ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? t.ui.menu.close : t.ui.menu.open}
+            aria-expanded={mobileMenuOpen}
+          >
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
@@ -406,10 +435,10 @@ const App: React.FC = () => {
              <div className="flex items-center justify-between py-4 border-y border-gray-800">
                  <button onClick={() => setIsDarkMode(!isDarkMode)} className="flex items-center gap-2 text-gray-400">
                      {isDarkMode ? <Sun size={20} /> : <Moon size={20} />} 
-                     {isDarkMode ? "Light Mode" : "Dark Mode"}
+                     {isDarkMode ? t.ui.theme.light : t.ui.theme.dark}
                  </button>
                  <button onClick={() => { toggleLanguage(); setMobileMenuOpen(false); }} className="flex items-center gap-2 text-gray-400">
-                    <Languages size={20} /> {lang === 'en' ? 'Türkçe' : 'English'}
+                    <Languages size={20} /> {lang === 'en' ? t.ui.language.toTurkish : t.ui.language.toEnglish}
                  </button>
              </div>
              
@@ -421,8 +450,8 @@ const App: React.FC = () => {
       {/* --- Sticky Mobile CTA Bar --- */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-4 animate-fade-in-up">
          <div className="flex flex-col">
-             <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Limited Spots</span>
-             <span className="font-bold text-gray-900 dark:text-white">{lang === 'tr' ? 'Koçluk Başvurusu' : 'Elite Coaching'}</span>
+             <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t.ui.mobileCta.badge}</span>
+             <span className="font-bold text-gray-900 dark:text-white">{t.ui.mobileCta.title}</span>
          </div>
          <Button size="md" onClick={() => openBooking()}>{t.nav.bookBtn}</Button>
       </div>
@@ -574,15 +603,17 @@ const App: React.FC = () => {
             
             {/* Background Decoration Text */}
             <div className="absolute top-0 right-0 -mr-20 -mt-10 select-none pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
-                <span className="text-[12rem] md:text-[20rem] font-strong text-black dark:text-white leading-none">ELITE</span>
+                <span className="text-[12rem] md:text-[20rem] font-strong text-black dark:text-white leading-none">{t.about.backgroundWord}</span>
             </div>
 
             <div className="flex flex-col md:flex-row gap-16 items-center relative z-10">
               {/* Left Side: Cinematic Video Preview Card */}
               <div className="w-full md:w-1/2 relative">
                   <TiltCard rotationIntensity={5} className="cursor-none">
-                    <div 
-                        className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black group"
+                    <button
+                        type="button"
+                        aria-label={t.ui.videoPreviewLabel}
+                        className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black group block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                         onClick={() => setVideoModalOpen(true)}
                     >
                         {/* 1. Image Base (Simulated Video Still) */}
@@ -601,7 +632,7 @@ const App: React.FC = () => {
                         {/* 2. Recording UI Overlay */}
                         <div className="absolute top-6 left-6 flex items-center gap-2">
                              <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.8)]"></div>
-                             <span className="text-white/90 text-xs font-mono tracking-widest">REC • [00:00:12]</span>
+                             <span className="text-white/90 text-xs font-mono tracking-widest">{t.ui.recording}</span>
                         </div>
                         
                         {/* Corner Markers */}
@@ -616,7 +647,7 @@ const App: React.FC = () => {
                                     <svg viewBox="0 0 100 100" width="100%" height="100%">
                                         <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
                                         <text fill="white" fontSize="11" fontWeight="bold" letterSpacing="2px">
-                                            <textPath xlinkHref="#circlePath">WATCH SHOWREEL • PLAY VIDEO •</textPath>
+                                            <textPath xlinkHref="#circlePath">{t.ui.videoRing}</textPath>
                                         </text>
                                     </svg>
                                 </div>
@@ -633,7 +664,7 @@ const App: React.FC = () => {
                                 {t.about.quote}
                              </h3>
                         </div>
-                    </div>
+                    </button>
                   </TiltCard>
               </div>
               
@@ -641,7 +672,7 @@ const App: React.FC = () => {
               <div className="w-full md:w-1/2">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-bold uppercase tracking-wider mb-6 text-gray-600 dark:text-gray-400">
                       <Star size={12} className="text-brand fill-brand" />
-                      About The Coach
+                      {t.ui.coachBadge}
                   </div>
                   
                   <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-8 whitespace-pre-line uppercase tracking-tight leading-[0.95]">
@@ -658,7 +689,7 @@ const App: React.FC = () => {
                   <div className="mt-10 p-6 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm flex items-center justify-between gap-4">
                       <div className="flex -space-x-4">
                         {CLIENT_AVATARS.map((src, i) => (
-                            <img key={i} className="w-12 h-12 rounded-full border-2 border-white dark:border-gray-900 object-cover bg-gray-200 dark:bg-gray-800" src={src} alt="Client" />
+                            <img key={i} className="w-12 h-12 rounded-full border-2 border-white dark:border-gray-900 object-cover bg-gray-200 dark:bg-gray-800" src={src} alt={`${t.ui.clientAlt} ${i + 1}`} />
                         ))}
                         <div className="w-12 h-12 rounded-full border-2 border-white dark:border-gray-900 bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-xs font-bold">
                             +1k
@@ -704,7 +735,7 @@ const App: React.FC = () => {
           {/* Calorie Calculator Section */}
           <Reveal>
             <div className="max-w-5xl mx-auto">
-               <CalorieCalculator lang={lang} onBookClick={() => openBooking("Nutrition Plan")} />
+               <CalorieCalculator lang={lang} onBookClick={() => openBooking(t.ui.nutritionPlanTitle)} />
             </div>
           </Reveal>
         </div>
@@ -780,8 +811,7 @@ const App: React.FC = () => {
               <div className="space-y-6">
                   {t.faq.items.map((item, index) => (
                       <Reveal key={index} delay={index * 0.05}>
-                        <div 
-                            onClick={() => toggleFaq(index)}
+                        <div
                             className={`group border rounded-[2rem] bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300 cursor-pointer
                                 ${openFaqIndex === index 
                                     ? 'border-brand/50 dark:border-brand/50 shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_24px_rgba(204,255,0,0.1)]' 
@@ -789,7 +819,12 @@ const App: React.FC = () => {
                                 }
                             `}
                         >
-                            <div className="w-full flex items-center justify-between p-6 md:p-8 text-left focus:outline-none">
+                            <button
+                                type="button"
+                                onClick={() => toggleFaq(index)}
+                                aria-expanded={openFaqIndex === index}
+                                className="w-full flex items-center justify-between p-6 md:p-8 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+                            >
                                 <div className="flex items-center gap-6">
                                     {/* Tech Plate Icon Container for FAQ */}
                                     <div className={`hidden md:flex relative items-center justify-center w-16 h-16 rounded-2xl transition-colors border shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)] flex-shrink-0
@@ -818,7 +853,7 @@ const App: React.FC = () => {
                                 `}>
                                     <ChevronDown size={20} />
                                 </span>
-                            </div>
+                            </button>
                             <div className={`overflow-hidden transition-all duration-500 ease-in-out ${openFaqIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                                 <div className="p-6 md:p-8 pt-0 pl-6 md:pl-[6.5rem] text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
                                     {item.a}
@@ -876,9 +911,21 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4">
-                      <a href="#" className="hover:text-brand transition-colors cursor-pointer"><Linkedin size={20} /></a>
-                      <a href="#" className="hover:text-brand transition-colors cursor-pointer"><Twitter size={20} /></a>
-                      <a href="#" className="hover:text-brand transition-colors cursor-pointer"><Mail size={20} /></a>
+                      {SOCIAL_LINKS.map((link) => {
+                        const isExternal = !link.href.startsWith('mailto:');
+                        return (
+                          <a
+                            key={link.key}
+                            href={link.href}
+                            aria-label={t.ui.social[link.key]}
+                            target={isExternal ? '_blank' : undefined}
+                            rel={isExternal ? 'noreferrer' : undefined}
+                            className="hover:text-brand transition-colors cursor-pointer"
+                          >
+                            {link.icon}
+                          </a>
+                        );
+                      })}
                   </div>
               </div>
               <div className="text-center mt-12 text-xs text-gray-700 dark:text-gray-800">
@@ -898,6 +945,7 @@ const App: React.FC = () => {
       <VideoModal 
         isOpen={videoModalOpen} 
         onClose={() => setVideoModalOpen(false)} 
+        closeLabel={t.ui.videoCloseLabel}
       />
     </div>
   );

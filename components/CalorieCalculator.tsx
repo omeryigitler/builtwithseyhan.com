@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, Activity, ArrowRight, ChevronDown, RefreshCcw } from 'lucide-react';
+import { Calculator, Activity, ChevronDown, RefreshCcw } from 'lucide-react';
 import { Button } from './Button';
 import { content, Language } from '../translations';
 
@@ -140,7 +140,7 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
                 <div>
                     <div className="flex justify-between items-start">
                         <p className="text-gray-400 font-medium mb-1">{t.result.maintenance}</p>
-                        <button onClick={reset} className="text-gray-500 hover:text-white transition-colors">
+                        <button onClick={reset} aria-label={t.reset} className="text-gray-500 hover:text-white transition-colors">
                             <RefreshCcw size={18} />
                         </button>
                     </div>
@@ -156,12 +156,12 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
                     <div className="bg-gray-800/50 dark:bg-gray-800 p-4 rounded-2xl border border-gray-700 dark:border-gray-700">
                         <p className="text-gray-400 text-xs font-bold uppercase mb-1">{t.result.cut}</p>
                         <p className="text-2xl font-bold text-white">{result - 500}</p>
-                        <p className="text-xs text-gray-500">kcal/day</p>
+                        <p className="text-xs text-gray-500">{t.result.unitPerDay}</p>
                     </div>
                     <div className="bg-gray-800/50 dark:bg-gray-800 p-4 rounded-2xl border border-gray-700 dark:border-gray-700">
                         <p className="text-gray-400 text-xs font-bold uppercase mb-1">{t.result.bulk}</p>
                         <p className="text-2xl font-bold text-white">{result + 300}</p>
-                        <p className="text-xs text-gray-500">kcal/day</p>
+                        <p className="text-xs text-gray-500">{t.result.unitPerDay}</p>
                     </div>
                 </div>
 

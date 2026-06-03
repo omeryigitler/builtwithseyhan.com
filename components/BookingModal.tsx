@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, ArrowRight, CheckCircle2, Globe, ChevronLeft, ChevronRight, Ban } from 'lucide-react';
+import { X, Clock, ArrowRight, CheckCircle2, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './Button';
 import { content, Language } from '../translations';
 
@@ -12,7 +12,10 @@ interface BookingModalProps {
 
 // Helper: Format Date to YYYY-MM-DD key for locking slots
 const formatDateKey = (date: Date) => {
-  return date.toISOString().split('T')[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 // --- SIMULATED BACKEND DATA ---
@@ -35,7 +38,7 @@ const getMockedBlockedSlots = () => {
 
 const BLOCKED_DB = getMockedBlockedSlots();
 
-export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, serviceTitle = "Discovery Call", lang }) => {
+export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, serviceTitle, lang }) => {
   const [step, setStep] = useState<1 | 2>(1);
   
   // State for the calendar
@@ -48,13 +51,34 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
         // Reset to today when opening
         setViewDate(new Date());
         setSelectedDateObj(null);
+        setSelectedTime(null);
         setStep(1);
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const t = content[lang].modal;
+  const resolvedServiceTitle = serviceTitle || content[lang].ui.defaultServiceTitle;
   const times = ["09:00", "09:30", "10:00", "11:00", "13:00", "14:30", "16:00"];
 
   // Calendar Logic
@@ -86,13 +110,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
   };
 
   const handleDateClick = (day: number) => {
-    // Create date object properly handling timezone offset issues for local display
     const newDate = new Date(year, month, day);
-    // Adjust for timezone offset to ensure the key matches consistently
-    const offset = newDate.getTimezoneOffset();
-    const adjustedDate = new Date(newDate.getTime() - (offset*60*1000));
     
     setSelectedDateObj(newDate);
+    setSelectedTime(null);
   };
 
   const handleTimeSelect = (time: string) => {
@@ -116,9 +137,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
   const formattedSelectedDate = selectedDateObj 
     ? new Intl.DateTimeFormat(lang === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }).format(selectedDateObj)
     : '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" 
@@ -129,6 +152,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
       <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col md:flex-row min-h-[600px] animate-fade-in-up transition-colors duration-300">
         <button 
           onClick={onClose}
+          aria-label={t.closeLabel}
           className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur rounded-full transition-colors"
         >
           <X size={20} />
@@ -140,11 +164,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                 <div className="mb-6">
                     <img 
                         src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=200&h=200&q=80" 
-                        alt="Coach" 
+                        alt={t.serviceDetails.coachAlt}
                         className="w-16 h-16 rounded-full border-2 border-white dark:border-gray-800 shadow-md mb-4 object-cover grayscale"
                     />
                     <p className="text-gray-500 dark:text-gray-400 font-medium text-sm mb-1">Mustafa Seyhan</p>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{serviceTitle}</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{resolvedServiceTitle}</h2>
                 </div>
                 
                 <div className="space-y-4 text-gray-600 dark:text-gray-400">
@@ -171,7 +195,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
         <div className="w-full md:w-2/3 p-8 bg-white dark:bg-gray-900 overflow-y-auto no-scrollbar transition-colors duration-300">
           {step === 1 ? (
              <div className="h-full flex flex-col justify-center">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">{t.title}</h3>
+                <h3 id="booking-modal-title" className="text-lg font-semibold text-gray-900 dark:text-white mb-6">{t.title}</h3>
                 <div className="flex flex-col md:flex-row gap-10 lg:gap-12">
                     {/* Real Calendar */}
                     <div className="flex-1">
@@ -179,10 +203,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                              {/* Capitalize first letter of month */}
                              <span className="font-medium text-gray-900 dark:text-white capitalize text-lg">{monthName}</span>
                              <div className="flex gap-2">
-                                 <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300 transition-colors">
+                                 <button onClick={handlePrevMonth} aria-label={t.prevMonthLabel} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300 transition-colors">
                                     <ChevronLeft size={20} />
                                  </button>
-                                 <button onClick={handleNextMonth} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300 transition-colors">
+                                 <button onClick={handleNextMonth} aria-label={t.nextMonthLabel} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300 transition-colors">
                                     <ChevronRight size={20} />
                                  </button>
                              </div>
@@ -199,13 +223,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                              {/* Days */}
                              {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
                                  const isSelected = selectedDateObj?.getDate() === day && selectedDateObj?.getMonth() === month && selectedDateObj?.getFullYear() === year;
+                                 const currentDate = new Date(year, month, day);
+                                 const isPast = currentDate < today;
                                  
                                  return (
                                      <button 
                                         key={day}
                                         onClick={() => handleDateClick(day)}
+                                        disabled={isPast}
+                                        aria-pressed={isSelected}
                                         className={`aspect-square rounded-xl flex items-center justify-center text-sm font-medium transition-all
-                                            ${isSelected
+                                            ${isPast
+                                                ? 'text-gray-300 dark:text-gray-700 cursor-not-allowed'
+                                                : isSelected
                                                 ? 'bg-gray-900 text-white dark:bg-brand dark:text-black shadow-md scale-105' 
                                                 : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:scale-105'
                                             }`}
@@ -222,7 +252,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                         {/* Static Header Container for Alignment */}
                         <div className="flex items-center justify-between mb-4 h-10 border-b border-gray-100 dark:border-gray-800">
                              <span className="font-medium text-gray-900 dark:text-white capitalize text-lg">
-                                {selectedDateObj ? formattedSelectedDate : <span className="opacity-0">Placeholder</span>}
+                                {selectedDateObj ? formattedSelectedDate : <span className="opacity-0">{t.datePlaceholder}</span>}
                              </span>
                         </div>
 
@@ -243,7 +273,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                                     >
                                         <span className="flex items-center gap-2">
                                             {time}
-                                            {isBlocked && <span className="text-[10px] font-normal no-underline uppercase bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-gray-500">Dolu</span>}
+                                            {isBlocked && <span className="text-[10px] font-normal no-underline uppercase bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-gray-500">{t.unavailable}</span>}
                                         </span>
                                         {!isBlocked && (
                                             <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity -ml-4 group-hover:ml-0 text-gray-900 dark:text-brand" />
@@ -261,7 +291,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                      <CheckCircle2 size={32} />
                  </div>
                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t.confirmedTitle}</h3>
-                 <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-sm" dangerouslySetInnerHTML={{__html: t.confirmedMsg(selectedTime || '', formattedSelectedDate)}}></p>
+                 <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-sm">{t.confirmedMsg(selectedTime || '', formattedSelectedDate)}</p>
                  <Button onClick={onClose} variant="secondary">{t.done}</Button>
              </div>
           )}

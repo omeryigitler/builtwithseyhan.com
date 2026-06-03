@@ -34,11 +34,42 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDragging) handleMove(e.touches[0].clientX);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    handleMove(e.clientX);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
     handleMove(e.touches[0].clientX);
   };
 
-  const handleMouseDown = () => setIsDragging(true);
-  const handleTouchStart = () => setIsDragging(true);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const step = 5;
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSliderPosition((current) => Math.max(0, current - step));
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSliderPosition((current) => Math.min(100, current + step));
+    }
+
+    if (e.key === 'Home') {
+      e.preventDefault();
+      setSliderPosition(0);
+    }
+
+    if (e.key === 'End') {
+      e.preventDefault();
+      setSliderPosition(100);
+    }
+  };
   
   const stopDragging = () => setIsDragging(false);
 
@@ -59,11 +90,18 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden select-none cursor-ew-resize transform-gpu isolate"
+      role="slider"
+      tabIndex={0}
+      aria-label={`${beforeLabel} / ${afterLabel}`}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(sliderPosition)}
+      className="relative w-full h-full overflow-hidden select-none cursor-ew-resize transform-gpu isolate focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
+      onKeyDown={handleKeyDown}
     >
       {/* After Image (Background) */}
       <img 

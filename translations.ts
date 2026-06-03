@@ -3,6 +3,41 @@ export type Language = 'en' | 'tr';
 
 export const content = {
   en: {
+    ui: {
+      defaultServiceTitle: "Free Analysis",
+      nutritionPlanTitle: "Nutrition Plan",
+      coachBadge: "About The Coach",
+      clientFallback: "Client",
+      clientAlt: "Coaching client",
+      mobileCta: {
+        badge: "Limited spots",
+        title: "Elite Coaching"
+      },
+      menu: {
+        open: "Open menu",
+        close: "Close menu"
+      },
+      theme: {
+        toLight: "Switch to light mode",
+        toDark: "Switch to dark mode",
+        light: "Light mode",
+        dark: "Dark mode"
+      },
+      language: {
+        label: "Change language",
+        toTurkish: "Turkish",
+        toEnglish: "English"
+      },
+      recording: "REC - [00:00:12]",
+      videoPreviewLabel: "Open introduction video",
+      videoCloseLabel: "Close video",
+      videoRing: "WATCH SHOWREEL - PLAY VIDEO -",
+      social: {
+        linkedin: "LinkedIn profile",
+        twitter: "X profile",
+        email: "Send email"
+      }
+    },
     nav: {
       about: "About Me",
       services: "Coaching",
@@ -50,6 +85,7 @@ export const content = {
         athlete: "Athlete (2x per day)"
       },
       calculateBtn: "Calculate My Numbers",
+      reset: "Reset calculator",
       empty: {
         title: "Waiting for Data...",
         subtitle: "Enter your stats on the left to see your personalized metabolic breakdown."
@@ -58,6 +94,7 @@ export const content = {
         maintenance: "Maintenance Calories",
         cut: "Fat Loss (Cut)",
         bulk: "Muscle Gain (Bulk)",
+        unitPerDay: "kcal/day",
         ctaText: "Numbers are just the start. Knowing WHAT to eat to hit these numbers while enjoying your life is the key.",
         ctaBtn: "Get My Meal Plan"
       }
@@ -65,6 +102,7 @@ export const content = {
     newsletter: {
         badge: "Free Resource",
         title: "The Ultimate Fat Loss Guide",
+        coverTitle: "FAT LOSS\nBLUEPRINT",
         subtitle: "Stop guessing. Get my 25-page PDF guide on metabolic adaptation and macronutrients delivered to your inbox for free.",
         placeholder: "Enter your email address",
         button: "Send Me The Guide",
@@ -72,6 +110,7 @@ export const content = {
     },
     about: {
       quote: "NO EXCUSES. JUST RESULTS.",
+      backgroundWord: "ELITE",
       title: "More than a trainer. \nA transformation architect.",
       p1: "With over 10 years of experience in competitive bodybuilding and sports nutrition, I don't guess—I engineer results.",
       p2: "My approach rejects 'bro-science'. We use data-driven protocols for training and nutrition that fit your lifestyle, ensuring sustainable results without starving yourself.",
@@ -190,21 +229,62 @@ export const content = {
     modal: {
       title: "Schedule Your Assessment",
       confirmedTitle: "You're Booked!",
-      confirmedMsg: (time: string, date: string) => `Your assessment is set for <strong>${date}</strong> at <strong>${time}</strong>. Check your email for the Zoom link and pre-call questionnaire.`,
+      confirmedMsg: (time: string, date: string) => `Your assessment is set for ${date} at ${time}. We will share the meeting details by email.`,
       done: "Back to Site",
+      closeLabel: "Close modal",
+      prevMonthLabel: "Previous month",
+      nextMonthLabel: "Next month",
+      unavailable: "Booked",
+      datePlaceholder: "Select a date",
       serviceDetails: {
          duration: "30 min",
          platform: "Video Call",
          desc: "We will review your training history, injuries, and dietary preferences to build your custom roadmap.",
-         poweredBy: "Mustafa Seyhan Systems"
+         poweredBy: "Mustafa Seyhan Systems",
+         coachAlt: "Mustafa Seyhan"
       },
       months: {
         oct: "October"
       },
-      days: ["S", "M", "T", "W", "T", "F", "S"]
+      days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     }
   },
   tr: {
+    ui: {
+      defaultServiceTitle: "Ücretsiz Analiz",
+      nutritionPlanTitle: "Beslenme Planı",
+      coachBadge: "Koç Hakkında",
+      clientFallback: "Danışan",
+      clientAlt: "Koçluk danışanı",
+      mobileCta: {
+        badge: "Sınırlı kontenjan",
+        title: "Koçluk Başvurusu"
+      },
+      menu: {
+        open: "Menüyü aç",
+        close: "Menüyü kapat"
+      },
+      theme: {
+        toLight: "Açık moda geç",
+        toDark: "Koyu moda geç",
+        light: "Açık mod",
+        dark: "Koyu mod"
+      },
+      language: {
+        label: "Dili değiştir",
+        toTurkish: "Türkçe",
+        toEnglish: "İngilizce"
+      },
+      recording: "KAYIT - [00:00:12]",
+      videoPreviewLabel: "Tanıtım videosunu aç",
+      videoCloseLabel: "Videoyu kapat",
+      videoRing: "TANITIMI İZLE - VİDEOYU OYNAT -",
+      social: {
+        linkedin: "LinkedIn profili",
+        twitter: "X profili",
+        email: "E-posta gönder"
+      }
+    },
     nav: {
       about: "Hakkımda",
       services: "Uzaktan Eğitim",
@@ -252,14 +332,16 @@ export const content = {
         athlete: "Sporcu (Günde çift idman)"
       },
       calculateBtn: "Hesapla",
+      reset: "Hesaplayıcıyı sıfırla",
       empty: {
         title: "Veri Bekleniyor...",
         subtitle: "Metabolik analizinizi görmek için soldaki bilgileri doldurun."
       },
       result: {
         maintenance: "Koruma Kalorisi",
-        cut: "Yağ Yakımı (Cut)",
-        bulk: "Kas Kazanımı (Bulk)",
+        cut: "Yağ Yakımı",
+        bulk: "Kas Kazanımı",
+        unitPerDay: "kcal/gün",
         ctaText: "Sayılar sadece başlangıç. Bu kalorileri tuttururken sevdiğiniz yemekleri nasıl yiyeceğinizi öğrenmek işin anahtarı.",
         ctaBtn: "Beslenme Planımı Oluştur"
       }
@@ -267,6 +349,7 @@ export const content = {
     newsletter: {
         badge: "Ücretsiz Kaynak",
         title: "Definasyon Rehberi",
+        coverTitle: "DEFINASYON\nREHBERİ",
         subtitle: "Deneme yanılmayı bırakın. Metabolik adaptasyon, makro besinler ve yağ yakımı üzerine hazırladığım 25 sayfalık rehberi ücretsiz indirin.",
         placeholder: "E-posta adresinizi girin",
         button: "Rehberi Gönder",
@@ -274,6 +357,7 @@ export const content = {
     },
     about: {
       quote: "MAZERET YOK. SADECE SONUÇ.",
+      backgroundWord: "ELİT",
       title: "Sadece antrenör değil. \nDönüşüm mimarı.",
       p1: "Vücut geliştirme ve sporcu beslenmesi konusundaki 10 yılı aşkın tecrübemle, tahmin yürütmüyorum—sonuç üretiyorum.",
       p2: "Yaklaşımımda 'kulaktan dolma' bilgilere yer yok. Yaşam tarzınıza uygun, aç kalmadan sürdürülebilir sonuçlar almanızı sağlayan, veriye dayalı antrenman ve beslenme protokolleri kullanıyoruz.",
@@ -292,7 +376,7 @@ export const content = {
         },
         2: {
           title: 'Beslenme Denetimi',
-          description: "Mevcut diyetinizin tam analizi, kişiye özel makro planlaması ve supplement protokolü oluşturulması.",
+          description: "Mevcut diyetinizin tam analizi, kişiye özel makro planlaması ve takviye protokolü oluşturulması.",
           duration: 'Tek Sefer',
           price: '₺2500'
         },
@@ -304,7 +388,7 @@ export const content = {
         },
         4: {
           title: 'Yarışma Hazırlık',
-          description: "Yarışmacılar için elit seviye koçluk. Poz dersleri, peak week protokolleri ve günlük takipler.",
+          description: "Yarışmacılar için elit seviye koçluk. Poz dersleri, son hafta protokolleri ve sahneye yaklaştıkça günlük takip.",
           duration: '16 Hafta',
           price: '₺25.000'
         }
@@ -333,12 +417,12 @@ export const content = {
           name: "Ahmet Y.",
           timeframe: "6 Ay",
           result: "Yarışma Formu",
-          quote: "Skinny-fat halimden podyum formuna. Son hafta yüklemeleri nokta atışıydı."
+          quote: "Zayıf ama yağlı halimden podyum formuna. Son hafta yüklemeleri nokta atışıydı."
         },
         {
           name: "Burak D.",
           timeframe: "8 Ay",
-          result: "Hardgainer Hacim",
+          result: "Zor Kilo Alanlar İçin Hacim",
           quote: "Yıllarca 65 kiloda takılı kalmıştım. Sonunda platoyu kırdık ve şu an 78 kilo defineyim."
         },
         {
@@ -365,7 +449,7 @@ export const content = {
         },
         {
           q: "Yemek listesi veriyor musunuz?",
-          a: "Size 'Esnek Diyet' (Flexible Dieting) prensiplerini öğretiyorum. Size sevmediğiniz şeyleri zorla yedirmek yerine, makro besin hedeflerinizi belirleyip kendi tercih ettiğiniz besinlerle bu hedefleri nasıl tutturacağınızı gösteriyorum."
+          a: "Size esnek beslenme prensiplerini öğretiyorum. Sevmediğiniz şeyleri zorla yedirmek yerine, makro besin hedeflerinizi belirleyip kendi tercih ettiğiniz besinlerle bu hedefleri nasıl tutturacağınızı gösteriyorum."
         },
         {
           q: "İade politikanız var mı?",
@@ -387,23 +471,29 @@ export const content = {
         { label: "Fiyatlandırma", href: "#services" },
         { label: "SSS", href: "#faq" }
       ],
-      rights: "Mustafa Seyhan Coaching. Tüm hakları saklıdır."
+      rights: "Mustafa Seyhan Koçluk. Tüm hakları saklıdır."
     },
     modal: {
       title: "Analiz Randevusu Oluştur",
       confirmedTitle: "Randevu Alındı!",
-      confirmedMsg: (time: string, date: string) => `Analiz görüşmeniz <strong>${date} Ekim</strong> saat <strong>${time}</strong>. Zoom linki e-postanıza gönderildi.`,
+      confirmedMsg: (time: string, date: string) => `Analiz görüşmeniz ${date} saat ${time} için oluşturuldu. Görüşme bilgileri e-posta ile paylaşılacak.`,
       done: "Siteye Dön",
+      closeLabel: "Pencereyi kapat",
+      prevMonthLabel: "Önceki ay",
+      nextMonthLabel: "Sonraki ay",
+      unavailable: "Dolu",
+      datePlaceholder: "Tarih seçin",
       serviceDetails: {
          duration: "30 dk",
          platform: "Görüntülü Görüşme",
          desc: "Antrenman geçmişinizi, sakatlık durumunuzu ve beslenme tercihlerinizi inceleyip size özel yol haritasını çıkaracağız.",
-         poweredBy: "Mustafa Seyhan Systems"
+         poweredBy: "Mustafa Seyhan Sistemleri",
+         coachAlt: "Mustafa Seyhan"
       },
       months: {
         oct: "Ekim"
       },
-      days: ["P", "P", "S", "Ç", "P", "C", "C"]
+      days: ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"]
     }
   }
 };
