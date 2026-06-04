@@ -230,6 +230,9 @@ export const content = {
     },
     modal: {
       title: "Schedule Your Assessment",
+      schedulerTitle: (provider: string) => `${provider} Calendar`,
+      schedulerSubtitle: "Choose an available day and time directly from the booking calendar.",
+      schedulerOpen: "Open calendar in a new tab",
       formTitle: "Contact Details",
       formSubtitle: "Add your details so we can confirm availability and send the meeting link.",
       confirmedTitle: "Request Ready",
@@ -500,6 +503,9 @@ export const content = {
     },
     modal: {
       title: "Analiz Randevusu Oluştur",
+      schedulerTitle: (provider: string) => `${provider} Takvimi`,
+      schedulerSubtitle: "Size uygun gün ve saati doğrudan randevu takviminden seçin.",
+      schedulerOpen: "Takvimi yeni sekmede aç",
       formTitle: "İletişim Bilgileri",
       formSubtitle: "Uygunluğu onaylayıp görüşme bilgilerini paylaşabilmemiz için bilgilerinizi ekleyin.",
       confirmedTitle: "Başvuru Hazırlandı",

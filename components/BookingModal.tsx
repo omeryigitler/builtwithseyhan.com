@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Clock, ArrowRight, CheckCircle2, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './Button';
 import { content, Language } from '../translations';
-import { CONTACT_EMAIL } from '../siteConfig';
+import {
+  CONTACT_EMAIL,
+  HAS_SCHEDULING_LINK,
+  SCHEDULING_PROVIDER,
+  SCHEDULING_URL,
+  USE_CALENDLY_WIDGET,
+} from '../siteConfig';
+
+declare global {
+  interface Window {
+    Calendly?: {
+      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
+    };
+  }
+}
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -19,8 +33,7 @@ const formatDateKey = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-// --- SIMULATED BACKEND DATA ---
-// This generates some "booked" slots for the next few days so you can test the UI.
+// Fallback-only demo availability. Production bookings use Cal.com or Calendly when configured.
 const getMockedBlockedSlots = () => {
     const today = new Date();
     const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
@@ -40,6 +53,7 @@ const getMockedBlockedSlots = () => {
 const BLOCKED_DB = getMockedBlockedSlots();
 
 export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, serviceTitle, lang }) => {
+  const calendlyContainerRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   
   // State for the calendar
@@ -83,10 +97,54 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (!isOpen || !HAS_SCHEDULING_LINK || !USE_CALENDLY_WIDGET || !calendlyContainerRef.current) {
+      return;
+    }
+
+    const parentElement = calendlyContainerRef.current;
+    let cancelled = false;
+    let scriptElement: HTMLScriptElement | null = null;
+
+    const initCalendly = () => {
+      if (cancelled || !window.Calendly) return;
+
+      parentElement.innerHTML = '';
+      window.Calendly.initInlineWidget({
+        url: SCHEDULING_URL,
+        parentElement,
+      });
+    };
+
+    const existingScript = document.querySelector<HTMLScriptElement>('script[src="https://assets.calendly.com/assets/external/widget.js"]');
+
+    if (window.Calendly) {
+      initCalendly();
+    } else if (existingScript) {
+      existingScript.addEventListener('load', initCalendly, { once: true });
+    } else {
+      scriptElement = document.createElement('script');
+      scriptElement.src = 'https://assets.calendly.com/assets/external/widget.js';
+      scriptElement.async = true;
+      scriptElement.onload = initCalendly;
+      document.body.appendChild(scriptElement);
+    }
+
+    return () => {
+      cancelled = true;
+      existingScript?.removeEventListener('load', initCalendly);
+      if (scriptElement) {
+        scriptElement.onload = null;
+      }
+      parentElement.innerHTML = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const t = content[lang].modal;
   const resolvedServiceTitle = serviceTitle || content[lang].ui.defaultServiceTitle;
+  const schedulerTitle = t.schedulerTitle(SCHEDULING_PROVIDER);
   const times = ["09:00", "09:30", "10:00", "11:00", "13:00", "14:30", "16:00"];
 
   // Calendar Logic
@@ -213,7 +271,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                     </div>
                     <div className="flex items-center gap-3">
                         <Globe size={18} />
-                        <span className="font-medium">{t.serviceDetails.platform}</span>
+                        <span className="font-medium">{HAS_SCHEDULING_LINK ? SCHEDULING_PROVIDER : t.serviceDetails.platform}</span>
                     </div>
                     <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-500 mt-4">
                         {t.serviceDetails.desc}
@@ -226,9 +284,42 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
             </div>
         </div>
 
-        {/* Right Panel: Calendar & Time */}
+        {/* Right Panel: Scheduling */}
         <div className="w-full md:w-2/3 p-8 bg-white dark:bg-gray-900 overflow-y-auto no-scrollbar transition-colors duration-300">
-          {step === 1 ? (
+          {HAS_SCHEDULING_LINK ? (
+             <div className="h-full flex flex-col">
+                <div className="mb-6 pr-12">
+                    <h3 id="booking-modal-title" className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{schedulerTitle}</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-lg">{t.schedulerSubtitle}</p>
+                </div>
+
+                {USE_CALENDLY_WIDGET ? (
+                    <div
+                        ref={calendlyContainerRef}
+                        className="min-h-[620px] w-full rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-950"
+                    />
+                ) : (
+                    <iframe
+                        title={schedulerTitle}
+                        src={SCHEDULING_URL}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        allow="clipboard-write; camera; microphone; fullscreen"
+                        className="min-h-[620px] w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white"
+                    />
+                )}
+
+                <a
+                    href={SCHEDULING_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex w-fit items-center gap-2 rounded-full border border-gray-200 dark:border-gray-800 px-4 py-2 text-sm font-bold text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-brand transition-colors"
+                >
+                    <span>{t.schedulerOpen}</span>
+                    <ArrowRight size={16} />
+                </a>
+             </div>
+          ) : step === 1 ? (
              <div className="h-full flex flex-col justify-center">
                 <h3 id="booking-modal-title" className="text-lg font-semibold text-gray-900 dark:text-white mb-6">{t.title}</h3>
                 <div className="flex flex-col md:flex-row gap-10 lg:gap-12">
