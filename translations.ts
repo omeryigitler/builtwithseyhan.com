@@ -351,11 +351,11 @@ export const content = {
       gender: { male: "Erkek", female: "Kadın" },
       inputs: { weight: "Kilo (kg)", height: "Boy (cm)", age: "Yaş", activity: "Aktivite Seviyesi" },
       activity: {
-        sedentary: "Hareketsiz (Ofis Çalışanı)",
-        light: "Hafif Spor (Haftada 1-2)",
-        moderate: "Orta Seviye (Haftada 3-5)",
-        active: "Aktif (Haftada 6-7)",
-        athlete: "Sporcu (Günde çift idman)"
+        sedentary: "Hareketsiz (Ofis işi)",
+        light: "Hafif aktif (1-2 gün)",
+        moderate: "Orta aktif (3-5 gün)",
+        active: "Çok aktif (6-7 gün)",
+        athlete: "Sporcu (Günde 2 idman)"
       },
       calculateBtn: "Hesapla",
       reset: "Hesaplayıcıyı sıfırla",

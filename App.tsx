@@ -347,7 +347,7 @@ const App: React.FC = () => {
   const shouldUseDarkNav = isScrolled || isNavHovered;
 
   return (
-    <div id="top" className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-white cursor-none selection:bg-brand selection:text-black transition-colors duration-300">
+    <div id="top" className="min-h-screen overflow-x-clip bg-gray-50 dark:bg-gray-950 pb-28 font-sans text-gray-900 dark:text-white selection:bg-brand selection:text-black transition-colors duration-300 md:pb-0">
       <CustomCursor />
       <ScrollProgress />
       
@@ -452,16 +452,18 @@ const App: React.FC = () => {
       )}
 
       {/* --- Sticky Mobile CTA Bar --- */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-4 animate-fade-in-up">
-         <div className="flex flex-col">
-             <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t.ui.mobileCta.badge}</span>
-             <span className="font-bold text-gray-900 dark:text-white">{t.ui.mobileCta.title}</span>
-         </div>
-         <Button size="md" onClick={() => openBooking()}>{t.nav.bookBtn}</Button>
-      </div>
+      {!mobileMenuOpen && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between gap-3 border-t border-gray-200 bg-white/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.1)] backdrop-blur dark:border-gray-800 dark:bg-gray-900/95 md:hidden animate-fade-in-up">
+           <div className="min-w-0 flex-1">
+               <span className="block truncate text-[11px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">{t.ui.mobileCta.badge}</span>
+               <span className="block truncate text-sm font-bold text-gray-900 dark:text-white">{t.ui.mobileCta.title}</span>
+           </div>
+           <Button size="sm" className="shrink-0 whitespace-nowrap" onClick={() => openBooking()}>{t.nav.bookBtn}</Button>
+        </div>
+      )}
 
       {/* --- Hero Section --- */}
-      <section className="relative pt-40 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors duration-500">
+      <section className="relative overflow-hidden bg-gray-50 px-5 pb-20 pt-36 transition-colors duration-500 dark:bg-gray-950 sm:px-6 sm:pt-40 md:pb-32 md:pt-48">
         
         {/* Animated Glow Effects (Aurora Blob) - UPDATED OPACITY FOR LIGHT MODE */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl -z-10 pointer-events-none opacity-30 dark:opacity-60 transition-opacity duration-500">
@@ -481,19 +483,19 @@ const App: React.FC = () => {
               <span className="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wide">{t.hero.badge}</span>
             </div>
             
-            <h1 className="text-5xl md:text-8xl font-black text-gray-900 dark:text-white tracking-tight leading-[1.05] mb-8 whitespace-pre-line uppercase dark:drop-shadow-none transition-colors duration-300">
+            <h1 className="mb-8 whitespace-pre-line text-[2rem] font-black uppercase leading-[1.05] tracking-tight text-gray-900 transition-colors duration-300 dark:text-white dark:drop-shadow-none min-[360px]:text-4xl sm:text-5xl md:text-8xl">
               {t.hero.title}
             </h1>
             
-            <p className="text-xl text-gray-500 dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed font-light transition-colors">
+            <p className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-500 transition-colors dark:text-gray-400 sm:text-xl">
               {t.hero.subtitle}
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="xl" onClick={() => openBooking()}>
+            <div className="mx-auto flex w-full max-w-xs flex-col items-center justify-center gap-4 sm:max-w-none sm:flex-row">
+              <Button size="xl" className="w-full sm:w-auto" onClick={() => openBooking()}>
                 {t.hero.bookBtn}
               </Button>
-              <Button size="xl" variant="outline" onClick={(e) => handleScroll(e, '#services')}>
+              <Button size="xl" variant="outline" className="w-full sm:w-auto" onClick={(e) => handleScroll(e, '#services')}>
                 {t.hero.programsBtn}
               </Button>
             </div>
@@ -534,7 +536,7 @@ const App: React.FC = () => {
                       <Reveal key={index} delay={index * 0.1}>
                         <TiltCard>
                             <div 
-                                className={`group relative w-full h-[340px] bg-white dark:bg-gray-900 border rounded-[2.5rem] transition-all duration-500 ease-out cursor-pointer overflow-hidden
+                                className={`group relative w-full min-h-[340px] overflow-hidden rounded-[2.5rem] border bg-white transition-all duration-500 ease-out dark:bg-gray-900 md:h-[340px]
                                     ${isActive 
                                         ? 'border-brand/50 dark:border-brand/50 shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_24px_rgba(204,255,0,0.1)]' 
                                         : 'border-gray-200 dark:border-gray-800 shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)]'
@@ -551,8 +553,8 @@ const App: React.FC = () => {
                                 </div>
 
                                 {/* Default Content: Icon & Title */}
-                                <div className={`absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out z-10
-                                    ${isActive ? 'opacity-0 scale-90 -translate-y-4' : 'opacity-100 scale-100 translate-y-0'}
+                                <div className={`absolute inset-0 z-10 hidden flex-col items-center justify-center p-8 transition-all duration-500 ease-out md:flex
+                                    ${isActive ? 'md:opacity-0 md:scale-90 md:-translate-y-4' : 'md:opacity-100 md:scale-100 md:translate-y-0'}
                                 `}>
                                     {/* Icon Container with 4 Dots */}
                                     <div className={`relative flex items-center justify-center w-28 h-28 rounded-[1.5rem] mb-8 shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)] transition-colors
@@ -573,8 +575,8 @@ const App: React.FC = () => {
                                 </div>
 
                                 {/* Hover Content: Description & Arrow */}
-                                <div className={`absolute inset-0 p-8 flex flex-col items-center justify-center text-center bg-white dark:bg-gray-900 transition-all duration-300 ease-out z-20
-                                    ${isActive ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95 pointer-events-none'}
+                                <div className={`relative z-20 flex min-h-[340px] flex-col items-center justify-center bg-white p-8 text-center transition-all duration-300 ease-out dark:bg-gray-900 md:absolute md:inset-0 md:min-h-0
+                                    ${isActive ? 'md:opacity-100 md:translate-y-0 md:scale-100' : 'md:pointer-events-none md:opacity-0 md:translate-y-8 md:scale-95'}
                                 `}>
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 uppercase">{step.title}</h3>
                                     <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-8 line-clamp-5">
@@ -613,7 +615,7 @@ const App: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-16 items-center relative z-10">
               {/* Left Side: Cinematic Video Preview Card */}
               <div className="w-full md:w-1/2 relative">
-                  <TiltCard rotationIntensity={5} className="cursor-none">
+                  <TiltCard rotationIntensity={5}>
                     <button
                         type="button"
                         aria-label={t.ui.videoPreviewLabel}

@@ -45,15 +45,15 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
   };
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden flex flex-col md:flex-row transition-colors duration-300">
+    <div className="flex w-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl transition-colors duration-300 dark:border-gray-800 dark:bg-gray-900 md:flex-row md:rounded-[2.5rem]">
       {/* Input Section */}
-      <div className="p-8 md:p-12 w-full md:w-1/2 flex flex-col justify-center">
+      <div className="flex w-full flex-col justify-center p-6 sm:p-8 md:w-1/2 md:p-12">
         <div className="mb-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold uppercase tracking-wider mb-4">
                 <Calculator size={14} />
                 {t.badge}
             </div>
-            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t.title}</h3>
+            <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">{t.title}</h3>
             <p className="text-gray-500 dark:text-gray-400">{t.subtitle}</p>
         </div>
 
@@ -75,7 +75,7 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
             </div>
 
             {/* Metrics */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="space-y-2">
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t.inputs.weight}</label>
                     <input 
@@ -115,7 +115,7 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
                     <select 
                         value={activity}
                         onChange={(e) => setActivity(parseFloat(e.target.value))}
-                        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-brand font-bold text-gray-900 dark:text-white appearance-none cursor-pointer"
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 pr-12 font-bold text-gray-900 appearance-none focus:outline-none focus:ring-2 focus:ring-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:ring-brand"
                     >
                         <option value={1.2}>{t.activity.sedentary}</option>
                         <option value={1.375}>{t.activity.light}</option>
@@ -134,7 +134,7 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
       </div>
 
       {/* Result Section */}
-      <div className={`w-full md:w-1/2 p-8 md:p-12 text-white flex flex-col justify-center transition-all duration-500 ${result ? 'bg-gray-900 dark:bg-gray-950' : 'bg-gray-800 dark:bg-gray-900'}`}>
+      <div className={`flex w-full flex-col justify-center p-6 text-white transition-all duration-500 sm:p-8 md:w-1/2 md:p-12 ${result ? 'bg-gray-900 dark:bg-gray-950' : 'bg-gray-800 dark:bg-gray-900'}`}>
          {result ? (
              <div className="animate-fade-in-up space-y-8">
                 <div>
@@ -144,7 +144,7 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
                             <RefreshCcw size={18} />
                         </button>
                     </div>
-                    <div className="text-6xl font-black tracking-tight text-white mb-2">
+                    <div className="mb-2 text-5xl font-black tracking-tight text-white sm:text-6xl">
                         {result} <span className="text-2xl font-medium text-brand">kcal</span>
                     </div>
                     <div className="h-2 w-full bg-gray-800 dark:bg-gray-800 rounded-full overflow-hidden">
@@ -152,7 +152,7 @@ export const CalorieCalculator: React.FC<CalorieCalculatorProps> = ({ lang, onBo
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="bg-gray-800/50 dark:bg-gray-800 p-4 rounded-2xl border border-gray-700 dark:border-gray-700">
                         <p className="text-gray-400 text-xs font-bold uppercase mb-1">{t.result.cut}</p>
                         <p className="text-2xl font-bold text-white">{result - 500}</p>

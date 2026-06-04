@@ -234,7 +234,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
   today.setHours(0, 0, 0, 0);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+    <div className="fixed inset-0 z-50 flex items-stretch justify-center p-0 sm:p-4 md:items-center md:p-6" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" 
@@ -242,7 +242,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
       />
 
       {/* Modal Content */}
-      <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col md:flex-row min-h-[600px] animate-fade-in-up transition-colors duration-300">
+      <div className="relative flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden rounded-none bg-white shadow-2xl transition-colors duration-300 dark:bg-gray-900 md:h-auto md:max-h-[90vh] md:min-h-[600px] md:flex-row md:rounded-3xl animate-fade-in-up">
         <button 
           onClick={onClose}
           aria-label={t.closeLabel}
@@ -252,7 +252,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
         </button>
 
         {/* Left Panel: Service Details */}
-        <div className="w-full md:w-1/3 bg-gray-50 dark:bg-gray-950 border-r border-gray-100 dark:border-gray-800 p-8 flex flex-col justify-between transition-colors duration-300">
+        <div className={`w-full border-r border-gray-100 bg-gray-50 p-5 transition-colors duration-300 dark:border-gray-800 dark:bg-gray-950 sm:p-8 md:w-1/3 ${HAS_SCHEDULING_LINK ? 'hidden md:flex' : 'flex'} flex-col justify-between`}>
             <div>
                 <div className="mb-6">
                     <img 
@@ -285,18 +285,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
         </div>
 
         {/* Right Panel: Scheduling */}
-        <div className="w-full md:w-2/3 p-8 bg-white dark:bg-gray-900 overflow-y-auto no-scrollbar transition-colors duration-300">
+        <div className="w-full flex-1 overflow-y-auto bg-white p-5 transition-colors duration-300 dark:bg-gray-900 sm:p-8 md:w-2/3 no-scrollbar">
           {HAS_SCHEDULING_LINK ? (
              <div className="h-full flex flex-col">
-                <div className="mb-6 pr-12">
-                    <h3 id="booking-modal-title" className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{schedulerTitle}</h3>
+                <div className="mb-4 pr-12 sm:mb-6">
+                    <h3 id="booking-modal-title" className="mb-2 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">{schedulerTitle}</h3>
                     <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-lg">{t.schedulerSubtitle}</p>
                 </div>
 
                 {USE_CALENDLY_WIDGET ? (
                     <div
                         ref={calendlyContainerRef}
-                        className="min-h-[620px] w-full rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-950"
+                        className="min-h-[560px] w-full overflow-hidden rounded-2xl bg-gray-50 dark:bg-gray-950 sm:min-h-[620px]"
                     />
                 ) : (
                     <iframe
@@ -305,7 +305,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
                         allow="clipboard-write; camera; microphone; fullscreen"
-                        className="min-h-[620px] w-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white"
+                        className="min-h-[560px] w-full rounded-2xl border border-gray-200 bg-white dark:border-gray-800 sm:min-h-[620px]"
                     />
                 )}
 
@@ -313,7 +313,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                     href={SCHEDULING_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-4 inline-flex w-fit items-center gap-2 rounded-full border border-gray-200 dark:border-gray-800 px-4 py-2 text-sm font-bold text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-brand transition-colors"
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-bold text-gray-900 transition-colors hover:border-gray-900 dark:border-gray-800 dark:text-white dark:hover:border-brand sm:w-fit"
                 >
                     <span>{t.schedulerOpen}</span>
                     <ArrowRight size={16} />
