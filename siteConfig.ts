@@ -1,6 +1,6 @@
 const env = import.meta.env;
 
-export const SITE_URL = env.VITE_SITE_URL || 'https://mustafa-seyhan-coaching.vercel.app/';
+export const SITE_URL = env.VITE_SITE_URL || 'https://builtwithseyhan.com/';
 
 export const CONTACT_EMAIL = env.VITE_CONTACT_EMAIL || 'info@mustafaseyhancoaching.com';
 
