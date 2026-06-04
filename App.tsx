@@ -11,6 +11,7 @@ import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
+import { CONTACT_EMAIL, SOCIAL_URLS } from './siteConfig';
 
 // Static parts of data structure
 const STATIC_SERVICE_ICONS = {
@@ -33,17 +34,17 @@ const CLIENT_AVATARS = [
 const SOCIAL_LINKS = [
   {
     key: 'linkedin' as const,
-    href: 'https://www.linkedin.com/in/mustafaseyhan/',
+    href: SOCIAL_URLS.linkedin,
     icon: <Linkedin size={20} />
   },
   {
     key: 'twitter' as const,
-    href: 'https://x.com/mustafaseyhan',
+    href: SOCIAL_URLS.twitter,
     icon: <Twitter size={20} />
   },
   {
     key: 'email' as const,
-    href: 'mailto:info@mustafaseyhancoaching.com',
+    href: SOCIAL_URLS.email,
     icon: <Mail size={20} />
   }
 ];
@@ -192,6 +193,9 @@ const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if(email) {
+            const subject = encodeURIComponent(t.subject);
+            const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
+            window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
             setStatus('success');
             setTimeout(() => {
                 setStatus('idle');

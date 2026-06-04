@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Clock, ArrowRight, CheckCircle2, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './Button';
 import { content, Language } from '../translations';
+import { CONTACT_EMAIL } from '../siteConfig';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -39,12 +40,18 @@ const getMockedBlockedSlots = () => {
 const BLOCKED_DB = getMockedBlockedSlots();
 
 export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, serviceTitle, lang }) => {
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   
   // State for the calendar
   const [viewDate, setViewDate] = useState(new Date()); // The month we are looking at
   const [selectedDateObj, setSelectedDateObj] = useState<Date | null>(null); // The specific day selected
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    goal: '',
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -52,6 +59,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
         setViewDate(new Date());
         setSelectedDateObj(null);
         setSelectedTime(null);
+        setContactForm({ name: '', email: '', phone: '', goal: '' });
         setStep(1);
     }
   }, [isOpen]);
@@ -119,6 +127,33 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
     setStep(2);
+  };
+
+  const handleContactChange = (field: keyof typeof contactForm, value: string) => {
+    setContactForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleRequestSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const emailLines = [
+      `${t.email.service}: ${resolvedServiceTitle}`,
+      `${t.email.date}: ${formattedSelectedDate}`,
+      `${t.email.time}: ${selectedTime || '-'}`,
+      '',
+      `${t.email.name}: ${contactForm.name}`,
+      `${t.email.email}: ${contactForm.email}`,
+      `${t.email.phone}: ${contactForm.phone}`,
+      '',
+      `${t.email.goal}:`,
+      contactForm.goal,
+    ];
+
+    const subject = encodeURIComponent(`${t.email.subject} - ${resolvedServiceTitle}`);
+    const body = encodeURIComponent(emailLines.join('\n'));
+
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    setStep(3);
   };
 
   // Check if a specific time is blocked for the selected date
@@ -285,13 +320,77 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                     </div>
                 </div>
              </div>
+          ) : step === 2 ? (
+             <form onSubmit={handleRequestSubmit} className="h-full flex flex-col justify-center animate-fade-in">
+                <div className="mb-8">
+                    <h3 id="booking-modal-title" className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t.formTitle}</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-lg">{t.formSubtitle}</p>
+                    <div className="mt-4 inline-flex flex-wrap gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        <span className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">{formattedSelectedDate}</span>
+                        <span className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">{selectedTime}</span>
+                    </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t.fields.name}</label>
+                        <input
+                            type="text"
+                            value={contactForm.name}
+                            onChange={(event) => handleContactChange('name', event.target.value)}
+                            required
+                            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-brand font-semibold text-gray-900 dark:text-white"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t.fields.email}</label>
+                        <input
+                            type="email"
+                            value={contactForm.email}
+                            onChange={(event) => handleContactChange('email', event.target.value)}
+                            required
+                            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-brand font-semibold text-gray-900 dark:text-white"
+                        />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t.fields.phone}</label>
+                        <input
+                            type="tel"
+                            value={contactForm.phone}
+                            onChange={(event) => handleContactChange('phone', event.target.value)}
+                            required
+                            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-brand font-semibold text-gray-900 dark:text-white"
+                        />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">{t.fields.goal}</label>
+                        <textarea
+                            value={contactForm.goal}
+                            onChange={(event) => handleContactChange('goal', event.target.value)}
+                            required
+                            rows={5}
+                            placeholder={t.fields.goalPlaceholder}
+                            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-brand font-semibold text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none"
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                    <Button type="button" variant="secondary" onClick={() => setStep(1)} className="shadow-none">
+                        {t.back}
+                    </Button>
+                    <Button type="submit" fullWidth>
+                        {t.submitRequest}
+                    </Button>
+                </div>
+             </form>
           ) : (
              <div className="h-full flex flex-col items-center justify-center text-center animate-fade-in">
                  <div className="w-16 h-16 bg-green-100 dark:bg-brand/20 text-green-600 dark:text-brand rounded-full flex items-center justify-center mb-6">
                      <CheckCircle2 size={32} />
                  </div>
-                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t.confirmedTitle}</h3>
-                 <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-sm">{t.confirmedMsg(selectedTime || '', formattedSelectedDate)}</p>
+                 <h3 id="booking-modal-title" className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t.confirmedTitle}</h3>
+                 <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-sm">{t.confirmedMsg}</p>
                  <Button onClick={onClose} variant="secondary">{t.done}</Button>
              </div>
           )}

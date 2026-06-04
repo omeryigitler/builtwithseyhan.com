@@ -106,7 +106,9 @@ export const content = {
         subtitle: "Stop guessing. Get my 25-page PDF guide on metabolic adaptation and macronutrients delivered to your inbox for free.",
         placeholder: "Enter your email address",
         button: "Send Me The Guide",
-        success: "Success! Check your inbox."
+        success: "Email draft opened. Send it to request the guide.",
+        subject: "Fat loss guide request",
+        emailLabel: "Email"
     },
     about: {
       quote: "NO EXCUSES. JUST RESULTS.",
@@ -228,14 +230,35 @@ export const content = {
     },
     modal: {
       title: "Schedule Your Assessment",
-      confirmedTitle: "You're Booked!",
-      confirmedMsg: (time: string, date: string) => `Your assessment is set for ${date} at ${time}. We will share the meeting details by email.`,
+      formTitle: "Contact Details",
+      formSubtitle: "Add your details so we can confirm availability and send the meeting link.",
+      confirmedTitle: "Request Ready",
+      confirmedMsg: "A pre-filled email draft has been opened. Send it to complete your coaching request.",
       done: "Back to Site",
+      back: "Back",
+      submitRequest: "Prepare Request",
       closeLabel: "Close modal",
       prevMonthLabel: "Previous month",
       nextMonthLabel: "Next month",
       unavailable: "Booked",
       datePlaceholder: "Select a date",
+      fields: {
+        name: "Full name",
+        email: "Email",
+        phone: "Phone / WhatsApp",
+        goal: "Goal",
+        goalPlaceholder: "Briefly describe your goal, current routine, and biggest challenge."
+      },
+      email: {
+        subject: "Coaching request",
+        service: "Selected service",
+        date: "Preferred date",
+        time: "Preferred time",
+        name: "Full name",
+        email: "Email",
+        phone: "Phone / WhatsApp",
+        goal: "Goal"
+      },
       serviceDetails: {
          duration: "30 min",
          platform: "Video Call",
@@ -353,7 +376,9 @@ export const content = {
         subtitle: "Deneme yanılmayı bırakın. Metabolik adaptasyon, makro besinler ve yağ yakımı üzerine hazırladığım 25 sayfalık rehberi ücretsiz indirin.",
         placeholder: "E-posta adresinizi girin",
         button: "Rehberi Gönder",
-        success: "Başarılı! E-postanızı kontrol edin."
+        success: "E-posta taslağı açıldı. Rehberi talep etmek için gönderin.",
+        subject: "Definasyon rehberi talebi",
+        emailLabel: "E-posta"
     },
     about: {
       quote: "MAZERET YOK. SADECE SONUÇ.",
@@ -475,14 +500,35 @@ export const content = {
     },
     modal: {
       title: "Analiz Randevusu Oluştur",
-      confirmedTitle: "Randevu Alındı!",
-      confirmedMsg: (time: string, date: string) => `Analiz görüşmeniz ${date} saat ${time} için oluşturuldu. Görüşme bilgileri e-posta ile paylaşılacak.`,
+      formTitle: "İletişim Bilgileri",
+      formSubtitle: "Uygunluğu onaylayıp görüşme bilgilerini paylaşabilmemiz için bilgilerinizi ekleyin.",
+      confirmedTitle: "Başvuru Hazırlandı",
+      confirmedMsg: "Önceden doldurulmuş e-posta taslağı açıldı. Koçluk başvurunuzu tamamlamak için e-postayı gönderin.",
       done: "Siteye Dön",
+      back: "Geri",
+      submitRequest: "Başvuruyu Hazırla",
       closeLabel: "Pencereyi kapat",
       prevMonthLabel: "Önceki ay",
       nextMonthLabel: "Sonraki ay",
       unavailable: "Dolu",
       datePlaceholder: "Tarih seçin",
+      fields: {
+        name: "Ad Soyad",
+        email: "E-posta",
+        phone: "Telefon / WhatsApp",
+        goal: "Hedef",
+        goalPlaceholder: "Hedefinizi, mevcut rutininizi ve en büyük zorlandığınız noktayı kısaca yazın."
+      },
+      email: {
+        subject: "Koçluk başvurusu",
+        service: "Seçilen hizmet",
+        date: "Tercih edilen tarih",
+        time: "Tercih edilen saat",
+        name: "Ad Soyad",
+        email: "E-posta",
+        phone: "Telefon / WhatsApp",
+        goal: "Hedef"
+      },
       serviceDetails: {
          duration: "30 dk",
          platform: "Görüntülü Görüşme",
