@@ -259,6 +259,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
                         src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=200&h=200&q=80" 
                         alt={t.serviceDetails.coachAlt}
                         className="w-16 h-16 rounded-full border-2 border-white dark:border-gray-800 shadow-md mb-4 object-cover grayscale"
+                        loading="lazy"
+                        decoding="async"
                     />
                     <p className="text-gray-500 dark:text-gray-400 font-medium text-sm mb-1">Mustafa Seyhan</p>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{resolvedServiceTitle}</h2>

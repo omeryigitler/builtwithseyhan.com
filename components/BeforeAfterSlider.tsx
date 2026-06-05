@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronsLeftRight } from 'lucide-react';
+import { LazyImage } from './LazyImage';
 
 interface BeforeAfterSliderProps {
   beforeImage: string;
@@ -104,10 +105,13 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
       onKeyDown={handleKeyDown}
     >
       {/* After Image (Background) */}
-      <img 
+      <LazyImage
         src={afterImage} 
         alt={`After ${alt}`} 
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
         draggable={false}
       />
       
@@ -121,10 +125,13 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
         className="absolute inset-0 w-full h-full overflow-hidden"
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       >
-        <img 
+        <LazyImage
           src={beforeImage} 
           alt={`Before ${alt}`} 
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+          loading="lazy"
+          decoding="async"
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           draggable={false}
         />
         {/* Label Before - Slides in on hover */}

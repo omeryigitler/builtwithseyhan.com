@@ -9,6 +9,7 @@ import { BeforeAfterSlider } from './components/BeforeAfterSlider';
 import { Reveal } from './components/Reveal';
 import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
+import { LazyImage } from './components/LazyImage';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
 import { CONTACT_EMAIL, SOCIAL_URLS } from './siteConfig';
@@ -130,56 +131,73 @@ const CountUp: React.FC<{ end: number; duration?: number; suffix?: string }> = (
 
 // --- Internal Helper Component: Scroll Progress Bar ---
 const ScrollProgress: React.FC = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollTop;
-      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scroll = `${totalScroll / windowHeight}`;
-      setScrollProgress(Number(scroll));
+      if (ticking) return;
+
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const totalScroll = document.documentElement.scrollTop;
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scroll = windowHeight > 0 ? totalScroll / windowHeight : 0;
+
+        if (progressRef.current) {
+          progressRef.current.style.transform = `scaleX(${Math.min(Math.max(scroll, 0), 1)})`;
+        }
+
+        ticking = false;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <div className="fixed top-0 left-0 w-full h-1.5 z-[60] bg-transparent pointer-events-none">
       <div 
-        className="h-full bg-brand shadow-[0_2px_10px_rgba(0,0,0,0.2)] transition-all duration-100 ease-out"
-        style={{ width: `${scrollProgress * 100}%` }}
+        ref={progressRef}
+        className="h-full origin-left scale-x-0 bg-brand shadow-[0_2px_10px_rgba(0,0,0,0.2)] transition-transform duration-100 ease-out"
       />
     </div>
   );
 };
 
-// --- Internal Helper Component: Infinite Logo Marquee ---
+// --- Internal Helper Component: Static Logo Strip ---
 const LogoMarquee = () => {
     const logos = [
         // Optimum Nutrition
-        <svg key="1" height="45" viewBox="0 0 100 50" fill="currentColor" className="mx-8"><path d="M10,25 Q10,5 30,5 Q50,5 50,25 Q50,45 30,45 Q10,45 10,25 Z M55,5 L70,45 L85,5 L100,45" stroke="currentColor" strokeWidth="4" fill="none" /><text x="30" y="32" fontFamily="Arial" fontWeight="bold" fontSize="16" textAnchor="middle" stroke="none" fill="currentColor">ON</text></svg>,
+        <svg key="1" height="45" viewBox="0 0 100 50" fill="currentColor"><path d="M10,25 Q10,5 30,5 Q50,5 50,25 Q50,45 30,45 Q10,45 10,25 Z M55,5 L70,45 L85,5 L100,45" stroke="currentColor" strokeWidth="4" fill="none" /><text x="30" y="32" fontFamily="Arial" fontWeight="bold" fontSize="16" textAnchor="middle" stroke="none" fill="currentColor">ON</text></svg>,
         // Gatorade
-        <svg key="2" height="40" viewBox="0 0 150 40" fill="currentColor" className="mx-8"><path d="M20,10 L30,5 L30,15 L40,15 L20,35 L20,20 L5,20 Z" /><text x="50" y="28" fontFamily="Arial" fontWeight="900" fontSize="24" fontStyle="italic" letterSpacing="-1">GATORADE</text></svg>,
+        <svg key="2" height="40" viewBox="0 0 150 40" fill="currentColor"><path d="M20,10 L30,5 L30,15 L40,15 L20,35 L20,20 L5,20 Z" /><text x="50" y="28" fontFamily="Arial" fontWeight="900" fontSize="24" fontStyle="italic" letterSpacing="-1">GATORADE</text></svg>,
         // MyProtein
-        <svg key="3" height="24" viewBox="0 0 140 24" fill="currentColor" className="mx-8"><text x="0" y="20" fontFamily="Arial" fontWeight="800" fontSize="20" letterSpacing="0.5">MYPROTEIN</text></svg>,
+        <svg key="3" height="24" viewBox="0 0 140 24" fill="currentColor"><text x="0" y="20" fontFamily="Arial" fontWeight="800" fontSize="20" letterSpacing="0.5">MYPROTEIN</text></svg>,
         // MusclePharm
-        <svg key="4" height="40" viewBox="0 0 180 40" fill="currentColor" className="mx-8"><rect x="0" y="5" width="8" height="30" /><rect x="12" y="5" width="8" height="30" /><rect x="24" y="5" width="8" height="30" /><text x="40" y="28" fontFamily="Arial" fontWeight="bold" fontSize="20">MUSCLE</text><text x="125" y="28" fontFamily="Arial" fontSize="20">PHARM</text></svg>,
+        <svg key="4" height="40" viewBox="0 0 180 40" fill="currentColor"><rect x="0" y="5" width="8" height="30" /><rect x="12" y="5" width="8" height="30" /><rect x="24" y="5" width="8" height="30" /><text x="40" y="28" fontFamily="Arial" fontWeight="bold" fontSize="20">MUSCLE</text><text x="125" y="28" fontFamily="Arial" fontSize="20">PHARM</text></svg>,
         // GNC
-        <svg key="5" height="30" viewBox="0 0 80 30" fill="currentColor" className="mx-8"><text x="0" y="25" fontFamily="Arial" fontWeight="900" fontSize="28">GNC</text></svg>
+        <svg key="5" height="30" viewBox="0 0 80 30" fill="currentColor"><text x="0" y="25" fontFamily="Arial" fontWeight="900" fontSize="28">GNC</text></svg>
     ];
 
     return (
-        <div className="relative flex overflow-x-hidden group">
-            <div className="animate-marquee whitespace-nowrap flex items-center text-gray-400 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-500">
-                {logos.map((logo, i) => <div key={i} className="grayscale hover:grayscale-0 transition-all">{logo}</div>)}
-                {logos.map((logo, i) => <div key={`dup-${i}`} className="grayscale hover:grayscale-0 transition-all">{logo}</div>)}
-                {logos.map((logo, i) => <div key={`dup2-${i}`} className="grayscale hover:grayscale-0 transition-all">{logo}</div>)}
-                {logos.map((logo, i) => <div key={`dup3-${i}`} className="grayscale hover:grayscale-0 transition-all">{logo}</div>)}
+        <div className="relative overflow-hidden px-4 md:px-6">
+            <div className="no-scrollbar flex snap-x items-center gap-5 overflow-x-auto px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 md:flex-wrap md:justify-center md:overflow-visible md:gap-x-16">
+                {logos.map((logo, i) => (
+                  <div key={i} className="flex h-12 min-w-[132px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white md:min-w-[110px] [&>svg]:max-h-full [&>svg]:max-w-full">
+                    {logo}
+                  </div>
+                ))}
             </div>
             {/* Fade Edges for Dark Mode */}
-            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300"></div>
-            <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300"></div>
+            <div className="pointer-events-none absolute top-0 left-0 hidden w-24 h-full bg-gradient-to-r from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 md:block"></div>
+            <div className="pointer-events-none absolute top-0 right-0 hidden w-24 h-full bg-gradient-to-l from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 md:block"></div>
         </div>
     );
 };
@@ -269,6 +287,7 @@ const App: React.FC = () => {
   
   // State for the Process section interaction
   const [activeProcessStep, setActiveProcessStep] = useState<number | null>(null);
+  const isScrolledRef = useRef(false);
 
   // Translation shortcut
   const t = content[lang];
@@ -301,9 +320,16 @@ const App: React.FC = () => {
   // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const nextIsScrolled = window.scrollY > 20;
+      if (isScrolledRef.current !== nextIsScrolled) {
+        isScrolledRef.current = nextIsScrolled;
+        setIsScrolled(nextIsScrolled);
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -466,7 +492,7 @@ const App: React.FC = () => {
       <section className="relative overflow-hidden bg-gray-50 px-5 pb-20 pt-36 transition-colors duration-500 dark:bg-gray-950 sm:px-6 sm:pt-40 md:pb-32 md:pt-48">
         
         {/* Animated Glow Effects (Aurora Blob) - UPDATED OPACITY FOR LIGHT MODE */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl -z-10 pointer-events-none opacity-30 dark:opacity-60 transition-opacity duration-500">
+        <div className="absolute top-0 left-1/2 hidden w-full h-full max-w-7xl -z-10 -translate-x-1/2 pointer-events-none opacity-30 transition-opacity duration-500 dark:opacity-60 md:block">
            <div className="absolute top-20 left-10 w-96 h-96 bg-brand rounded-full blur-[120px] mix-blend-screen opacity-20 animate-blob"></div>
            <div className="absolute top-40 right-10 w-96 h-96 bg-blue-600 rounded-full blur-[120px] mix-blend-screen opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
            <div className="absolute -bottom-20 left-1/3 w-96 h-96 bg-purple-600 rounded-full blur-[120px] mix-blend-screen opacity-20 animate-blob" style={{ animationDelay: '4s' }}></div>
@@ -624,10 +650,12 @@ const App: React.FC = () => {
                     >
                         {/* 1. Image Base (Simulated Video Still) */}
                         <div className="absolute inset-0">
-                           <img 
+                           <LazyImage
                               src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop" 
                               alt="Mustafa Seyhan Training" 
                               className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out opacity-80 group-hover:opacity-100"
+                              loading="lazy"
+                              decoding="async"
                            />
                            {/* Grain Overlay */}
                            <div className="absolute inset-0 bg-noise opacity-20 mix-blend-overlay pointer-events-none"></div>
@@ -637,7 +665,7 @@ const App: React.FC = () => {
 
                         {/* 2. Recording UI Overlay */}
                         <div className="absolute top-6 left-6 flex items-center gap-2">
-                             <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.8)]"></div>
+                             <div className="w-3 h-3 bg-red-600 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.8)] group-hover:animate-pulse"></div>
                              <span className="text-white/90 text-xs font-mono tracking-widest">{t.ui.recording}</span>
                         </div>
                         
@@ -649,7 +677,7 @@ const App: React.FC = () => {
                         <div className="absolute inset-0 flex items-center justify-center z-20">
                             <div className="relative group-hover:scale-110 transition-transform duration-500">
                                 {/* Text Ring */}
-                                <div className="absolute inset-0 -m-8 w-32 h-32 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <div className="absolute inset-0 -m-8 w-32 h-32 opacity-0 transition-opacity duration-500 group-hover:animate-spin-slow group-hover:opacity-100">
                                     <svg viewBox="0 0 100 100" width="100%" height="100%">
                                         <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
                                         <text fill="white" fontSize="11" fontWeight="bold" letterSpacing="2px">
@@ -695,7 +723,14 @@ const App: React.FC = () => {
                   <div className="mt-10 p-6 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm flex items-center justify-between gap-4">
                       <div className="flex -space-x-4">
                         {CLIENT_AVATARS.map((src, i) => (
-                            <img key={i} className="w-12 h-12 rounded-full border-2 border-white dark:border-gray-900 object-cover bg-gray-200 dark:bg-gray-800" src={src} alt={`${t.ui.clientAlt} ${i + 1}`} />
+                            <LazyImage
+                              key={i}
+                              className="w-12 h-12 rounded-full border-2 border-white dark:border-gray-900 object-cover bg-gray-200 dark:bg-gray-800"
+                              src={src}
+                              alt={`${t.ui.clientAlt} ${i + 1}`}
+                              loading="lazy"
+                              decoding="async"
+                            />
                         ))}
                         <div className="w-12 h-12 rounded-full border-2 border-white dark:border-gray-900 bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center text-xs font-bold">
                             +1k
@@ -878,7 +913,7 @@ const App: React.FC = () => {
       {/* --- CTA / Footer --- */}
       <footer className="bg-gray-900 dark:bg-gray-950 text-white pt-24 pb-12 px-6 border-t border-transparent dark:border-gray-900 rounded-t-[3rem] dark:rounded-none mt-12 mb-16 md:mb-0 relative overflow-hidden transition-all duration-300">
           {/* Footer Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none opacity-20 dark:opacity-10">
+          <div className="absolute top-0 left-1/2 hidden w-full h-full max-w-7xl -translate-x-1/2 pointer-events-none opacity-20 dark:opacity-10 md:block">
              <div className="absolute top-20 right-10 w-64 h-64 bg-brand rounded-full blur-[100px]"></div>
           </div>
 

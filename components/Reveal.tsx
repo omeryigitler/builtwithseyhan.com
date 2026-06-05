@@ -40,8 +40,8 @@ export const Reveal: React.FC<RevealProps> = ({ children, width = '100%', delay 
     <div
       ref={ref}
       style={{ width, transitionDelay: `${delay}s` }}
-      className={`transition-all duration-1000 ease-out transform ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      className={`transition-all duration-500 ease-out motion-reduce:transition-none ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       } ${className}`}
     >
       {children}
