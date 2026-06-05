@@ -188,9 +188,9 @@ const LogoMarquee = () => {
 
     return (
         <div className="relative overflow-hidden px-4 md:px-6">
-            <div className="no-scrollbar flex snap-x items-center gap-5 overflow-x-auto px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 md:flex-wrap md:justify-center md:overflow-visible md:gap-x-16">
+            <div className="no-scrollbar flex snap-x items-center gap-3 overflow-x-auto px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 md:flex-wrap md:justify-center md:overflow-visible md:gap-x-16">
                 {logos.map((logo, i) => (
-                  <div key={i} className="flex h-12 min-w-[132px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white md:min-w-[110px] [&>svg]:max-h-full [&>svg]:max-w-full">
+                  <div key={i} className="flex h-12 min-w-[118px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white md:min-w-[110px] [&>svg]:max-h-full [&>svg]:max-w-full">
                     {logo}
                   </div>
                 ))}
