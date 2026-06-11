@@ -749,7 +749,7 @@ const App: React.FC = () => {
                     href="https://omeryigitler.com"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-brand font-semibold hover:text-brand-hover transition-colors"
+                    className="text-brand font-semibold hover:text-brand-hover hover:tracking-wider transition-all duration-300"
                   >
                     Ömer YİĞİTLER
                   </a>

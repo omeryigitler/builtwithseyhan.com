@@ -42,7 +42,7 @@ export const content = {
       bookBtn: "Start Now"
     },
     hero: {
-      badge: "Limited spots for Summer '24",
+      badge: "Transformations speak louder than words",
       title: "Build your dream physique.\nMaster your metabolism.",
       subtitle: "Scientific programming, customized nutrition, and elite mindset coaching to help you look, feel, and perform at your absolute best.",
       bookBtn: "Start Your Transformation",
@@ -313,7 +313,7 @@ export const content = {
       bookBtn: "Başvuru Yap"
     },
     hero: {
-      badge: "Yaz dönemi kayıtları açıldı",
+      badge: "Sonuçlar her şeyi anlatır",
       title: "Hayalindeki fiziği inşa et.\nMetabolizmanı yönet.",
       subtitle: "En iyi halinize ulaşmanız için bilimsel antrenman programlaması, kişiye özel beslenme ve profesyonel süreç yönetimi.",
       bookBtn: "Değişimi Başlat",
