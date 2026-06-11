@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Zap, BookOpen, Check } from 'lucide-react';
+import { Zap, BookOpen, Check, Loader } from 'lucide-react';
 import { Button } from './Button';
 import { Reveal } from './Reveal';
 import { content, Language } from '../translations';
 import { CONTACT_EMAIL } from '../siteConfig';
+import { loadEmailJSConfig } from './AdminPanel';
 
 interface Props {
   lang: Language;
@@ -12,19 +13,40 @@ interface Props {
 export const NewsletterSection: React.FC<Props> = ({ lang }) => {
   const t = content[lang].newsletter;
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+
+    const cfg = loadEmailJSConfig();
+    const hasEmailJS = !!(cfg.serviceId && cfg.templateId && cfg.publicKey);
+
+    if (hasEmailJS) {
+      setStatus('loading');
+      try {
+        const emailjs = await import('@emailjs/browser');
+        await emailjs.send(cfg.serviceId, cfg.templateId, {
+          user_email: email,
+          ebook_url: cfg.ebookUrl || '',
+        }, cfg.publicKey);
+        setStatus('success');
+        setTimeout(() => { setStatus('idle'); setEmail(''); }, 4000);
+      } catch {
+        // Fallback to mailto on failure
+        const subject = encodeURIComponent(t.subject);
+        const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
+        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+        setStatus('success');
+        setTimeout(() => { setStatus('idle'); setEmail(''); }, 3000);
+      }
+    } else {
+      // No EmailJS configured — use mailto fallback
       const subject = encodeURIComponent(t.subject);
       const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
       setStatus('success');
-      setTimeout(() => {
-        setStatus('idle');
-        setEmail('');
-      }, 3000);
+      setTimeout(() => { setStatus('idle'); setEmail(''); }, 3000);
     }
   };
 
@@ -61,14 +83,15 @@ export const NewsletterSection: React.FC<Props> = ({ lang }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="flex-1 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-700 focus:outline-none focus:border-gray-900 dark:focus:border-brand focus:ring-1 focus:ring-gray-900 dark:focus:ring-brand transition-all bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
+                disabled={status === 'loading' || status === 'success'}
+                className="flex-1 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-700 focus:outline-none focus:border-gray-900 dark:focus:border-brand focus:ring-1 focus:ring-gray-900 dark:focus:ring-brand transition-all bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 disabled:opacity-60"
               />
               <Button
                 type="submit"
-                disabled={status === 'success'}
-                className="bg-gray-900 dark:bg-brand text-white dark:text-black hover:bg-black dark:hover:bg-brand-hover border-transparent shadow-none"
+                disabled={status === 'loading' || status === 'success'}
+                className="bg-gray-900 dark:bg-brand text-white dark:text-black hover:bg-black dark:hover:bg-brand-hover border-transparent shadow-none min-w-[48px]"
               >
-                {status === 'success' ? <Check size={20} /> : t.button}
+                {status === 'success' ? <Check size={20} /> : status === 'loading' ? <Loader size={20} className="animate-spin" /> : t.button}
               </Button>
             </form>
             {status === 'success' && (

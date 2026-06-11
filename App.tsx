@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Video, Star, Linkedin, Twitter, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, Moon, Sun, HelpCircle } from 'lucide-react';
+import { Menu, X, Video, Star, Instagram, Youtube, Linkedin, Twitter, Facebook, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, Moon, Sun, HelpCircle } from 'lucide-react';
 import { Button } from './components/Button';
 import { BookingModal } from './components/BookingModal';
 import { VideoModal } from './components/VideoModal';
@@ -11,14 +11,14 @@ import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
 import { LazyImage } from './components/LazyImage';
 import { CoachPhotoStack } from './components/CoachPhotoStack';
-import { AdminPanel, loadCustomTestimonials, CustomTestimonial } from './components/AdminPanel';
+import { AdminPanel, loadCustomTestimonials, loadSocialLinks, CustomTestimonial, SocialLink } from './components/AdminPanel';
 import { CountUp } from './components/CountUp';
 import { ScrollProgress } from './components/ScrollProgress';
 import { LogoMarquee } from './components/LogoMarquee';
 import { NewsletterSection } from './components/NewsletterSection';
+import { WhatsAppFloat } from './components/WhatsAppFloat';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
-import { SOCIAL_URLS } from './siteConfig';
 
 // Static parts of data structure
 const STATIC_SERVICE_ICONS = {
@@ -46,63 +46,6 @@ const CLIENT_AVATARS = [
   '/images/avatar-3.jpg',
 ];
 
-const SOCIAL_LINKS = [
-  {
-    key: 'linkedin' as const,
-    href: SOCIAL_URLS.linkedin,
-    icon: <Linkedin size={20} />
-  },
-  {
-    key: 'twitter' as const,
-    href: SOCIAL_URLS.twitter,
-    icon: <Twitter size={20} />
-  },
-  {
-    key: 'email' as const,
-    href: SOCIAL_URLS.email,
-    icon: <Mail size={20} />
-  }
-];
-
-// Updated Static Data for Fitness Transformations
-const STATIC_TESTIMONIAL_DATA = [
-  {
-    id: '1',
-    // Male weight loss / muscle gain
-    imageBefore: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '2',
-    // Female fitness / toning (Selin)
-    imageBefore: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=600&auto=format&fit=crop&grayscale',
-  },
-  {
-    id: '3',
-    // Male competition ready
-    imageBefore: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '4',
-    // Male Hardgainer / Bulk
-    imageBefore: 'https://images.unsplash.com/photo-1507398941214-572c25f4b1dc?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '5',
-    // Female Postpartum / Core
-    imageBefore: 'https://images.unsplash.com/photo-1620932934088-fbdb2920e484?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1616803689943-5601631c7fec?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '6',
-    // Male 40+ Age
-    imageBefore: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1590556409324-aa1d726e5c3c?q=80&w=600&auto=format&fit=crop&grayscale', 
-  }
-];
 
 
 const App: React.FC = () => {
@@ -124,6 +67,7 @@ const App: React.FC = () => {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [customTestimonials, setCustomTestimonials] = useState<CustomTestimonial[]>(loadCustomTestimonials);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(loadSocialLinks);
   const logoClickCount = useRef(0);
   const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   
@@ -153,27 +97,11 @@ const App: React.FC = () => {
     { id: '4', ...t.services.cards[4], icon: STATIC_SERVICE_ICONS[4] },
   ];
 
-  // Construct Testimonials dynamically based on language
-  const staticTestimonials: Testimonial[] = STATIC_TESTIMONIAL_DATA.map((item, index) => ({
-    ...item,
-    name: t.testimonials.items[index]?.name || t.ui.clientFallback,
-    timeframe: t.testimonials.items[index]?.timeframe || "",
-    result: t.testimonials.items[index]?.result || "",
-    quote: t.testimonials.items[index]?.quote || ""
+  const testimonials: Testimonial[] = customTestimonials.map(c => ({
+    id: c.id, name: c.name, timeframe: c.timeframe,
+    result: c.result, quote: c.quote,
+    imageBefore: c.imageBefore, imageAfter: c.imageAfter,
   }));
-
-  // Custom testimonials from admin override static ones
-  const testimonials: Testimonial[] = customTestimonials.length > 0
-    ? customTestimonials.map(c => ({
-        id: c.id,
-        name: c.name,
-        timeframe: c.timeframe,
-        result: c.result,
-        quote: c.quote,
-        imageBefore: c.imageBefore,
-        imageAfter: c.imageAfter,
-      }))
-    : staticTestimonials;
 
   // Adaptive grid: 1→center, 2→side-by-side, 3→3col, 4→3+1center, 5→3+2center…
   const renderTestimonialGrid = (items: Testimonial[]) => {
@@ -663,7 +591,19 @@ const App: React.FC = () => {
                </div>
             </Reveal>
 
-            {renderTestimonialGrid(testimonials)}
+            {testimonials.length > 0 ? renderTestimonialGrid(testimonials) : (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-900 flex items-center justify-center mb-6">
+                  <Star size={28} className="text-gray-300 dark:text-gray-700" />
+                </div>
+                <p className="text-gray-400 dark:text-gray-600 text-sm font-medium">
+                  {lang === 'tr' ? 'Henüz dönüşüm eklenmedi.' : 'No transformations added yet.'}
+                </p>
+                <p className="text-gray-300 dark:text-gray-700 text-xs mt-1">
+                  {lang === 'tr' ? 'Admin panelinden gerçek müşteri fotoğrafları yükle.' : 'Upload real client photos from the admin panel.'}
+                </p>
+              </div>
+            )}
 
          </div>
       </section>
@@ -779,18 +719,25 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4">
-                      {SOCIAL_LINKS.map((link) => {
-                        const isExternal = !link.href.startsWith('mailto:');
+                      {socialLinks.filter(s => s.enabled && s.url).map((s) => {
+                        const isExternal = !s.url.startsWith('mailto:');
+                        const icon = {
+                          instagram: <Instagram size={20} />,
+                          tiktok: <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>,
+                          youtube: <Youtube size={20} />,
+                          twitter: <Twitter size={20} />,
+                          linkedin: <Linkedin size={20} />,
+                          facebook: <Facebook size={20} />,
+                          whatsapp: <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>,
+                          email: <Mail size={20} />,
+                        }[s.id];
                         return (
-                          <a
-                            key={link.key}
-                            href={link.href}
-                            aria-label={t.ui.social[link.key]}
+                          <a key={s.id} href={s.url}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noreferrer' : undefined}
                             className="hover:text-brand transition-colors cursor-pointer"
                           >
-                            {link.icon}
+                            {icon}
                           </a>
                         );
                       })}
@@ -816,11 +763,17 @@ const App: React.FC = () => {
         closeLabel={t.ui.videoCloseLabel}
       />
 
+      <WhatsAppFloat
+        url={socialLinks.find(s => s.id === 'whatsapp' && s.enabled)?.url ?? ''}
+      />
+
       <AdminPanel
         isOpen={adminOpen}
         onClose={() => setAdminOpen(false)}
         testimonials={customTestimonials}
         onChange={setCustomTestimonials}
+        socialLinks={socialLinks}
+        onSocialChange={setSocialLinks}
         lang={lang}
       />
     </div>
