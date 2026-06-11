@@ -678,7 +678,7 @@ const App: React.FC = () => {
       <NewsletterSection lang={lang} />
 
       {/* --- CTA / Footer --- */}
-      <footer className="bg-gray-900 dark:bg-gray-950 text-white pt-24 pb-12 px-6 border-t border-transparent dark:border-gray-900 rounded-t-[3rem] dark:rounded-none mt-12 relative overflow-hidden transition-all duration-300">
+      <footer className="bg-gray-900 dark:bg-gray-950 text-white pt-24 pb-4 px-6 border-t border-transparent dark:border-gray-900 rounded-t-[3rem] dark:rounded-none mt-12 relative overflow-hidden transition-all duration-300">
           {/* Footer Glow */}
           <div className="absolute top-0 left-1/2 hidden w-full h-full max-w-7xl -translate-x-1/2 pointer-events-none opacity-20 dark:opacity-10 md:block">
              <div className="absolute top-20 right-10 w-64 h-64 bg-brand rounded-full blur-[100px]"></div>
