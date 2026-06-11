@@ -746,6 +746,17 @@ const App: React.FC = () => {
               <div className="text-center mt-12 text-xs text-gray-700 dark:text-gray-800">
                   © {new Date().getFullYear()} {t.footer.rights}
               </div>
+              <div className="text-center mt-4 text-xs text-gray-600 dark:text-gray-700">
+                  Designed &amp; Developed by{' '}
+                  <a
+                    href="https://omeryigitler.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-brand font-semibold hover:text-brand-hover transition-colors"
+                  >
+                    Ömer YİĞİTLER
+                  </a>
+              </div>
           </div>
       </footer>
 
