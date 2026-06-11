@@ -149,6 +149,8 @@ export const content = {
       title: "Real Results",
       subtitle: "See what happens when consistency meets strategy.",
       readMore: "View All Transformations",
+      showAll: "See All Transformations",
+      showLess: "Show Less",
       before: "BEFORE",
       after: "AFTER",
       items: [
@@ -418,6 +420,8 @@ export const content = {
       title: "Gerçek Sonuçlar",
       subtitle: "İstikrar ve strateji birleştiğinde neler olduğuna bakın.",
       readMore: "Tüm Değişimleri Gör",
+      showAll: "Tüm Dönüşümleri Gör",
+      showLess: "Daha Az Göster",
       before: "ÖNCESİ",
       after: "SONRASI",
       items: [

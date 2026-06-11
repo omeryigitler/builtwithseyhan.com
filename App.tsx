@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Video, Zap, Star, Linkedin, Twitter, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, BookOpen, Check, Moon, Sun, HelpCircle, Play } from 'lucide-react';
+import { Menu, X, Video, Star, Instagram, Youtube, Linkedin, Twitter, Facebook, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, Moon, Sun, HelpCircle } from 'lucide-react';
 import { Button } from './components/Button';
 import { BookingModal } from './components/BookingModal';
 import { VideoModal } from './components/VideoModal';
@@ -10,9 +10,15 @@ import { Reveal } from './components/Reveal';
 import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
 import { LazyImage } from './components/LazyImage';
+import { CoachPhotoStack } from './components/CoachPhotoStack';
+import { AdminPanel, loadCustomTestimonials, loadSocialLinks, CustomTestimonial, SocialLink } from './components/AdminPanel';
+import { CountUp } from './components/CountUp';
+import { ScrollProgress } from './components/ScrollProgress';
+import { LogoMarquee } from './components/LogoMarquee';
+import { NewsletterSection } from './components/NewsletterSection';
+import { WhatsAppFloat } from './components/WhatsAppFloat';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
-import { CONTACT_EMAIL, SOCIAL_URLS } from './siteConfig';
 
 // Static parts of data structure
 const STATIC_SERVICE_ICONS = {
@@ -25,268 +31,33 @@ const STATIC_SERVICE_ICONS = {
 // Icons for the Process Section
 const PROCESS_ICONS = [ClipboardCheck, Layout, TrendingUp];
 
-// Stable Avatar URLs for the About Section
+// Mustafa's real coaching photos — mustafa-2 (back pose) leads as hero
+const COACH_PHOTOS = [
+  '/images/mustafa-2.jpg',
+  '/images/mustafa-1.jpg',
+  '/images/mustafa-3.jpg',
+  '/images/mustafa-4.jpg',
+  '/images/mustafa-5.jpg',
+];
+
 const CLIENT_AVATARS = [
-  "https://randomuser.me/api/portraits/women/44.jpg",
-  "https://randomuser.me/api/portraits/men/32.jpg",
-  "https://randomuser.me/api/portraits/women/68.jpg"
+  '/images/avatar-1.jpg',
+  '/images/avatar-2.jpg',
+  '/images/avatar-3.jpg',
 ];
 
-const SOCIAL_LINKS = [
-  {
-    key: 'linkedin' as const,
-    href: SOCIAL_URLS.linkedin,
-    icon: <Linkedin size={20} />
-  },
-  {
-    key: 'twitter' as const,
-    href: SOCIAL_URLS.twitter,
-    icon: <Twitter size={20} />
-  },
-  {
-    key: 'email' as const,
-    href: SOCIAL_URLS.email,
-    icon: <Mail size={20} />
-  }
-];
 
-// Updated Static Data for Fitness Transformations
-const STATIC_TESTIMONIAL_DATA = [
-  {
-    id: '1',
-    // Male weight loss / muscle gain
-    imageBefore: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '2',
-    // Female fitness / toning (Selin)
-    imageBefore: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=600&auto=format&fit=crop&grayscale',
-  },
-  {
-    id: '3',
-    // Male competition ready
-    imageBefore: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '4',
-    // Male Hardgainer / Bulk
-    imageBefore: 'https://images.unsplash.com/photo-1507398941214-572c25f4b1dc?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '5',
-    // Female Postpartum / Core
-    imageBefore: 'https://images.unsplash.com/photo-1620932934088-fbdb2920e484?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1616803689943-5601631c7fec?q=80&w=600&auto=format&fit=crop&grayscale', 
-  },
-  {
-    id: '6',
-    // Male 40+ Age
-    imageBefore: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?q=80&w=600&auto=format&fit=crop&grayscale', 
-    imageAfter: 'https://images.unsplash.com/photo-1590556409324-aa1d726e5c3c?q=80&w=600&auto=format&fit=crop&grayscale', 
-  }
-];
-
-// --- Internal Helper Component: CountUp Animation ---
-const CountUp: React.FC<{ end: number; duration?: number; suffix?: string }> = ({ end, duration = 2000, suffix = '' }) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          let start = 0;
-          const increment = end / (duration / 16); // 60fps
-          
-          const timer = setInterval(() => {
-            start += increment;
-            if (start >= end) {
-              setCount(end);
-              clearInterval(timer);
-            } else {
-              setCount(Math.ceil(start));
-            }
-          }, 16);
-          
-          setHasAnimated(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [end, duration, hasAnimated]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
-};
-
-// --- Internal Helper Component: Scroll Progress Bar ---
-const ScrollProgress: React.FC = () => {
-  const progressRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (ticking) return;
-
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        const totalScroll = document.documentElement.scrollTop;
-        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scroll = windowHeight > 0 ? totalScroll / windowHeight : 0;
-
-        if (progressRef.current) {
-          progressRef.current.style.transform = `scaleX(${Math.min(Math.max(scroll, 0), 1)})`;
-        }
-
-        ticking = false;
-      });
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  return (
-    <div className="fixed top-0 left-0 w-full h-1.5 z-[60] bg-transparent pointer-events-none">
-      <div 
-        ref={progressRef}
-        className="h-full origin-left scale-x-0 bg-brand shadow-[0_2px_10px_rgba(0,0,0,0.2)] transition-transform duration-100 ease-out"
-      />
-    </div>
-  );
-};
-
-// --- Internal Helper Component: Logo Strip ---
-const LogoMarquee = () => {
-    const logos = [
-        // Optimum Nutrition
-        <svg key="1" height="45" viewBox="0 0 100 50" fill="currentColor"><path d="M10,25 Q10,5 30,5 Q50,5 50,25 Q50,45 30,45 Q10,45 10,25 Z M55,5 L70,45 L85,5 L100,45" stroke="currentColor" strokeWidth="4" fill="none" /><text x="30" y="32" fontFamily="Arial" fontWeight="bold" fontSize="16" textAnchor="middle" stroke="none" fill="currentColor">ON</text></svg>,
-        // Gatorade
-        <svg key="2" height="40" viewBox="0 0 150 40" fill="currentColor"><path d="M20,10 L30,5 L30,15 L40,15 L20,35 L20,20 L5,20 Z" /><text x="50" y="28" fontFamily="Arial" fontWeight="900" fontSize="24" fontStyle="italic" letterSpacing="-1">GATORADE</text></svg>,
-        // MyProtein
-        <svg key="3" height="24" viewBox="0 0 140 24" fill="currentColor"><text x="0" y="20" fontFamily="Arial" fontWeight="800" fontSize="20" letterSpacing="0.5">MYPROTEIN</text></svg>,
-        // MusclePharm
-        <svg key="4" height="40" viewBox="0 0 180 40" fill="currentColor"><rect x="0" y="5" width="8" height="30" /><rect x="12" y="5" width="8" height="30" /><rect x="24" y="5" width="8" height="30" /><text x="40" y="28" fontFamily="Arial" fontWeight="bold" fontSize="20">MUSCLE</text><text x="125" y="28" fontFamily="Arial" fontSize="20">PHARM</text></svg>,
-        // GNC
-        <svg key="5" height="30" viewBox="0 0 80 30" fill="currentColor"><text x="0" y="25" fontFamily="Arial" fontWeight="900" fontSize="28">GNC</text></svg>
-    ];
-
-    return (
-        <div className="relative overflow-hidden px-4 md:px-6">
-            <div className="no-scrollbar flex snap-x touch-pan-x items-center gap-4 overflow-x-auto overscroll-x-contain px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 lg:hidden">
-                {logos.map((logo, i) => (
-                  <div key={i} className="flex h-12 min-w-[128px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
-                    {logo}
-                  </div>
-                ))}
-            </div>
-            <div className="hidden overflow-hidden lg:block">
-              <div className="flex w-max text-gray-400 transition-colors duration-300 dark:text-gray-600 lg:animate-logo-marquee motion-reduce:animate-none hover:[animation-play-state:paused]">
-                {[0, 1].map((group) => (
-                  <div key={group} className="flex shrink-0 items-center gap-16 pr-16">
-                    {logos.map((logo, i) => (
-                      <div key={`${group}-${i}`} className="flex h-12 min-w-[120px] shrink-0 items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
-                        {logo}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Fade Edges for Dark Mode */}
-            <div className="pointer-events-none absolute top-0 left-0 hidden w-24 h-full bg-gradient-to-r from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 lg:block"></div>
-            <div className="pointer-events-none absolute top-0 right-0 hidden w-24 h-full bg-gradient-to-l from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 lg:block"></div>
-        </div>
-    );
-};
-
-// --- Internal Helper: Newsletter Section ---
-const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
-    const t = content[lang].newsletter;
-    const [email, setEmail] = useState('');
-    const [status, setStatus] = useState<'idle' | 'success'>('idle');
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if(email) {
-            const subject = encodeURIComponent(t.subject);
-            const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
-            window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-            setStatus('success');
-            setTimeout(() => {
-                setStatus('idle');
-                setEmail('');
-            }, 3000);
-        }
-    };
-
-    return (
-        <section className="py-24 px-6 text-gray-900 dark:text-white transition-colors duration-300">
-            <Reveal>
-                <div className="max-w-7xl mx-auto bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-200 dark:border-gray-800 shadow-xl relative overflow-hidden p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 md:gap-24">
-                    {/* Visual Mockup of E-Book */}
-                    <div className="w-full md:w-1/2 flex justify-center md:justify-end relative z-10">
-                        {/* Book: Light Mode -> Black, Dark Mode -> White */}
-                        <div className="relative w-64 h-80 bg-gray-900 dark:bg-white rounded-r-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500 border-l-4 border-gray-700 dark:border-gray-200 flex flex-col justify-between p-6">
-                            <div className="text-white dark:text-gray-900">
-                                <p className="text-xs font-bold tracking-widest uppercase opacity-50 mb-2">Mustafa Seyhan</p>
-                                <h3 className="text-3xl font-black leading-tight italic whitespace-pre-line">{t.coverTitle}</h3>
-                            </div>
-                            <div className="mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center">
-                                    <BookOpen className="text-gray-900 dark:text-white" size={20} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="w-full md:w-1/2 text-center md:text-left relative z-10">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-6">
-                            <Zap size={14} className="fill-brand text-black dark:text-brand" />
-                            {t.badge}
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold dark:font-black text-gray-900 dark:text-white mb-4 uppercase tracking-tight">{t.title}</h2>
-                        <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto md:mx-0 font-medium">{t.subtitle}</p>
-                        
-                        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto md:mx-0">
-                            <input 
-                                type="email" 
-                                placeholder={t.placeholder} 
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                className="flex-1 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-700 focus:outline-none focus:border-gray-900 dark:focus:border-brand focus:ring-1 focus:ring-gray-900 dark:focus:ring-brand transition-all bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                            />
-                            <Button type="submit" disabled={status === 'success'} className="bg-gray-900 dark:bg-brand text-white dark:text-black hover:bg-black dark:hover:bg-brand-hover border-transparent shadow-none">
-                                {status === 'success' ? <Check size={20} /> : t.button}
-                            </Button>
-                        </form>
-                        {status === 'success' && <p className="text-green-600 dark:text-brand text-sm mt-3 font-medium animate-fade-in">{t.success}</p>}
-                    </div>
-                </div>
-            </Reveal>
-        </section>
-    );
-};
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('en');
+  const [lang, setLang] = useState<Language>(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const bl = navigator.language?.toLowerCase() ?? '';
+      return (tz === 'Europe/Istanbul' || bl.startsWith('tr')) ? 'tr' : 'en';
+    } catch {
+      return 'en';
+    }
+  });
   const [isScrolled, setIsScrolled] = useState(false);
   const [isNavHovered, setIsNavHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -294,6 +65,11 @@ const App: React.FC = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.en.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [customTestimonials, setCustomTestimonials] = useState<CustomTestimonial[]>(loadCustomTestimonials);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(loadSocialLinks);
+  const logoClickCount = useRef(0);
+  const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Theme State - Default to false (Light Mode)
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -321,14 +97,74 @@ const App: React.FC = () => {
     { id: '4', ...t.services.cards[4], icon: STATIC_SERVICE_ICONS[4] },
   ];
 
-  // Construct Testimonials dynamically based on language
-  const testimonials: Testimonial[] = STATIC_TESTIMONIAL_DATA.map((item, index) => ({
-    ...item,
-    name: t.testimonials.items[index]?.name || t.ui.clientFallback,
-    timeframe: t.testimonials.items[index]?.timeframe || "",
-    result: t.testimonials.items[index]?.result || "",
-    quote: t.testimonials.items[index]?.quote || ""
+  const testimonials: Testimonial[] = customTestimonials.map(c => ({
+    id: c.id, name: c.name, timeframe: c.timeframe,
+    result: c.result, quote: c.quote,
+    imageBefore: c.imageBefore, imageAfter: c.imageAfter,
   }));
+
+  // Adaptive grid: 1→center, 2→side-by-side, 3→3col, 4→3+1center, 5→3+2center…
+  const renderTestimonialGrid = (items: Testimonial[]) => {
+    if (items.length === 0) return null;
+    const fullRowCount = Math.floor(items.length / 3);
+    const remainder = items.length % 3;
+    const fullItems = items.slice(0, fullRowCount * 3);
+    const remainderItems = items.slice(fullRowCount * 3);
+
+    return (
+      <div className="space-y-8">
+        {fullRowCount > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {fullItems.map((tItem, index) => renderTestimonialCard(tItem, index))}
+          </div>
+        )}
+        {remainder > 0 && (
+          <div className="flex flex-col md:flex-row justify-center gap-8">
+            {remainderItems.map((tItem, i) => (
+              <div key={tItem.id} className="w-full md:w-[calc(50%-1rem)] lg:w-[calc((100%-4rem)/3)]">
+                {renderTestimonialCard(tItem, fullRowCount * 3 + i)}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderTestimonialCard = (tItem: Testimonial, index: number) => (
+    <Reveal key={tItem.id ?? index} delay={Math.min(index, 2) * 0.1}>
+      <div className="group relative bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:border-brand dark:hover:border-brand transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(204,255,0,0.3)] hover:-translate-y-2 flex flex-col h-full transform-gpu [backface-visibility:hidden] [mask-image:radial-gradient(white,black)]">
+        <div className="relative h-[400px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+          <BeforeAfterSlider
+            beforeImage={tItem.imageBefore}
+            afterImage={tItem.imageAfter}
+            alt={tItem.name}
+            beforeLabel={t.testimonials.before}
+            afterLabel={t.testimonials.after}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <h3 className="text-white font-bold text-2xl mb-1">{tItem.name}</h3>
+            <div className="text-brand font-bold text-lg tracking-tight">{tItem.result}</div>
+          </div>
+        </div>
+        <div className="p-8 flex flex-col flex-1 relative transition-colors duration-500 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/50">
+          <div className="mb-6">
+            <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              <Calendar size={14} />
+              <span>{tItem.timeframe}</span>
+            </div>
+            {tItem.quote && (
+              <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed italic">
+                "{tItem.quote}"
+              </p>
+            )}
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+        </div>
+      </div>
+    </Reveal>
+  );
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -370,6 +206,19 @@ const App: React.FC = () => {
     }
   };
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    logoClickCount.current += 1;
+    if (logoClickTimer.current) clearTimeout(logoClickTimer.current);
+    if (logoClickCount.current >= 3) {
+      setAdminOpen(true);
+      logoClickCount.current = 0;
+    } else {
+      logoClickTimer.current = setTimeout(() => { logoClickCount.current = 0; }, 800);
+    }
+  };
+
   const openBooking = (title: string = t.ui.defaultServiceTitle) => {
     setSelectedServiceTitle(title);
     setBookingModalOpen(true);
@@ -403,9 +252,9 @@ const App: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <a 
+          <a
             href="#top"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+            onClick={handleLogoClick}
             className={`text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer transition-colors ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`}
           >
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-serif italic font-black transition-colors ${shouldUseDarkNav ? 'bg-white text-gray-900' : 'bg-gray-900 text-white dark:bg-white dark:text-black'}`}>M</div>
@@ -641,67 +490,13 @@ const App: React.FC = () => {
             </div>
 
             <div className="flex flex-col md:flex-row gap-16 items-center relative z-10">
-              {/* Left Side: Cinematic Video Preview Card */}
-              <div className="w-full md:w-1/2 relative">
-                  <TiltCard rotationIntensity={5}>
-                    <button
-                        type="button"
-                        aria-label={t.ui.videoPreviewLabel}
-                        className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black group block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                        onClick={() => setVideoModalOpen(true)}
-                    >
-                        {/* 1. Image Base (Simulated Video Still) */}
-                        <div className="absolute inset-0">
-                           <LazyImage
-                              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop" 
-                              alt="Mustafa Seyhan Training" 
-                              className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out opacity-80 group-hover:opacity-100"
-                              loading="lazy"
-                              decoding="async"
-                           />
-                           {/* Grain Overlay */}
-                           <div className="absolute inset-0 bg-noise opacity-20 mix-blend-overlay pointer-events-none"></div>
-                           {/* Vignette */}
-                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none"></div>
-                        </div>
-
-                        {/* 2. Recording UI Overlay */}
-                        <div className="absolute top-6 left-6 flex items-center gap-2">
-                             <div className="w-3 h-3 bg-red-600 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.8)] group-hover:animate-pulse"></div>
-                             <span className="text-white/90 text-xs font-mono tracking-widest">{t.ui.recording}</span>
-                        </div>
-                        
-                        {/* Corner Markers */}
-                        <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-white/30 rounded-tr-lg"></div>
-                        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-white/30 rounded-bl-lg"></div>
-
-                        {/* 3. Center Interaction (Play Button & Ring) */}
-                        <div className="absolute inset-0 flex items-center justify-center z-20">
-                            <div className="relative group-hover:scale-110 transition-transform duration-500">
-                                {/* Text Ring */}
-                                <div className="absolute inset-0 -m-8 w-32 h-32 opacity-0 transition-opacity duration-500 group-hover:animate-spin-slow group-hover:opacity-100">
-                                    <svg viewBox="0 0 100 100" width="100%" height="100%">
-                                        <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-                                        <text fill="white" fontSize="11" fontWeight="bold" letterSpacing="2px">
-                                            <textPath xlinkHref="#circlePath">{t.ui.videoRing}</textPath>
-                                        </text>
-                                    </svg>
-                                </div>
-                                {/* Play Button */}
-                                <div className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-colors duration-300 shadow-xl">
-                                    <Play size={24} className="fill-white text-white group-hover:fill-black group-hover:text-black ml-1 transition-colors" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 4. "Poster Style" Quote Overlay */}
-                        <div className="absolute bottom-10 left-0 right-0 px-8 text-center pointer-events-none z-10">
-                             <h3 className="font-strong text-4xl md:text-5xl text-white italic leading-none drop-shadow-lg tracking-wide opacity-90 group-hover:text-brand transition-colors duration-300">
-                                {t.about.quote}
-                             </h3>
-                        </div>
-                    </button>
-                  </TiltCard>
+              {/* Left Side: Coach Photo Stack */}
+              <div className="w-full md:w-1/2 relative pb-16 md:pb-12">
+                <CoachPhotoStack
+                  photos={COACH_PHOTOS}
+                  name="Mustafa Seyhan"
+                  badgeLabel={t.ui.coachBadge}
+                />
               </div>
               
               {/* Right Side: Text Content */}
@@ -796,50 +591,20 @@ const App: React.FC = () => {
                </div>
             </Reveal>
 
-            {/* Modern Grid Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {testimonials.map((tItem, index) => (
-                    <Reveal key={index} delay={index * 0.1}>
-                        <div className="group relative bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:border-brand dark:hover:border-brand transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(204,255,0,0.3)] hover:-translate-y-2 flex flex-col h-full transform-gpu [backface-visibility:hidden] [mask-image:radial-gradient(white,black)]">
-                            
-                            {/* Image Container */}
-                            <div className="relative h-[400px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                                <BeforeAfterSlider 
-                                    beforeImage={tItem.imageBefore} 
-                                    afterImage={tItem.imageAfter} 
-                                    alt={tItem.name}
-                                    beforeLabel={t.testimonials.before}
-                                    afterLabel={t.testimonials.after}
-                                />
-                                {/* Bottom Gradient for better text readability */}
-                                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
-                                
-                                {/* Floating Badge over Image */}
-                                <div className="absolute bottom-6 left-6 right-6">
-                                     <h3 className="text-white font-bold text-2xl mb-1">{tItem.name}</h3>
-                                     <div className="text-brand font-bold text-lg tracking-tight">{tItem.result}</div>
-                                </div>
-                            </div>
+            {testimonials.length > 0 ? renderTestimonialGrid(testimonials) : (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-900 flex items-center justify-center mb-6">
+                  <Star size={28} className="text-gray-300 dark:text-gray-700" />
+                </div>
+                <p className="text-gray-400 dark:text-gray-600 text-sm font-medium">
+                  {lang === 'tr' ? 'Henüz dönüşüm eklenmedi.' : 'No transformations added yet.'}
+                </p>
+                <p className="text-gray-300 dark:text-gray-700 text-xs mt-1">
+                  {lang === 'tr' ? 'Admin panelinden gerçek müşteri fotoğrafları yükle.' : 'Upload real client photos from the admin panel.'}
+                </p>
+              </div>
+            )}
 
-                            {/* Details Container */}
-                            <div className="p-8 flex flex-col flex-1 relative transition-colors duration-500 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/50">
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                                        <Calendar size={14} />
-                                        <span>{tItem.timeframe}</span>
-                                    </div>
-                                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed italic">
-                                        "{tItem.quote}"
-                                    </p>
-                                </div>
-                                
-                                {/* Hover Effect: Subtle glow line at bottom */}
-                                <div className="absolute bottom-0 left-0 w-full h-1 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                            </div>
-                        </div>
-                    </Reveal>
-                ))}
-            </div>
          </div>
       </section>
 
@@ -954,18 +719,25 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4">
-                      {SOCIAL_LINKS.map((link) => {
-                        const isExternal = !link.href.startsWith('mailto:');
+                      {socialLinks.filter(s => s.enabled && s.url).map((s) => {
+                        const isExternal = !s.url.startsWith('mailto:');
+                        const icon = {
+                          instagram: <Instagram size={20} />,
+                          tiktok: <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>,
+                          youtube: <Youtube size={20} />,
+                          twitter: <Twitter size={20} />,
+                          linkedin: <Linkedin size={20} />,
+                          facebook: <Facebook size={20} />,
+                          whatsapp: <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>,
+                          email: <Mail size={20} />,
+                        }[s.id];
                         return (
-                          <a
-                            key={link.key}
-                            href={link.href}
-                            aria-label={t.ui.social[link.key]}
+                          <a key={s.id} href={s.url}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noreferrer' : undefined}
                             className="hover:text-brand transition-colors cursor-pointer"
                           >
-                            {link.icon}
+                            {icon}
                           </a>
                         );
                       })}
@@ -985,10 +757,24 @@ const App: React.FC = () => {
         lang={lang}
       />
 
-      <VideoModal 
-        isOpen={videoModalOpen} 
-        onClose={() => setVideoModalOpen(false)} 
+      <VideoModal
+        isOpen={videoModalOpen}
+        onClose={() => setVideoModalOpen(false)}
         closeLabel={t.ui.videoCloseLabel}
+      />
+
+      <WhatsAppFloat
+        url={socialLinks.find(s => s.id === 'whatsapp' && s.enabled)?.url ?? ''}
+      />
+
+      <AdminPanel
+        isOpen={adminOpen}
+        onClose={() => setAdminOpen(false)}
+        testimonials={customTestimonials}
+        onChange={setCustomTestimonials}
+        socialLinks={socialLinks}
+        onSocialChange={setSocialLinks}
+        lang={lang}
       />
     </div>
   );
