@@ -297,7 +297,15 @@ const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
 };
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('en');
+  const [lang, setLang] = useState<Language>(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const bl = navigator.language?.toLowerCase() ?? '';
+      return (tz === 'Europe/Istanbul' || bl.startsWith('tr')) ? 'tr' : 'en';
+    } catch {
+      return 'en';
+    }
+  });
   const [isScrolled, setIsScrolled] = useState(false);
   const [isNavHovered, setIsNavHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -1004,6 +1012,7 @@ const App: React.FC = () => {
         onClose={() => setAdminOpen(false)}
         testimonials={customTestimonials}
         onChange={setCustomTestimonials}
+        lang={lang}
       />
     </div>
   );

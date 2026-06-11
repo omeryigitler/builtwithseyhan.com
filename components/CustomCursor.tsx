@@ -78,13 +78,13 @@ export const CustomCursor: React.FC = () => {
       <div 
         ref={cursorRef}
         // Light Mode: Gray-900, Dark Mode: Brand (Volt)
-        className="fixed top-0 left-0 w-3 h-3 bg-gray-900 dark:bg-brand rounded-full pointer-events-none z-[100] -ml-1.5 -mt-1.5 mix-blend-difference"
+        className="fixed top-0 left-0 w-3 h-3 bg-gray-900 dark:bg-brand rounded-full pointer-events-none z-[9999] -ml-1.5 -mt-1.5 mix-blend-difference"
       />
       
       {/* Follower Ring - Physics Follow */}
       <div 
         ref={followerRef}
-        className={`fixed top-0 left-0 w-8 h-8 border rounded-full pointer-events-none z-[99] -ml-4 -mt-4 transition-colors duration-300 ease-out will-change-transform
+        className={`fixed top-0 left-0 w-8 h-8 border rounded-full pointer-events-none z-[9998] -ml-4 -mt-4 transition-colors duration-300 ease-out will-change-transform
           ${isHovering 
             ? 'bg-gray-900/10 dark:bg-brand/20 border-transparent' 
             : 'border-gray-900 dark:border-brand'

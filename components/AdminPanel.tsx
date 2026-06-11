@@ -1,5 +1,28 @@
 import React, { useState, useRef } from 'react';
 import { X, Plus, Trash2, Upload, Eye, EyeOff } from 'lucide-react';
+import type { Language } from '../translations';
+
+const UI: Record<Language, {
+  title: string; count: string; addSection: string; beforeLabel: string; afterLabel: string;
+  changePhoto: string; namePlaceholder: string; resultPlaceholder: string;
+  timePlaceholder: string; quotePlaceholder: string; addBtn: string;
+  savedSection: string; clearAll: string; deleteAll: string;
+}> = {
+  en: {
+    title: 'Admin Panel', count: 'saved', addSection: 'Add New Before / After',
+    beforeLabel: 'BEFORE', afterLabel: 'AFTER', changePhoto: 'Change',
+    namePlaceholder: 'Name (e.g. Emre K.)', resultPlaceholder: 'Result (e.g. -12kg / Muscle Gain)',
+    timePlaceholder: 'Duration (e.g. 12 Weeks)', quotePlaceholder: 'Quote (optional)',
+    addBtn: 'Add', savedSection: 'Saved Images', clearAll: 'Clear All', deleteAll: 'Delete All',
+  },
+  tr: {
+    title: 'Admin Panel', count: 'görsel kayıtlı', addSection: 'Yeni Before / After Ekle',
+    beforeLabel: 'ÖNCE', afterLabel: 'SONRA', changePhoto: 'Değiştir',
+    namePlaceholder: 'İsim (ör. Emre K.)', resultPlaceholder: 'Sonuç (ör. -12kg / Kas Kazanımı)',
+    timePlaceholder: 'Süre (ör. 12 Hafta)', quotePlaceholder: 'Yorum (opsiyonel)',
+    addBtn: 'Ekle', savedSection: 'Kayıtlı Görseller', clearAll: 'Tümünü Sil', deleteAll: 'Tümünü Sil',
+  },
+};
 
 export interface CustomTestimonial {
   id: string;
@@ -31,11 +54,13 @@ interface Props {
   onClose: () => void;
   testimonials: CustomTestimonial[];
   onChange: (items: CustomTestimonial[]) => void;
+  lang: Language;
 }
 
 const EMPTY_FORM = { name: '', result: '', timeframe: '', quote: '', imageBefore: '', imageAfter: '' };
 
-export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onChange }) => {
+export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onChange, lang }) => {
+  const u = UI[lang];
   const [form, setForm] = useState(EMPTY_FORM);
   const [previewBefore, setPreviewBefore] = useState('');
   const [previewAfter, setPreviewAfter] = useState('');
@@ -82,7 +107,7 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[500] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
@@ -91,8 +116,8 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b border-gray-800 sticky top-0 bg-gray-900 z-10">
           <div>
-            <h2 className="text-white font-black text-xl uppercase tracking-tight">Admin Panel</h2>
-            <p className="text-gray-500 text-xs mt-0.5">{testimonials.length} görsel kayıtlı</p>
+            <h2 className="text-white font-black text-xl uppercase tracking-tight">{u.title}</h2>
+            <p className="text-gray-500 text-xs mt-0.5">{testimonials.length} {u.count}</p>
           </div>
           <button onClick={onClose} className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-gray-500 transition-colors">
             <X size={18} />
@@ -104,7 +129,7 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
           <section>
             <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-5 flex items-center gap-2">
               <Plus size={16} className="text-brand" />
-              Yeni Before / After Ekle
+              {u.addSection}
             </h3>
 
             <div className="grid grid-cols-2 gap-4 mb-5">
@@ -118,12 +143,12 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
                 ) : (
                   <>
                     <Upload size={24} className="text-gray-600 group-hover:text-brand transition-colors" />
-                    <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">ÖNCE</span>
+                    <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">{u.beforeLabel}</span>
                   </>
                 )}
                 {previewBefore && (
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">Değiştir</span>
+                    <span className="text-white text-xs font-bold">{u.changePhoto}</span>
                   </div>
                 )}
                 <input ref={beforeRef} type="file" accept="image/*" className="hidden"
@@ -140,12 +165,12 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
                 ) : (
                   <>
                     <Upload size={24} className="text-gray-600 group-hover:text-brand transition-colors" />
-                    <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">SONRA</span>
+                    <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">{u.afterLabel}</span>
                   </>
                 )}
                 {previewAfter && (
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">Değiştir</span>
+                    <span className="text-white text-xs font-bold">{u.changePhoto}</span>
                   </div>
                 )}
                 <input ref={afterRef} type="file" accept="image/*" className="hidden"
@@ -157,14 +182,14 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
               <div className="grid grid-cols-2 gap-3">
                 <input
                   type="text"
-                  placeholder="İsim (ör. Emre K.)"
+                  placeholder={u.namePlaceholder}
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:border-brand"
                 />
                 <input
                   type="text"
-                  placeholder="Sonuç (ör. -12kg / Kas Kazanımı)"
+                  placeholder={u.resultPlaceholder}
                   value={form.result}
                   onChange={e => setForm(f => ({ ...f, result: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:border-brand"
@@ -173,14 +198,14 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
               <div className="grid grid-cols-2 gap-3">
                 <input
                   type="text"
-                  placeholder="Süre (ör. 12 Hafta)"
+                  placeholder={u.timePlaceholder}
                   value={form.timeframe}
                   onChange={e => setForm(f => ({ ...f, timeframe: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:border-brand"
                 />
                 <input
                   type="text"
-                  placeholder="Yorum (opsiyonel)"
+                  placeholder={u.quotePlaceholder}
                   value={form.quote}
                   onChange={e => setForm(f => ({ ...f, quote: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder:text-gray-600 text-sm focus:outline-none focus:border-brand"
@@ -193,7 +218,7 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
               disabled={!form.imageBefore || !form.imageAfter || !form.name}
               className="mt-4 w-full py-3 rounded-xl bg-brand text-black font-black text-sm uppercase tracking-widest hover:bg-brand-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              Ekle
+              {u.addBtn}
             </button>
           </section>
 
@@ -205,10 +230,10 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
                   <button onClick={() => setShowPreviews(p => !p)} className="text-gray-500 hover:text-white transition-colors">
                     {showPreviews ? <Eye size={16} /> : <EyeOff size={16} />}
                   </button>
-                  Kayıtlı Görseller
+                  {u.savedSection}
                 </h3>
                 <button onClick={handleClearAll} className="text-xs text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-colors">
-                  Tümünü Sil
+                  {u.clearAll}
                 </button>
               </div>
 
@@ -222,7 +247,7 @@ export const AdminPanel: React.FC<Props> = ({ isOpen, onClose, testimonials, onC
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="text-white font-bold text-sm truncate">{t.name || `Görsel ${i + 1}`}</div>
+                      <div className="text-white font-bold text-sm truncate">{t.name || `${lang === 'tr' ? 'Görsel' : 'Image'} ${i + 1}`}</div>
                       {t.result && <div className="text-brand text-xs font-bold mt-0.5 truncate">{t.result}</div>}
                       {t.timeframe && <div className="text-gray-500 text-xs mt-0.5">{t.timeframe}</div>}
                     </div>
