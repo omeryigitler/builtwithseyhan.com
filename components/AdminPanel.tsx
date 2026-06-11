@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Trash2, Upload, Eye, EyeOff, Instagram, Youtube, Twitter, Linkedin, Facebook, Mail, ExternalLink, CheckCircle, AlertCircle, Send } from 'lucide-react';
 import type { Language } from '../translations';
 
@@ -193,9 +193,16 @@ export const AdminPanel: React.FC<Props> = ({
   const beforeRef = useRef<HTMLInputElement>(null);
   const afterRef = useRef<HTMLInputElement>(null);
 
-  // Social state
+  // Social state — auto-saves to localStorage on every change
   const [socials, setSocials] = useState<SocialLink[]>(socialLinks);
-  const [socialSaved, setSocialSaved] = useState(false);
+  const isFirstSocialRender = useRef(true);
+  // (no manual save button — useEffect below persists every change)
+
+  useEffect(() => {
+    if (isFirstSocialRender.current) { isFirstSocialRender.current = false; return; }
+    saveSocialLinks(socials);
+    onSocialChange(socials);
+  }, [socials]);
 
   // Email state
   const [emailCfg, setEmailCfg] = useState<EmailJSConfig>(loadEmailJSConfig);
@@ -247,13 +254,6 @@ export const AdminPanel: React.FC<Props> = ({
 
   const setSocialUrl = (id: SocialPlatformId, url: string) =>
     setSocials(s => s.map(p => p.id === id ? { ...p, url } : p));
-
-  const handleSaveSocials = () => {
-    saveSocialLinks(socials);
-    onSocialChange(socials);
-    setSocialSaved(true);
-    setTimeout(() => setSocialSaved(false), 2000);
-  };
 
   // ── Email helpers ────────────────────────────────────────────────────────────
 
@@ -434,6 +434,10 @@ export const AdminPanel: React.FC<Props> = ({
               <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-2">{u.socialTitle}</h3>
               <p className="text-gray-500 text-xs mb-6">{u.socialHint}</p>
 
+              <p className="text-[11px] text-brand flex items-center gap-1 mb-4">
+                <CheckCircle size={12} /> {lang === 'tr' ? 'Değişiklikler otomatik kaydedilir' : 'Changes are saved automatically'}
+              </p>
+
               <div className="space-y-3">
                 {socials.map(social => {
                   const meta = PLATFORM_META[social.id];
@@ -471,12 +475,6 @@ export const AdminPanel: React.FC<Props> = ({
                 })}
               </div>
 
-              <button
-                onClick={handleSaveSocials}
-                className="mt-6 w-full py-3 rounded-xl bg-brand text-black font-black text-sm uppercase tracking-widest hover:bg-brand-hover transition-colors flex items-center justify-center gap-2"
-              >
-                {socialSaved ? <><CheckCircle size={16} /> {u.socialSaved}</> : u.socialSave}
-              </button>
             </section>
           )}
 
