@@ -4,16 +4,12 @@ import { LazyImage } from './LazyImage';
 interface CoachPhotoStackProps {
   photos: string[];
   name: string;
-  statNumber: string;
-  statLabel: string;
   badgeLabel: string;
 }
 
 export const CoachPhotoStack: React.FC<CoachPhotoStackProps> = ({
   photos,
   name,
-  statNumber,
-  statLabel,
   badgeLabel,
 }) => {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -35,12 +31,6 @@ export const CoachPhotoStack: React.FC<CoachPhotoStackProps> = ({
         {/* Bottom vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
-        {/* Floating stat badge */}
-        <div className="absolute bottom-6 left-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-3 text-white">
-          <div className="text-3xl font-black leading-none">{statNumber}</div>
-          <div className="text-xs font-bold uppercase tracking-widest text-white/70 mt-0.5">{statLabel}</div>
-        </div>
-
         {/* Top badge */}
         <div className="absolute top-6 left-6 flex items-center gap-2 bg-brand/90 backdrop-blur-sm rounded-full px-3 py-1.5">
           <span className="w-2 h-2 rounded-full bg-black animate-pulse" />
@@ -48,7 +38,7 @@ export const CoachPhotoStack: React.FC<CoachPhotoStackProps> = ({
         </div>
       </div>
 
-      {/* Accent photo stack — bottom-right corner */}
+      {/* Accent photo — bottom-right corner */}
       <div
         className="absolute -bottom-6 -right-6 w-[42%] aspect-[3/4] rounded-[1.5rem] overflow-hidden border-4 border-white dark:border-gray-950 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 cursor-pointer bg-gray-900 z-10"
         onClick={() => setActiveIdx((activeIdx + 1) % photos.length)}
@@ -61,12 +51,7 @@ export const CoachPhotoStack: React.FC<CoachPhotoStackProps> = ({
           loading="lazy"
           decoding="async"
         />
-        {/* Click hint */}
-        <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-          <span className="opacity-0 hover:opacity-100 text-white text-xs font-bold uppercase tracking-wider transition-opacity duration-300">
-            Next →
-          </span>
-        </div>
+        <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors duration-300" />
       </div>
 
       {/* Photo dots indicator */}
@@ -75,8 +60,8 @@ export const CoachPhotoStack: React.FC<CoachPhotoStackProps> = ({
           <button
             key={i}
             onClick={() => setActiveIdx(i)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === activeIdx ? 'bg-brand w-6' : 'bg-gray-300 dark:bg-gray-700'
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === activeIdx ? 'bg-brand w-6' : 'w-2 bg-gray-300 dark:bg-gray-700'
             }`}
             aria-label={`Photo ${i + 1}`}
           />

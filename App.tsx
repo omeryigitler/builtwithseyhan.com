@@ -26,10 +26,10 @@ const STATIC_SERVICE_ICONS = {
 // Icons for the Process Section
 const PROCESS_ICONS = [ClipboardCheck, Layout, TrendingUp];
 
-// Mustafa's real coaching photos (place files in /public/images/)
+// Mustafa's real coaching photos — mustafa-2 (back pose) leads as hero
 const COACH_PHOTOS = [
-  '/images/mustafa-1.jpg',
   '/images/mustafa-2.jpg',
+  '/images/mustafa-1.jpg',
   '/images/mustafa-3.jpg',
   '/images/mustafa-4.jpg',
   '/images/mustafa-5.jpg',
@@ -305,6 +305,9 @@ const App: React.FC = () => {
   const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.en.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [showAllTestimonials, setShowAllTestimonials] = useState(false);
+  const [showBeforeAfter, setShowBeforeAfter] = useState(true);
+  const logoClickCount = useRef(0);
+  const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Theme State - Default to false (Light Mode)
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -381,6 +384,19 @@ const App: React.FC = () => {
     }
   };
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    logoClickCount.current += 1;
+    if (logoClickTimer.current) clearTimeout(logoClickTimer.current);
+    if (logoClickCount.current >= 3) {
+      setShowBeforeAfter(prev => !prev);
+      logoClickCount.current = 0;
+    } else {
+      logoClickTimer.current = setTimeout(() => { logoClickCount.current = 0; }, 800);
+    }
+  };
+
   const openBooking = (title: string = t.ui.defaultServiceTitle) => {
     setSelectedServiceTitle(title);
     setBookingModalOpen(true);
@@ -414,9 +430,9 @@ const App: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <a 
+          <a
             href="#top"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+            onClick={handleLogoClick}
             className={`text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer transition-colors ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`}
           >
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-serif italic font-black transition-colors ${shouldUseDarkNav ? 'bg-white text-gray-900' : 'bg-gray-900 text-white dark:bg-white dark:text-black'}`}>M</div>
@@ -657,8 +673,6 @@ const App: React.FC = () => {
                 <CoachPhotoStack
                   photos={COACH_PHOTOS}
                   name="Mustafa Seyhan"
-                  statNumber="1000+"
-                  statLabel={t.about.stats}
                   badgeLabel={t.ui.coachBadge}
                 />
               </div>
@@ -757,7 +771,7 @@ const App: React.FC = () => {
 
             {/* Modern Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {(showAllTestimonials ? testimonials : testimonials.slice(0, 3)).map((tItem, index) => (
+                {(showBeforeAfter ? (showAllTestimonials ? testimonials : testimonials.slice(0, 3)) : []).map((tItem, index) => (
                     <Reveal key={index} delay={index * 0.1}>
                         <div className="group relative bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:border-brand dark:hover:border-brand transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(204,255,0,0.3)] hover:-translate-y-2 flex flex-col h-full transform-gpu [backface-visibility:hidden] [mask-image:radial-gradient(white,black)]">
                             
@@ -800,18 +814,6 @@ const App: React.FC = () => {
                 ))}
             </div>
 
-            {/* Toggle Button */}
-            <div className="flex justify-center mt-12">
-              <button
-                onClick={() => setShowAllTestimonials(prev => !prev)}
-                className="group flex items-center gap-3 px-8 py-4 rounded-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-bold text-sm uppercase tracking-widest hover:border-brand dark:hover:border-brand hover:text-brand transition-all duration-300 shadow-sm hover:shadow-[0_0_30px_rgba(204,255,0,0.15)]"
-              >
-                <span>{showAllTestimonials ? t.testimonials.showLess ?? 'Show Less' : t.testimonials.showAll ?? 'See All Transformations'}</span>
-                <span className={`w-6 h-6 rounded-full border-2 border-current flex items-center justify-center transition-transform duration-300 ${showAllTestimonials ? 'rotate-180' : ''}`}>
-                  <ChevronDown size={14} />
-                </span>
-              </button>
-            </div>
          </div>
       </section>
 
