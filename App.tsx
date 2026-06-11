@@ -743,21 +743,19 @@ const App: React.FC = () => {
                       })}
                   </div>
               </div>
-              <div className="text-center mt-12 space-y-2">
-                  <div className="text-xs text-gray-600 dark:text-gray-700">
-                      Designed &amp; Developed by{' '}
-                      <a
-                        href="https://omeryigitler.com"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-brand font-semibold hover:text-brand-hover transition-colors"
-                      >
-                        Ömer YİĞİTLER
-                      </a>
-                  </div>
-                  <div className="text-xs text-gray-700 dark:text-gray-800">
-                      © {new Date().getFullYear()} {t.footer.rights}
-                  </div>
+              <div className="text-center mt-6 text-xs text-gray-600 dark:text-gray-700">
+                  Designed &amp; Developed by{' '}
+                  <a
+                    href="https://omeryigitler.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-brand font-semibold hover:text-brand-hover transition-colors"
+                  >
+                    Ömer YİĞİTLER
+                  </a>
+              </div>
+              <div className="text-center mt-2 pb-2 text-xs text-gray-700 dark:text-gray-800">
+                  © {new Date().getFullYear()} {t.footer.rights}
               </div>
           </div>
       </footer>
