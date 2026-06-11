@@ -171,7 +171,7 @@ const ScrollProgress: React.FC = () => {
   );
 };
 
-// --- Internal Helper Component: Static Logo Strip ---
+// --- Internal Helper Component: Logo Strip ---
 const LogoMarquee = () => {
     const logos = [
         // Optimum Nutrition
@@ -188,25 +188,29 @@ const LogoMarquee = () => {
 
     return (
         <div className="relative overflow-hidden px-4 md:px-6">
-            <div className="no-scrollbar flex snap-x items-center gap-3 overflow-x-auto px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 md:hidden">
+            <div className="no-scrollbar flex snap-x touch-pan-x items-center gap-4 overflow-x-auto overscroll-x-contain px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 lg:hidden">
                 {logos.map((logo, i) => (
-                  <div key={i} className="flex h-12 min-w-[118px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
+                  <div key={i} className="flex h-12 min-w-[128px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
                     {logo}
                   </div>
                 ))}
             </div>
-            <div className="hidden overflow-hidden md:block">
-              <div className="flex w-max items-center gap-16 text-gray-400 transition-colors duration-300 dark:text-gray-600 md:animate-logo-marquee motion-reduce:animate-none hover:[animation-play-state:paused]">
-                {[...logos, ...logos].map((logo, i) => (
-                  <div key={i} className="flex h-12 min-w-[120px] shrink-0 items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
-                    {logo}
+            <div className="hidden overflow-hidden lg:block">
+              <div className="flex w-max text-gray-400 transition-colors duration-300 dark:text-gray-600 lg:animate-logo-marquee motion-reduce:animate-none hover:[animation-play-state:paused]">
+                {[0, 1].map((group) => (
+                  <div key={group} className="flex shrink-0 items-center gap-16 pr-16">
+                    {logos.map((logo, i) => (
+                      <div key={`${group}-${i}`} className="flex h-12 min-w-[120px] shrink-0 items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
+                        {logo}
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
             </div>
             {/* Fade Edges for Dark Mode */}
-            <div className="pointer-events-none absolute top-0 left-0 hidden w-24 h-full bg-gradient-to-r from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 md:block"></div>
-            <div className="pointer-events-none absolute top-0 right-0 hidden w-24 h-full bg-gradient-to-l from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 md:block"></div>
+            <div className="pointer-events-none absolute top-0 left-0 hidden w-24 h-full bg-gradient-to-r from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 lg:block"></div>
+            <div className="pointer-events-none absolute top-0 right-0 hidden w-24 h-full bg-gradient-to-l from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 lg:block"></div>
         </div>
     );
 };
@@ -282,13 +286,13 @@ const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
 };
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('tr'); 
+  const [lang, setLang] = useState<Language>('en');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isNavHovered, setIsNavHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-  const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.tr.ui.defaultServiceTitle);
+  const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.en.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   
   // Theme State - Default to false (Light Mode)
@@ -382,7 +386,7 @@ const App: React.FC = () => {
   const shouldUseDarkNav = isScrolled || isNavHovered;
 
   return (
-    <div id="top" className="min-h-screen overflow-x-clip bg-gray-50 dark:bg-gray-950 pb-28 font-sans text-gray-900 dark:text-white selection:bg-brand selection:text-black transition-colors duration-300 md:pb-0">
+    <div id="top" className="min-h-screen overflow-x-clip bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-white selection:bg-brand selection:text-black transition-colors duration-300">
       <CustomCursor />
       <ScrollProgress />
       
@@ -409,7 +413,7 @@ const App: React.FC = () => {
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-6">
             {NAV_LINKS.map((link) => (
               <a 
                 key={link.label} 
@@ -446,7 +450,7 @@ const App: React.FC = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className={`md:hidden ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`}
+            className={`lg:hidden ${shouldUseDarkNav ? 'text-white' : 'text-gray-900 dark:text-white'}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? t.ui.menu.close : t.ui.menu.open}
             aria-expanded={mobileMenuOpen}
@@ -458,7 +462,7 @@ const App: React.FC = () => {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-30 bg-gray-900 dark:bg-gray-950 pt-24 px-6 md:hidden animate-in slide-in-from-top-10 duration-200">
+        <div className="fixed inset-0 z-30 bg-gray-900 dark:bg-gray-950 pt-24 px-6 lg:hidden animate-in slide-in-from-top-10 duration-200">
           <div className="flex flex-col gap-6 text-xl font-medium text-white">
              {NAV_LINKS.map((link) => (
                <a 
@@ -486,17 +490,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* --- Sticky Mobile CTA Bar --- */}
-      {!mobileMenuOpen && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between gap-3 border-t border-gray-200 bg-white/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.1)] backdrop-blur dark:border-gray-800 dark:bg-gray-900/95 md:hidden animate-fade-in-up">
-           <div className="min-w-0 flex-1">
-               <span className="block truncate text-[11px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">{t.ui.mobileCta.badge}</span>
-               <span className="block truncate text-sm font-bold text-gray-900 dark:text-white">{t.ui.mobileCta.title}</span>
-           </div>
-           <Button size="sm" className="shrink-0 whitespace-nowrap" onClick={() => openBooking()}>{t.nav.bookBtn}</Button>
-        </div>
-      )}
-
       {/* --- Hero Section --- */}
       <section className="relative overflow-hidden bg-gray-50 px-5 pb-20 pt-36 transition-colors duration-500 dark:bg-gray-950 sm:px-6 sm:pt-40 md:pb-32 md:pt-48">
         
@@ -518,7 +511,7 @@ const App: React.FC = () => {
               <span className="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wide">{t.hero.badge}</span>
             </div>
             
-            <h1 className="mb-8 whitespace-pre-line text-[2rem] font-black uppercase leading-[1.05] tracking-tight text-gray-900 transition-colors duration-300 dark:text-white dark:drop-shadow-none min-[360px]:text-4xl sm:text-5xl md:text-8xl">
+            <h1 className="mb-8 whitespace-pre-line text-[2rem] font-black uppercase leading-[1.05] tracking-tight text-gray-900 transition-colors duration-300 dark:text-white dark:drop-shadow-none min-[360px]:text-4xl sm:text-5xl md:text-6xl lg:text-8xl">
               {t.hero.title}
             </h1>
             
@@ -920,7 +913,7 @@ const App: React.FC = () => {
       <NewsletterSection lang={lang} />
 
       {/* --- CTA / Footer --- */}
-      <footer className="bg-gray-900 dark:bg-gray-950 text-white pt-24 pb-12 px-6 border-t border-transparent dark:border-gray-900 rounded-t-[3rem] dark:rounded-none mt-12 mb-16 md:mb-0 relative overflow-hidden transition-all duration-300">
+      <footer className="bg-gray-900 dark:bg-gray-950 text-white pt-24 pb-12 px-6 border-t border-transparent dark:border-gray-900 rounded-t-[3rem] dark:rounded-none mt-12 relative overflow-hidden transition-all duration-300">
           {/* Footer Glow */}
           <div className="absolute top-0 left-1/2 hidden w-full h-full max-w-7xl -translate-x-1/2 pointer-events-none opacity-20 dark:opacity-10 md:block">
              <div className="absolute top-20 right-10 w-64 h-64 bg-brand rounded-full blur-[100px]"></div>
@@ -947,7 +940,7 @@ const App: React.FC = () => {
                     Mustafa Seyhan.
                   </div>
                   
-                  <div className="flex gap-8">
+                  <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:gap-8">
                       {t.footer.links.map((link, i) => (
                           <a 
                             key={i} 

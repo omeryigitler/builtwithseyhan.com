@@ -9,10 +9,6 @@ export const content = {
       coachBadge: "About The Coach",
       clientFallback: "Client",
       clientAlt: "Coaching client",
-      mobileCta: {
-        badge: "Limited spots",
-        title: "Elite Coaching"
-      },
       menu: {
         open: "Open menu",
         close: "Close menu"
@@ -282,10 +278,6 @@ export const content = {
       coachBadge: "Koç Hakkında",
       clientFallback: "Danışan",
       clientAlt: "Koçluk danışanı",
-      mobileCta: {
-        badge: "Sınırlı kontenjan",
-        title: "Koçluk Başvurusu"
-      },
       menu: {
         open: "Menüyü aç",
         close: "Menüyü kapat"

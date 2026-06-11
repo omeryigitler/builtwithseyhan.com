@@ -36,7 +36,7 @@ module.exports = {
         },
       },
       animation: {
-        'logo-marquee': 'logoMarquee 55s linear infinite',
+        'logo-marquee': 'logoMarquee 38s linear infinite',
         'fade-in': 'fadeIn 0.3s ease-out forwards',
         'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
         blob: 'blob 7s infinite',
