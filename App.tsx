@@ -11,6 +11,7 @@ import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
 import { LazyImage } from './components/LazyImage';
 import { CoachPhotoStack } from './components/CoachPhotoStack';
+import { AdminPanel, loadCustomTestimonials, CustomTestimonial } from './components/AdminPanel';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
 import { CONTACT_EMAIL, SOCIAL_URLS } from './siteConfig';
@@ -304,8 +305,8 @@ const App: React.FC = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.en.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
-  const [showBeforeAfter, setShowBeforeAfter] = useState(true);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [customTestimonials, setCustomTestimonials] = useState<CustomTestimonial[]>(loadCustomTestimonials);
   const logoClickCount = useRef(0);
   const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   
@@ -336,13 +337,89 @@ const App: React.FC = () => {
   ];
 
   // Construct Testimonials dynamically based on language
-  const testimonials: Testimonial[] = STATIC_TESTIMONIAL_DATA.map((item, index) => ({
+  const staticTestimonials: Testimonial[] = STATIC_TESTIMONIAL_DATA.map((item, index) => ({
     ...item,
     name: t.testimonials.items[index]?.name || t.ui.clientFallback,
     timeframe: t.testimonials.items[index]?.timeframe || "",
     result: t.testimonials.items[index]?.result || "",
     quote: t.testimonials.items[index]?.quote || ""
   }));
+
+  // Custom testimonials from admin override static ones
+  const testimonials: Testimonial[] = customTestimonials.length > 0
+    ? customTestimonials.map(c => ({
+        id: c.id,
+        name: c.name,
+        timeframe: c.timeframe,
+        result: c.result,
+        quote: c.quote,
+        imageBefore: c.imageBefore,
+        imageAfter: c.imageAfter,
+      }))
+    : staticTestimonials;
+
+  // Adaptive grid: 1→center, 2→side-by-side, 3→3col, 4→3+1center, 5→3+2center…
+  const renderTestimonialGrid = (items: Testimonial[]) => {
+    if (items.length === 0) return null;
+    const fullRowCount = Math.floor(items.length / 3);
+    const remainder = items.length % 3;
+    const fullItems = items.slice(0, fullRowCount * 3);
+    const remainderItems = items.slice(fullRowCount * 3);
+
+    return (
+      <div className="space-y-8">
+        {fullRowCount > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {fullItems.map((tItem, index) => renderTestimonialCard(tItem, index))}
+          </div>
+        )}
+        {remainder > 0 && (
+          <div className="flex flex-col md:flex-row justify-center gap-8">
+            {remainderItems.map((tItem, i) => (
+              <div key={tItem.id} className="w-full md:w-[calc(50%-1rem)] lg:w-[calc((100%-4rem)/3)]">
+                {renderTestimonialCard(tItem, fullRowCount * 3 + i)}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderTestimonialCard = (tItem: Testimonial, index: number) => (
+    <Reveal key={tItem.id ?? index} delay={Math.min(index, 2) * 0.1}>
+      <div className="group relative bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:border-brand dark:hover:border-brand transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(204,255,0,0.3)] hover:-translate-y-2 flex flex-col h-full transform-gpu [backface-visibility:hidden] [mask-image:radial-gradient(white,black)]">
+        <div className="relative h-[400px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+          <BeforeAfterSlider
+            beforeImage={tItem.imageBefore}
+            afterImage={tItem.imageAfter}
+            alt={tItem.name}
+            beforeLabel={t.testimonials.before}
+            afterLabel={t.testimonials.after}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <h3 className="text-white font-bold text-2xl mb-1">{tItem.name}</h3>
+            <div className="text-brand font-bold text-lg tracking-tight">{tItem.result}</div>
+          </div>
+        </div>
+        <div className="p-8 flex flex-col flex-1 relative transition-colors duration-500 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/50">
+          <div className="mb-6">
+            <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              <Calendar size={14} />
+              <span>{tItem.timeframe}</span>
+            </div>
+            {tItem.quote && (
+              <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed italic">
+                "{tItem.quote}"
+              </p>
+            )}
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+        </div>
+      </div>
+    </Reveal>
+  );
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -390,7 +467,7 @@ const App: React.FC = () => {
     logoClickCount.current += 1;
     if (logoClickTimer.current) clearTimeout(logoClickTimer.current);
     if (logoClickCount.current >= 3) {
-      setShowBeforeAfter(prev => !prev);
+      setAdminOpen(true);
       logoClickCount.current = 0;
     } else {
       logoClickTimer.current = setTimeout(() => { logoClickCount.current = 0; }, 800);
@@ -769,50 +846,7 @@ const App: React.FC = () => {
                </div>
             </Reveal>
 
-            {/* Modern Grid Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {(showBeforeAfter ? (showAllTestimonials ? testimonials : testimonials.slice(0, 3)) : []).map((tItem, index) => (
-                    <Reveal key={index} delay={index * 0.1}>
-                        <div className="group relative bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:border-brand dark:hover:border-brand transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(204,255,0,0.3)] hover:-translate-y-2 flex flex-col h-full transform-gpu [backface-visibility:hidden] [mask-image:radial-gradient(white,black)]">
-                            
-                            {/* Image Container */}
-                            <div className="relative h-[400px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                                <BeforeAfterSlider 
-                                    beforeImage={tItem.imageBefore} 
-                                    afterImage={tItem.imageAfter} 
-                                    alt={tItem.name}
-                                    beforeLabel={t.testimonials.before}
-                                    afterLabel={t.testimonials.after}
-                                />
-                                {/* Bottom Gradient for better text readability */}
-                                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
-                                
-                                {/* Floating Badge over Image */}
-                                <div className="absolute bottom-6 left-6 right-6">
-                                     <h3 className="text-white font-bold text-2xl mb-1">{tItem.name}</h3>
-                                     <div className="text-brand font-bold text-lg tracking-tight">{tItem.result}</div>
-                                </div>
-                            </div>
-
-                            {/* Details Container */}
-                            <div className="p-8 flex flex-col flex-1 relative transition-colors duration-500 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/50">
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                                        <Calendar size={14} />
-                                        <span>{tItem.timeframe}</span>
-                                    </div>
-                                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed italic">
-                                        "{tItem.quote}"
-                                    </p>
-                                </div>
-                                
-                                {/* Hover Effect: Subtle glow line at bottom */}
-                                <div className="absolute bottom-0 left-0 w-full h-1 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                            </div>
-                        </div>
-                    </Reveal>
-                ))}
-            </div>
+            {renderTestimonialGrid(testimonials)}
 
          </div>
       </section>
@@ -959,10 +993,17 @@ const App: React.FC = () => {
         lang={lang}
       />
 
-      <VideoModal 
-        isOpen={videoModalOpen} 
-        onClose={() => setVideoModalOpen(false)} 
+      <VideoModal
+        isOpen={videoModalOpen}
+        onClose={() => setVideoModalOpen(false)}
         closeLabel={t.ui.videoCloseLabel}
+      />
+
+      <AdminPanel
+        isOpen={adminOpen}
+        onClose={() => setAdminOpen(false)}
+        testimonials={customTestimonials}
+        onChange={setCustomTestimonials}
       />
     </div>
   );
