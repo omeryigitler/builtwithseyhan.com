@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Video, Zap, Star, Linkedin, Twitter, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, BookOpen, Check, Moon, Sun, HelpCircle, Play } from 'lucide-react';
+import { Menu, X, Video, Star, Linkedin, Twitter, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, Moon, Sun, HelpCircle } from 'lucide-react';
 import { Button } from './components/Button';
 import { BookingModal } from './components/BookingModal';
 import { VideoModal } from './components/VideoModal';
@@ -12,9 +12,13 @@ import { CustomCursor } from './components/CustomCursor';
 import { LazyImage } from './components/LazyImage';
 import { CoachPhotoStack } from './components/CoachPhotoStack';
 import { AdminPanel, loadCustomTestimonials, CustomTestimonial } from './components/AdminPanel';
+import { CountUp } from './components/CountUp';
+import { ScrollProgress } from './components/ScrollProgress';
+import { LogoMarquee } from './components/LogoMarquee';
+import { NewsletterSection } from './components/NewsletterSection';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
-import { CONTACT_EMAIL, SOCIAL_URLS } from './siteConfig';
+import { SOCIAL_URLS } from './siteConfig';
 
 // Static parts of data structure
 const STATIC_SERVICE_ICONS = {
@@ -36,11 +40,10 @@ const COACH_PHOTOS = [
   '/images/mustafa-5.jpg',
 ];
 
-// Stable Avatar URLs for the About Section
 const CLIENT_AVATARS = [
-  "https://randomuser.me/api/portraits/women/44.jpg",
-  "https://randomuser.me/api/portraits/men/32.jpg",
-  "https://randomuser.me/api/portraits/women/68.jpg"
+  '/images/avatar-1.jpg',
+  '/images/avatar-2.jpg',
+  '/images/avatar-3.jpg',
 ];
 
 const SOCIAL_LINKS = [
@@ -101,200 +104,6 @@ const STATIC_TESTIMONIAL_DATA = [
   }
 ];
 
-// --- Internal Helper Component: CountUp Animation ---
-const CountUp: React.FC<{ end: number; duration?: number; suffix?: string }> = ({ end, duration = 2000, suffix = '' }) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          let start = 0;
-          const increment = end / (duration / 16); // 60fps
-          
-          const timer = setInterval(() => {
-            start += increment;
-            if (start >= end) {
-              setCount(end);
-              clearInterval(timer);
-            } else {
-              setCount(Math.ceil(start));
-            }
-          }, 16);
-          
-          setHasAnimated(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [end, duration, hasAnimated]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
-};
-
-// --- Internal Helper Component: Scroll Progress Bar ---
-const ScrollProgress: React.FC = () => {
-  const progressRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (ticking) return;
-
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        const totalScroll = document.documentElement.scrollTop;
-        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scroll = windowHeight > 0 ? totalScroll / windowHeight : 0;
-
-        if (progressRef.current) {
-          progressRef.current.style.transform = `scaleX(${Math.min(Math.max(scroll, 0), 1)})`;
-        }
-
-        ticking = false;
-      });
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  return (
-    <div className="fixed top-0 left-0 w-full h-1.5 z-[60] bg-transparent pointer-events-none">
-      <div 
-        ref={progressRef}
-        className="h-full origin-left scale-x-0 bg-brand shadow-[0_2px_10px_rgba(0,0,0,0.2)] transition-transform duration-100 ease-out"
-      />
-    </div>
-  );
-};
-
-// --- Internal Helper Component: Logo Strip ---
-const LogoMarquee = () => {
-    const logos = [
-        // Optimum Nutrition
-        <svg key="1" height="45" viewBox="0 0 100 50" fill="currentColor"><path d="M10,25 Q10,5 30,5 Q50,5 50,25 Q50,45 30,45 Q10,45 10,25 Z M55,5 L70,45 L85,5 L100,45" stroke="currentColor" strokeWidth="4" fill="none" /><text x="30" y="32" fontFamily="Arial" fontWeight="bold" fontSize="16" textAnchor="middle" stroke="none" fill="currentColor">ON</text></svg>,
-        // Gatorade
-        <svg key="2" height="40" viewBox="0 0 150 40" fill="currentColor"><path d="M20,10 L30,5 L30,15 L40,15 L20,35 L20,20 L5,20 Z" /><text x="50" y="28" fontFamily="Arial" fontWeight="900" fontSize="24" fontStyle="italic" letterSpacing="-1">GATORADE</text></svg>,
-        // MyProtein
-        <svg key="3" height="24" viewBox="0 0 140 24" fill="currentColor"><text x="0" y="20" fontFamily="Arial" fontWeight="800" fontSize="20" letterSpacing="0.5">MYPROTEIN</text></svg>,
-        // MusclePharm
-        <svg key="4" height="40" viewBox="0 0 180 40" fill="currentColor"><rect x="0" y="5" width="8" height="30" /><rect x="12" y="5" width="8" height="30" /><rect x="24" y="5" width="8" height="30" /><text x="40" y="28" fontFamily="Arial" fontWeight="bold" fontSize="20">MUSCLE</text><text x="125" y="28" fontFamily="Arial" fontSize="20">PHARM</text></svg>,
-        // GNC
-        <svg key="5" height="30" viewBox="0 0 80 30" fill="currentColor"><text x="0" y="25" fontFamily="Arial" fontWeight="900" fontSize="28">GNC</text></svg>
-    ];
-
-    return (
-        <div className="relative overflow-hidden px-4 md:px-6">
-            <div className="no-scrollbar flex snap-x touch-pan-x items-center gap-4 overflow-x-auto overscroll-x-contain px-2 py-2 text-gray-400 transition-colors duration-300 dark:text-gray-600 lg:hidden">
-                {logos.map((logo, i) => (
-                  <div key={i} className="flex h-12 min-w-[128px] shrink-0 snap-center items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
-                    {logo}
-                  </div>
-                ))}
-            </div>
-            <div className="hidden overflow-hidden lg:block">
-              <div className="flex w-max text-gray-400 transition-colors duration-300 dark:text-gray-600 lg:animate-logo-marquee motion-reduce:animate-none hover:[animation-play-state:paused]">
-                {[0, 1].map((group) => (
-                  <div key={group} className="flex shrink-0 items-center gap-16 pr-16">
-                    {logos.map((logo, i) => (
-                      <div key={`${group}-${i}`} className="flex h-12 min-w-[120px] shrink-0 items-center justify-center grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:text-gray-900 dark:hover:text-white [&>svg]:max-h-full [&>svg]:max-w-full">
-                        {logo}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Fade Edges for Dark Mode */}
-            <div className="pointer-events-none absolute top-0 left-0 hidden w-24 h-full bg-gradient-to-r from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 lg:block"></div>
-            <div className="pointer-events-none absolute top-0 right-0 hidden w-24 h-full bg-gradient-to-l from-gray-50 dark:from-gray-950 to-transparent z-10 transition-colors duration-300 lg:block"></div>
-        </div>
-    );
-};
-
-// --- Internal Helper: Newsletter Section ---
-const NewsletterSection: React.FC<{ lang: Language }> = ({ lang }) => {
-    const t = content[lang].newsletter;
-    const [email, setEmail] = useState('');
-    const [status, setStatus] = useState<'idle' | 'success'>('idle');
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if(email) {
-            const subject = encodeURIComponent(t.subject);
-            const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
-            window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-            setStatus('success');
-            setTimeout(() => {
-                setStatus('idle');
-                setEmail('');
-            }, 3000);
-        }
-    };
-
-    return (
-        <section className="py-24 px-6 text-gray-900 dark:text-white transition-colors duration-300">
-            <Reveal>
-                <div className="max-w-7xl mx-auto bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-200 dark:border-gray-800 shadow-xl relative overflow-hidden p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 md:gap-24">
-                    {/* Visual Mockup of E-Book */}
-                    <div className="w-full md:w-1/2 flex justify-center md:justify-end relative z-10">
-                        {/* Book: Light Mode -> Black, Dark Mode -> White */}
-                        <div className="relative w-64 h-80 bg-gray-900 dark:bg-white rounded-r-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500 border-l-4 border-gray-700 dark:border-gray-200 flex flex-col justify-between p-6">
-                            <div className="text-white dark:text-gray-900">
-                                <p className="text-xs font-bold tracking-widest uppercase opacity-50 mb-2">Mustafa Seyhan</p>
-                                <h3 className="text-3xl font-black leading-tight italic whitespace-pre-line">{t.coverTitle}</h3>
-                            </div>
-                            <div className="mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center">
-                                    <BookOpen className="text-gray-900 dark:text-white" size={20} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="w-full md:w-1/2 text-center md:text-left relative z-10">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-6">
-                            <Zap size={14} className="fill-brand text-black dark:text-brand" />
-                            {t.badge}
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold dark:font-black text-gray-900 dark:text-white mb-4 uppercase tracking-tight">{t.title}</h2>
-                        <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto md:mx-0 font-medium">{t.subtitle}</p>
-                        
-                        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto md:mx-0">
-                            <input 
-                                type="email" 
-                                placeholder={t.placeholder} 
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                className="flex-1 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-700 focus:outline-none focus:border-gray-900 dark:focus:border-brand focus:ring-1 focus:ring-gray-900 dark:focus:ring-brand transition-all bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                            />
-                            <Button type="submit" disabled={status === 'success'} className="bg-gray-900 dark:bg-brand text-white dark:text-black hover:bg-black dark:hover:bg-brand-hover border-transparent shadow-none">
-                                {status === 'success' ? <Check size={20} /> : t.button}
-                            </Button>
-                        </form>
-                        {status === 'success' && <p className="text-green-600 dark:text-brand text-sm mt-3 font-medium animate-fade-in">{t.success}</p>}
-                    </div>
-                </div>
-            </Reveal>
-        </section>
-    );
-};
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>(() => {
