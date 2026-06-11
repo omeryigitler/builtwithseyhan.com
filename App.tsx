@@ -10,6 +10,7 @@ import { Reveal } from './components/Reveal';
 import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
 import { LazyImage } from './components/LazyImage';
+import { CoachPhotoStack } from './components/CoachPhotoStack';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
 import { CONTACT_EMAIL, SOCIAL_URLS } from './siteConfig';
@@ -24,6 +25,15 @@ const STATIC_SERVICE_ICONS = {
 
 // Icons for the Process Section
 const PROCESS_ICONS = [ClipboardCheck, Layout, TrendingUp];
+
+// Mustafa's real coaching photos (place files in /public/images/)
+const COACH_PHOTOS = [
+  '/images/mustafa-1.jpg',
+  '/images/mustafa-2.jpg',
+  '/images/mustafa-3.jpg',
+  '/images/mustafa-4.jpg',
+  '/images/mustafa-5.jpg',
+];
 
 // Stable Avatar URLs for the About Section
 const CLIENT_AVATARS = [
@@ -294,6 +304,7 @@ const App: React.FC = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.en.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
   
   // Theme State - Default to false (Light Mode)
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -641,67 +652,15 @@ const App: React.FC = () => {
             </div>
 
             <div className="flex flex-col md:flex-row gap-16 items-center relative z-10">
-              {/* Left Side: Cinematic Video Preview Card */}
-              <div className="w-full md:w-1/2 relative">
-                  <TiltCard rotationIntensity={5}>
-                    <button
-                        type="button"
-                        aria-label={t.ui.videoPreviewLabel}
-                        className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black group block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                        onClick={() => setVideoModalOpen(true)}
-                    >
-                        {/* 1. Image Base (Simulated Video Still) */}
-                        <div className="absolute inset-0">
-                           <LazyImage
-                              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop" 
-                              alt="Mustafa Seyhan Training" 
-                              className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out opacity-80 group-hover:opacity-100"
-                              loading="lazy"
-                              decoding="async"
-                           />
-                           {/* Grain Overlay */}
-                           <div className="absolute inset-0 bg-noise opacity-20 mix-blend-overlay pointer-events-none"></div>
-                           {/* Vignette */}
-                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none"></div>
-                        </div>
-
-                        {/* 2. Recording UI Overlay */}
-                        <div className="absolute top-6 left-6 flex items-center gap-2">
-                             <div className="w-3 h-3 bg-red-600 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.8)] group-hover:animate-pulse"></div>
-                             <span className="text-white/90 text-xs font-mono tracking-widest">{t.ui.recording}</span>
-                        </div>
-                        
-                        {/* Corner Markers */}
-                        <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-white/30 rounded-tr-lg"></div>
-                        <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-white/30 rounded-bl-lg"></div>
-
-                        {/* 3. Center Interaction (Play Button & Ring) */}
-                        <div className="absolute inset-0 flex items-center justify-center z-20">
-                            <div className="relative group-hover:scale-110 transition-transform duration-500">
-                                {/* Text Ring */}
-                                <div className="absolute inset-0 -m-8 w-32 h-32 opacity-0 transition-opacity duration-500 group-hover:animate-spin-slow group-hover:opacity-100">
-                                    <svg viewBox="0 0 100 100" width="100%" height="100%">
-                                        <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-                                        <text fill="white" fontSize="11" fontWeight="bold" letterSpacing="2px">
-                                            <textPath xlinkHref="#circlePath">{t.ui.videoRing}</textPath>
-                                        </text>
-                                    </svg>
-                                </div>
-                                {/* Play Button */}
-                                <div className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-colors duration-300 shadow-xl">
-                                    <Play size={24} className="fill-white text-white group-hover:fill-black group-hover:text-black ml-1 transition-colors" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 4. "Poster Style" Quote Overlay */}
-                        <div className="absolute bottom-10 left-0 right-0 px-8 text-center pointer-events-none z-10">
-                             <h3 className="font-strong text-4xl md:text-5xl text-white italic leading-none drop-shadow-lg tracking-wide opacity-90 group-hover:text-brand transition-colors duration-300">
-                                {t.about.quote}
-                             </h3>
-                        </div>
-                    </button>
-                  </TiltCard>
+              {/* Left Side: Coach Photo Stack */}
+              <div className="w-full md:w-1/2 relative pb-16 md:pb-12">
+                <CoachPhotoStack
+                  photos={COACH_PHOTOS}
+                  name="Mustafa Seyhan"
+                  statNumber="1000+"
+                  statLabel={t.about.stats}
+                  badgeLabel={t.ui.coachBadge}
+                />
               </div>
               
               {/* Right Side: Text Content */}
@@ -798,7 +757,7 @@ const App: React.FC = () => {
 
             {/* Modern Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {testimonials.map((tItem, index) => (
+                {(showAllTestimonials ? testimonials : testimonials.slice(0, 3)).map((tItem, index) => (
                     <Reveal key={index} delay={index * 0.1}>
                         <div className="group relative bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer hover:border-brand dark:hover:border-brand transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(204,255,0,0.3)] hover:-translate-y-2 flex flex-col h-full transform-gpu [backface-visibility:hidden] [mask-image:radial-gradient(white,black)]">
                             
@@ -839,6 +798,19 @@ const App: React.FC = () => {
                         </div>
                     </Reveal>
                 ))}
+            </div>
+
+            {/* Toggle Button */}
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={() => setShowAllTestimonials(prev => !prev)}
+                className="group flex items-center gap-3 px-8 py-4 rounded-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-bold text-sm uppercase tracking-widest hover:border-brand dark:hover:border-brand hover:text-brand transition-all duration-300 shadow-sm hover:shadow-[0_0_30px_rgba(204,255,0,0.15)]"
+              >
+                <span>{showAllTestimonials ? t.testimonials.showLess ?? 'Show Less' : t.testimonials.showAll ?? 'See All Transformations'}</span>
+                <span className={`w-6 h-6 rounded-full border-2 border-current flex items-center justify-center transition-transform duration-300 ${showAllTestimonials ? 'rotate-180' : ''}`}>
+                  <ChevronDown size={14} />
+                </span>
+              </button>
             </div>
          </div>
       </section>
