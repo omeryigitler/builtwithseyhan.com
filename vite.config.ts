@@ -27,6 +27,12 @@ export default defineConfig({
         manualChunks: {
           react: ['react', 'react-dom'],
           icons: ['lucide-react'],
+          firebase: [
+            'firebase/app',
+            'firebase/firestore',
+            'firebase/storage',
+            'firebase/auth',
+          ],
         },
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',

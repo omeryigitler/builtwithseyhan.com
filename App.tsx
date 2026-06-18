@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Video, Star, Instagram, Youtube, Linkedin, Twitter, Facebook, Mail, Languages, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, Moon, Sun, HelpCircle } from 'lucide-react';
+import { Menu, X, Video, Star, Instagram, Youtube, Linkedin, Twitter, Facebook, Mail, Dumbbell, Activity, Trophy, Calendar, ClipboardCheck, Layout, TrendingUp, ChevronDown, ArrowRight, Moon, Sun, HelpCircle } from 'lucide-react';
 import { Button } from './components/Button';
 import { BookingModal } from './components/BookingModal';
 import { VideoModal } from './components/VideoModal';
@@ -11,11 +11,19 @@ import { TiltCard } from './components/TiltCard';
 import { CustomCursor } from './components/CustomCursor';
 import { LazyImage } from './components/LazyImage';
 import { CoachPhotoStack } from './components/CoachPhotoStack';
-import { AdminPanel, loadCustomTestimonials, loadSocialLinks, CustomTestimonial, SocialLink } from './components/AdminPanel';
+import { AdminPanel } from './components/AdminPanel';
+import {
+  CustomTestimonial,
+  SiteSettings,
+  DEFAULT_SETTINGS,
+  subscribeTestimonials,
+  subscribeSettings,
+} from './lib/content';
 import { CountUp } from './components/CountUp';
 import { ScrollProgress } from './components/ScrollProgress';
 import { LogoMarquee } from './components/LogoMarquee';
 import { NewsletterSection } from './components/NewsletterSection';
+import { GymLeadSection } from './components/GymLeadSection';
 import { WhatsAppFloat } from './components/WhatsAppFloat';
 import { Service, Testimonial } from './types';
 import { content, Language } from './translations';
@@ -49,25 +57,18 @@ const CLIENT_AVATARS = [
 
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>(() => {
-    try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const bl = navigator.language?.toLowerCase() ?? '';
-      return (tz === 'Europe/Istanbul' || bl.startsWith('tr')) ? 'tr' : 'en';
-    } catch {
-      return 'en';
-    }
-  });
+  const lang: Language = 'tr';
   const [isScrolled, setIsScrolled] = useState(false);
   const [isNavHovered, setIsNavHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-  const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.en.ui.defaultServiceTitle);
+  const [selectedServiceTitle, setSelectedServiceTitle] = useState(content.tr.ui.defaultServiceTitle);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [customTestimonials, setCustomTestimonials] = useState<CustomTestimonial[]>(loadCustomTestimonials);
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(loadSocialLinks);
+  const [customTestimonials, setCustomTestimonials] = useState<CustomTestimonial[]>([]);
+  const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+  const socialLinks = settings.socials;
   const logoClickCount = useRef(0);
   const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   
@@ -195,6 +196,17 @@ const App: React.FC = () => {
     document.documentElement.lang = lang;
   }, [lang]);
 
+  // Live content from Firebase (testimonials + settings). Falls back to empty
+  // when Firebase isn't configured, so the site still renders.
+  useEffect(() => {
+    const unsubTestimonials = subscribeTestimonials(setCustomTestimonials);
+    const unsubSettings = subscribeSettings(setSettings);
+    return () => {
+      unsubTestimonials();
+      unsubSettings();
+    };
+  }, []);
+
   // Safe smooth scrolling function
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
     e.preventDefault(); 
@@ -222,10 +234,6 @@ const App: React.FC = () => {
   const openBooking = (title: string = t.ui.defaultServiceTitle) => {
     setSelectedServiceTitle(title);
     setBookingModalOpen(true);
-  };
-
-  const toggleLanguage = () => {
-    setLang(prev => prev === 'en' ? 'tr' : 'en');
   };
 
   const toggleFaq = (index: number) => {
@@ -284,15 +292,6 @@ const App: React.FC = () => {
                     {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
 
-                <button 
-                onClick={toggleLanguage}
-                aria-label={t.ui.language.label}
-                className={`flex items-center gap-1 text-sm font-medium transition-colors px-3 py-1.5 rounded-full cursor-pointer ${shouldUseDarkNav ? 'text-gray-400 hover:bg-white/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10'}`}
-                >
-                <Languages size={16} />
-                <span className="uppercase">{lang}</span>
-                </button>
-
                 <Button size="sm" variant="primary" onClick={() => openBooking()}>{t.nav.bookBtn}</Button>
             </div>
           </div>
@@ -324,13 +323,10 @@ const App: React.FC = () => {
                </a>
              ))}
              
-             <div className="flex items-center justify-between py-4 border-y border-gray-800">
+             <div className="flex items-center py-4 border-y border-gray-800">
                  <button onClick={() => setIsDarkMode(!isDarkMode)} className="flex items-center gap-2 text-gray-400">
-                     {isDarkMode ? <Sun size={20} /> : <Moon size={20} />} 
+                     {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                      {isDarkMode ? t.ui.theme.light : t.ui.theme.dark}
-                 </button>
-                 <button onClick={() => { toggleLanguage(); setMobileMenuOpen(false); }} className="flex items-center gap-2 text-gray-400">
-                    <Languages size={20} /> {lang === 'en' ? t.ui.language.toTurkish : t.ui.language.toEnglish}
                  </button>
              </div>
              
@@ -597,10 +593,10 @@ const App: React.FC = () => {
                   <Star size={28} className="text-gray-300 dark:text-gray-700" />
                 </div>
                 <p className="text-gray-400 dark:text-gray-600 text-sm font-medium">
-                  {lang === 'tr' ? 'Henüz dönüşüm eklenmedi.' : 'No transformations added yet.'}
+                  Henüz dönüşüm eklenmedi.
                 </p>
                 <p className="text-gray-300 dark:text-gray-700 text-xs mt-1">
-                  {lang === 'tr' ? 'Admin panelinden gerçek müşteri fotoğrafları yükle.' : 'Upload real client photos from the admin panel.'}
+                  Admin panelinden gerçek müşteri fotoğrafları yükle.
                 </p>
               </div>
             )}
@@ -673,6 +669,9 @@ const App: React.FC = () => {
               </div>
           </Reveal>
       </section>
+
+      {/* --- Malta gym lead capture (referral) --- */}
+      <GymLeadSection lang={lang} gym={settings.gym} />
 
       {/* --- NEW NEWSLETTER SECTION (Moved Up in Code but rendered here) --- */}
       <NewsletterSection lang={lang} />
@@ -782,9 +781,7 @@ const App: React.FC = () => {
         isOpen={adminOpen}
         onClose={() => setAdminOpen(false)}
         testimonials={customTestimonials}
-        onChange={setCustomTestimonials}
-        socialLinks={socialLinks}
-        onSocialChange={setSocialLinks}
+        settings={settings}
         lang={lang}
       />
     </div>

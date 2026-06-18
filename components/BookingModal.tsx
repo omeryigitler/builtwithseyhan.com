@@ -3,12 +3,12 @@ import { X, Clock, ArrowRight, CheckCircle2, Globe, ChevronLeft, ChevronRight } 
 import { Button } from './Button';
 import { content, Language } from '../translations';
 import {
-  CONTACT_EMAIL,
   HAS_SCHEDULING_LINK,
   SCHEDULING_PROVIDER,
   SCHEDULING_URL,
   USE_CALENDLY_WIDGET,
 } from '../siteConfig';
+import { submitLead, mailtoFallback } from '../lib/lead';
 
 declare global {
   interface Window {
@@ -191,26 +191,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, ser
     setContactForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleRequestSubmit = (event: React.FormEvent) => {
+  const handleRequestSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const emailLines = [
-      `${t.email.service}: ${resolvedServiceTitle}`,
-      `${t.email.date}: ${formattedSelectedDate}`,
-      `${t.email.time}: ${selectedTime || '-'}`,
-      '',
-      `${t.email.name}: ${contactForm.name}`,
-      `${t.email.email}: ${contactForm.email}`,
-      `${t.email.phone}: ${contactForm.phone}`,
-      '',
-      `${t.email.goal}:`,
-      contactForm.goal,
-    ];
+    const payload = {
+      type: 'coaching' as const,
+      name: contactForm.name,
+      email: contactForm.email,
+      phone: contactForm.phone,
+      goal: contactForm.goal,
+      service: resolvedServiceTitle,
+      date: formattedSelectedDate,
+      time: selectedTime || '',
+      lang,
+    };
 
-    const subject = encodeURIComponent(`${t.email.subject} - ${resolvedServiceTitle}`);
-    const body = encodeURIComponent(emailLines.join('\n'));
-
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    const ok = await submitLead(payload);
+    if (!ok) mailtoFallback(payload);
     setStep(3);
   };
 

@@ -3,8 +3,7 @@ import { Zap, BookOpen, Check, Loader } from 'lucide-react';
 import { Button } from './Button';
 import { Reveal } from './Reveal';
 import { content, Language } from '../translations';
-import { CONTACT_EMAIL } from '../siteConfig';
-import { loadEmailJSConfig } from './AdminPanel';
+import { submitLead, mailtoFallback } from '../lib/lead';
 
 interface Props {
   lang: Language;
@@ -19,35 +18,14 @@ export const NewsletterSection: React.FC<Props> = ({ lang }) => {
     e.preventDefault();
     if (!email) return;
 
-    const cfg = loadEmailJSConfig();
-    const hasEmailJS = !!(cfg.serviceId && cfg.templateId && cfg.publicKey);
-
-    if (hasEmailJS) {
-      setStatus('loading');
-      try {
-        const emailjs = await import('@emailjs/browser');
-        await emailjs.send(cfg.serviceId, cfg.templateId, {
-          user_email: email,
-          ebook_url: cfg.ebookUrl || '',
-        }, cfg.publicKey);
-        setStatus('success');
-        setTimeout(() => { setStatus('idle'); setEmail(''); }, 4000);
-      } catch {
-        // Fallback to mailto on failure
-        const subject = encodeURIComponent(t.subject);
-        const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
-        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-        setStatus('success');
-        setTimeout(() => { setStatus('idle'); setEmail(''); }, 3000);
-      }
-    } else {
-      // No EmailJS configured — use mailto fallback
-      const subject = encodeURIComponent(t.subject);
-      const body = encodeURIComponent(`${t.emailLabel}: ${email}`);
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-      setStatus('success');
-      setTimeout(() => { setStatus('idle'); setEmail(''); }, 3000);
-    }
+    setStatus('loading');
+    const ok = await submitLead({ type: 'newsletter', email, lang });
+    if (!ok) mailtoFallback({ type: 'newsletter', email });
+    setStatus('success');
+    setTimeout(() => {
+      setStatus('idle');
+      setEmail('');
+    }, 4000);
   };
 
   return (
