@@ -21,7 +21,7 @@ const App: React.FC = () => {
 
         <div className="service-line">
           <i />
-          <p>PERSONAL TRAINING &amp; COACHING</p>
+          <p>Fitness <span aria-hidden="true">•</span> Health <span aria-hidden="true">•</span> LifeStyle</p>
           <i />
         </div>
 
