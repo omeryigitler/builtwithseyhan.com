@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const App: React.FC = () => {
-  const [creditHover, setCreditHover] = useState(false);
-
   return (
     <main className="coming-page" aria-label="Built With Seyhan coming soon page">
       <section className="coming-card">
         <img
           className="bws-logo"
-          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=5"
+          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=6"
           alt="Built With Seyhan BWS logo"
           draggable="false"
-          style={{ width: 'clamp(210px, 25vw, 370px)' }}
         />
 
         <h1 className="brand-title">
@@ -30,17 +27,7 @@ const App: React.FC = () => {
           <span />
         </div>
 
-        <h2
-          className="coming-title"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 'clamp(30px, 5vw, 88px)',
-            whiteSpace: 'nowrap',
-            textIndent: 0,
-          }}
-        >
+        <h2 className="coming-title">
           <span>COMING</span>
           <span>SOON</span>
         </h2>
@@ -52,17 +39,14 @@ const App: React.FC = () => {
           <i />
           <p>
             Designed &amp; Developed by{' '}
-            <strong
-              onMouseEnter={() => setCreditHover(true)}
-              onMouseLeave={() => setCreditHover(false)}
-              style={{
-                color: creditHover ? '#f1d890' : '#cdaa5a',
-                textShadow: creditHover ? '0 0 10px rgba(205, 170, 90, 0.42)' : 'none',
-                transition: 'color 180ms ease, text-shadow 180ms ease',
-              }}
+            <a
+              href="https://omeryigitler.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visit omeryigitler.com"
             >
               Ömer YİĞİTLER
-            </strong>
+            </a>
           </p>
           <i />
           <span className="dot" />
