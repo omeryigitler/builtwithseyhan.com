@@ -6,7 +6,7 @@ const App: React.FC = () => {
       <section className="coming-card">
         <img
           className="bws-logo"
-          src="/bws-logo-inline.svg?v=1"
+          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=4"
           alt="Built With Seyhan BWS logo"
           draggable="false"
         />
@@ -27,16 +27,17 @@ const App: React.FC = () => {
           <span />
         </div>
 
-        <h2 className="coming-title">COMING SOON</h2>
+        <h2 className="coming-title">
+          <span>COMING</span>
+          <span>SOON</span>
+        </h2>
 
         <div className="light-line" aria-hidden="true" />
 
         <footer className="credit-line">
           <span className="dot" />
           <i />
-          <p>
-            Designed &amp; Developed by <strong>Ömer YİĞİTLER</strong>
-          </p>
+          <p>Designed &amp; Developed by <strong>Ömer YİĞİTLER</strong></p>
           <i />
           <span className="dot" />
         </footer>
