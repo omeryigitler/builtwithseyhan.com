@@ -120,10 +120,15 @@ body {
 .service-line p {
   margin: 0;
   color: #cdaa5a;
-  font-size: clamp(12px, 1.15vw, 18px);
+  font-size: clamp(11px, 1.05vw, 18px);
   font-weight: 700;
-  letter-spacing: clamp(0.22em, 0.8vw, 0.42em);
+  letter-spacing: clamp(0.1em, 0.55vw, 0.28em);
   white-space: nowrap;
+}
+
+.service-line p span {
+  margin: 0 0.45em;
+  opacity: 0.9;
 }
 
 .mark-line {
@@ -244,15 +249,20 @@ body {
   }
 
   .service-line {
-    width: 86vw;
-    gap: 10px;
+    width: 92vw;
+    gap: 8px;
   }
 
   .service-line p {
-    white-space: normal;
+    white-space: nowrap;
     text-align: center;
-    line-height: 1.45;
-    letter-spacing: 0.22em;
+    line-height: 1.2;
+    font-size: clamp(10px, 2.75vw, 13px);
+    letter-spacing: 0.075em;
+  }
+
+  .service-line p span {
+    margin: 0 0.28em;
   }
 
   .coming-title {
