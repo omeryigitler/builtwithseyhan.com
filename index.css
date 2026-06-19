@@ -234,10 +234,13 @@ body {
   }
 
   .brand-title {
-    gap: 12px;
-    font-size: clamp(24px, 8vw, 38px);
-    letter-spacing: 0.12em;
-    flex-wrap: wrap;
+    width: 96vw;
+    max-width: 96vw;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: clamp(7px, 2.1vw, 12px);
+    font-size: clamp(17px, 5.5vw, 30px);
+    letter-spacing: 0.055em;
   }
 
   .service-line {
