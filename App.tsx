@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const App: React.FC = () => {
+  const [creditHover, setCreditHover] = useState(false);
+
   return (
     <main className="coming-page" aria-label="Built With Seyhan coming soon page">
       <section className="coming-card">
@@ -48,7 +50,20 @@ const App: React.FC = () => {
         <footer className="credit-line">
           <span className="dot" />
           <i />
-          <p>Designed &amp; Developed by <strong>Ömer YİĞİTLER</strong></p>
+          <p>
+            Designed &amp; Developed by{' '}
+            <strong
+              onMouseEnter={() => setCreditHover(true)}
+              onMouseLeave={() => setCreditHover(false)}
+              style={{
+                color: creditHover ? '#f1d890' : '#cdaa5a',
+                textShadow: creditHover ? '0 0 10px rgba(205, 170, 90, 0.42)' : 'none',
+                transition: 'color 180ms ease, text-shadow 180ms ease',
+              }}
+            >
+              Ömer YİĞİTLER
+            </strong>
+          </p>
           <i />
           <span className="dot" />
         </footer>
