@@ -6,9 +6,10 @@ const App: React.FC = () => {
       <section className="coming-card">
         <img
           className="bws-logo"
-          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=4"
+          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=5"
           alt="Built With Seyhan BWS logo"
           draggable="false"
+          style={{ width: 'clamp(210px, 25vw, 370px)' }}
         />
 
         <h1 className="brand-title">
@@ -27,7 +28,17 @@ const App: React.FC = () => {
           <span />
         </div>
 
-        <h2 className="coming-title">
+        <h2
+          className="coming-title"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'clamp(30px, 5vw, 88px)',
+            whiteSpace: 'nowrap',
+            textIndent: 0,
+          }}
+        >
           <span>COMING</span>
           <span>SOON</span>
         </h2>
