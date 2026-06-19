@@ -28,17 +28,18 @@ const App: React.FC = () => {
         .bws-coming-soon {
           position: relative;
           min-height: 100vh;
+          min-height: 100svh;
           overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: clamp(24px, 4vw, 72px);
+          padding: clamp(20px, 3.6vw, 64px);
           color: var(--bws-silver);
           font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           background:
-            radial-gradient(circle at 50% 56%, rgba(212, 150, 48, 0.14) 0, rgba(212, 150, 48, 0.05) 18%, transparent 42%),
-            radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0.025) 24%, transparent 58%),
-            radial-gradient(circle at 50% 120%, rgba(210, 138, 34, 0.16), transparent 44%),
+            radial-gradient(circle at 50% 53%, rgba(211, 141, 35, 0.18) 0, rgba(211, 141, 35, 0.07) 24%, transparent 47%),
+            radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.06) 0, rgba(255, 255, 255, 0.02) 27%, transparent 58%),
+            radial-gradient(circle at 50% 118%, rgba(210, 138, 34, 0.13), transparent 43%),
             linear-gradient(135deg, #000 0%, #11100e 48%, #020202 100%);
         }
 
@@ -47,7 +48,7 @@ const App: React.FC = () => {
           position: absolute;
           inset: 0;
           pointer-events: none;
-          opacity: 0.42;
+          opacity: 0.38;
           background-image:
             linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.014) 1px, transparent 1px);
@@ -60,14 +61,14 @@ const App: React.FC = () => {
           position: absolute;
           inset: -12%;
           pointer-events: none;
-          background: radial-gradient(circle, transparent 28%, rgba(0,0,0,0.42) 66%, rgba(0,0,0,0.92) 100%);
+          background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.45) 68%, rgba(0,0,0,0.94) 100%);
         }
 
         .bws-shell {
           position: relative;
           z-index: 1;
-          width: min(100%, 1040px);
-          min-height: min(760px, calc(100vh - 48px));
+          width: min(100%, 1080px);
+          min-height: min(800px, calc(100vh - 40px));
           display: grid;
           grid-template-rows: 1fr auto 1fr;
           align-items: center;
@@ -80,13 +81,13 @@ const App: React.FC = () => {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          transform: translateY(18px);
+          transform: translateY(10px);
         }
 
         .bws-logo-wrap {
-          width: min(360px, 70vw);
-          margin-bottom: clamp(18px, 2.4vw, 32px);
-          filter: drop-shadow(0 22px 18px rgba(0, 0, 0, 0.58));
+          width: min(430px, 70vw);
+          margin-bottom: clamp(18px, 2.2vw, 30px);
+          filter: drop-shadow(0 24px 18px rgba(0, 0, 0, 0.66));
         }
 
         .bws-logo {
@@ -97,29 +98,43 @@ const App: React.FC = () => {
 
         .bws-mark-text {
           font-family: "Bebas Neue", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-          font-size: 126px;
+          font-size: 142px;
           font-weight: 900;
-          letter-spacing: -8px;
+          letter-spacing: -7px;
           fill: url(#bwsGold);
-          stroke: rgba(255, 228, 158, 0.58);
-          stroke-width: 1.2;
+          stroke: rgba(255, 230, 165, 0.62);
+          stroke-width: 1;
           paint-order: stroke fill;
         }
 
-        .bws-mark-cut {
-          stroke: rgba(57, 31, 5, 0.72);
-          stroke-width: 6;
+        .bws-mark-edge {
+          fill: none;
+          stroke: url(#bwsGold);
+          stroke-width: 9;
+          stroke-linejoin: miter;
           stroke-linecap: square;
+          opacity: 0.92;
+          filter: drop-shadow(0 8px 9px rgba(0,0,0,0.78));
+        }
+
+        .bws-mark-dark-cut {
+          fill: none;
+          stroke: rgba(42, 24, 7, 0.74);
+          stroke-width: 4;
+          stroke-linejoin: miter;
+          stroke-linecap: square;
+          opacity: 0.8;
         }
 
         .bws-brand {
           margin: 0;
           color: #dedbd7;
-          font-size: clamp(27px, 3.05vw, 44px);
+          font-size: clamp(28px, 3.15vw, 46px);
           font-weight: 800;
-          letter-spacing: clamp(10px, 1.25vw, 20px);
+          letter-spacing: clamp(9px, 1.22vw, 20px);
           line-height: 1;
           text-transform: uppercase;
+          white-space: nowrap;
           text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255,255,255,0.28);
         }
 
@@ -137,13 +152,15 @@ const App: React.FC = () => {
           align-items: center;
           justify-content: center;
           gap: 18px;
-          width: min(560px, 82vw);
+          width: min(720px, 90vw);
           margin-top: 18px;
           color: #e8b65b;
-          font-size: clamp(12px, 1.25vw, 17px);
+          font-size: clamp(11px, 1vw, 15px);
           font-weight: 500;
-          letter-spacing: clamp(5px, 0.55vw, 9px);
+          letter-spacing: clamp(4px, 0.48vw, 7px);
+          line-height: 1;
           text-transform: uppercase;
+          white-space: nowrap;
         }
 
         .bws-subtitle::before,
@@ -151,23 +168,24 @@ const App: React.FC = () => {
           content: "";
           height: 1px;
           flex: 1;
-          max-width: 84px;
-          background: linear-gradient(90deg, transparent, rgba(226, 157, 55, 0.9));
+          max-width: 80px;
+          background: linear-gradient(90deg, transparent, rgba(226, 157, 55, 0.95));
         }
 
         .bws-subtitle::after {
-          background: linear-gradient(90deg, rgba(226, 157, 55, 0.9), transparent);
+          background: linear-gradient(90deg, rgba(226, 157, 55, 0.95), transparent);
         }
 
         .bws-coming-text {
           position: relative;
-          margin: clamp(68px, 8.6vw, 100px) 0 0;
+          margin: clamp(70px, 8vw, 96px) 0 0;
           color: #e6e2dd;
-          font-size: clamp(42px, 6.1vw, 78px);
+          font-size: clamp(42px, 6vw, 78px);
           font-weight: 300;
           letter-spacing: clamp(18px, 2.8vw, 40px);
           line-height: 1;
           text-transform: uppercase;
+          white-space: nowrap;
           text-shadow: 0 7px 0 rgba(0,0,0,0.35), 0 0 32px rgba(255,255,255,0.1);
         }
 
@@ -241,6 +259,19 @@ const App: React.FC = () => {
           letter-spacing: 4px;
         }
 
+        @media (max-width: 840px) {
+          .bws-brand {
+            white-space: normal;
+            letter-spacing: 7px;
+          }
+
+          .bws-subtitle {
+            width: min(620px, 92vw);
+            letter-spacing: 3.3px;
+            font-size: 11px;
+          }
+        }
+
         @media (max-width: 720px) {
           .bws-shell {
             min-height: calc(100vh - 48px);
@@ -250,13 +281,14 @@ const App: React.FC = () => {
             transform: translateY(8px);
           }
 
-          .bws-brand {
-            letter-spacing: 7px;
+          .bws-logo-wrap {
+            width: min(330px, 78vw);
           }
 
           .bws-subtitle {
             gap: 11px;
-            letter-spacing: 3.6px;
+            white-space: normal;
+            line-height: 1.45;
           }
 
           .bws-coming-text {
@@ -283,25 +315,27 @@ const App: React.FC = () => {
 
         <div className="bws-center">
           <div className="bws-logo-wrap" aria-hidden="true">
-            <svg className="bws-logo" viewBox="0 0 520 210" role="img">
+            <svg className="bws-logo" viewBox="0 0 440 220" role="img">
               <defs>
                 <linearGradient id="bwsGold" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#fff0b7" />
-                  <stop offset="36%" stopColor="#d89731" />
-                  <stop offset="68%" stopColor="#7b4716" />
+                  <stop offset="34%" stopColor="#d89731" />
+                  <stop offset="66%" stopColor="#7b4716" />
                   <stop offset="100%" stopColor="#f4c66d" />
                 </linearGradient>
-                <filter id="bwsDepth" x="-20%" y="-20%" width="140%" height="150%">
-                  <feDropShadow dx="0" dy="8" stdDeviation="4" floodColor="#000" floodOpacity="0.78" />
-                  <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="#f2bd5a" floodOpacity="0.5" />
+                <filter id="bwsDepth" x="-25%" y="-25%" width="150%" height="160%">
+                  <feDropShadow dx="0" dy="9" stdDeviation="4" floodColor="#000" floodOpacity="0.72" />
+                  <feDropShadow dx="0" dy="0" stdDeviation="1" floodColor="#f2bd5a" floodOpacity="0.52" />
                 </filter>
               </defs>
               <g filter="url(#bwsDepth)">
-                <text className="bws-mark-text" x="50%" y="138" textAnchor="middle">BWS</text>
-                <path className="bws-mark-cut" d="M174 58 L106 104 H171 L104 158" fill="none" opacity="0.55" />
-                <path className="bws-mark-cut" d="M346 58 L414 104 H349 L416 158" fill="none" opacity="0.55" />
-                <path d="M246 32 V173" stroke="url(#bwsGold)" strokeWidth="13" strokeLinecap="square" />
-                <path d="M274 32 V173" stroke="url(#bwsGold)" strokeWidth="13" strokeLinecap="square" />
+                <path className="bws-mark-edge" d="M108 78 L48 124 H96 L48 165" />
+                <path className="bws-mark-edge" d="M332 78 L392 124 H344 L392 165" />
+                <path className="bws-mark-dark-cut" d="M111 102 L75 128 H111 L74 154" />
+                <path className="bws-mark-dark-cut" d="M329 102 L365 128 H329 L366 154" />
+                <text className="bws-mark-text" x="220" y="151" textAnchor="middle" textLength="252" lengthAdjust="spacingAndGlyphs">BWS</text>
+                <path d="M195 54 V172" stroke="url(#bwsGold)" strokeWidth="11" strokeLinecap="square" />
+                <path d="M245 54 V172" stroke="url(#bwsGold)" strokeWidth="11" strokeLinecap="square" />
               </g>
             </svg>
           </div>
