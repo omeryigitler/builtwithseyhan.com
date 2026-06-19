@@ -4,17 +4,17 @@ const animate = require('tailwindcss-animate');
 module.exports = {
   darkMode: 'class',
   content: [
-    './index.html',
-    './index.{ts,tsx}',
-    './App.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
-    './translations.ts',
+    './i18n/**/*.{ts,tsx}',
+    './lib/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        strong: ['Bebas Neue', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Inter', 'sans-serif'],
+        strong: ['var(--font-display)', 'Bebas Neue', 'sans-serif'],
+        display: ['var(--font-display)', 'Bebas Neue', 'sans-serif'],
       },
       colors: {
         brand: {

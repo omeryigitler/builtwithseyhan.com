@@ -1,143 +1,110 @@
-import {
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-  deleteDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { db, isFirebaseReady } from './firebase';
+import { createServerSupabase } from './supabase/server';
+import type { Post, SocialItem, SiteSettings } from './types';
+import { SAMPLE_POSTS, SAMPLE_SOCIAL, SAMPLE_SETTINGS } from './sample';
 
-// ─── Types ──────────────────────────────────────────────────────────────────
+// ─── Row mappers (snake_case DB → camelCase app types) ───────────────────────
 
-export interface CustomTestimonial {
-  id: string;
-  name: string;
-  result: string;
-  timeframe: string;
-  quote: string;
-  imageBefore: string; // Firebase Storage download URL
-  imageAfter: string; // Firebase Storage download URL
-  order?: number;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function mapPost(r: any): Post {
+  return {
+    id: String(r.id),
+    slug: r.slug,
+    type: r.type,
+    category: r.category,
+    title: { tr: r.title_tr ?? '', en: r.title_en ?? '' },
+    excerpt: { tr: r.excerpt_tr ?? '', en: r.excerpt_en ?? '' },
+    body: { tr: r.body_tr ?? '', en: r.body_en ?? '' },
+    imageUrl: r.image_url ?? null,
+    videoUrl: r.video_url ?? null,
+    socialUrl: r.social_url ?? null,
+    featured: !!r.featured,
+    createdAt: r.created_at ?? new Date().toISOString(),
+  };
 }
 
-export type SocialPlatformId =
-  | 'instagram'
-  | 'tiktok'
-  | 'youtube'
-  | 'twitter'
-  | 'linkedin'
-  | 'facebook'
-  | 'whatsapp'
-  | 'email';
+function mapSocial(r: any): SocialItem {
+  return {
+    id: String(r.id),
+    imageUrl: r.image_url,
+    socialUrl: r.social_url,
+    platform: r.platform ?? 'instagram',
+    caption: { tr: r.caption_tr ?? '', en: r.caption_en ?? '' },
+    createdAt: r.created_at ?? new Date().toISOString(),
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
-export interface SocialLink {
-  id: SocialPlatformId;
-  url: string;
-  enabled: boolean;
+// ─── Posts ───────────────────────────────────────────────────────────────────
+
+export async function getPosts(): Promise<Post[]> {
+  const supabase = await createServerSupabase();
+  if (!supabase) return SAMPLE_POSTS;
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('published', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (error || !data) return SAMPLE_POSTS;
+  return data.map(mapPost);
 }
 
-export interface GymInfo {
-  name: string;
-  location: string;
-  offer: string;
+export async function getFeaturedVideos(limit = 5): Promise<Post[]> {
+  const posts = await getPosts();
+  return posts.filter((p) => p.type === 'video').slice(0, limit);
 }
 
-export interface SiteSettings {
-  socials: SocialLink[];
-  gym: GymInfo;
+export async function getBlogPosts(limit?: number): Promise<Post[]> {
+  const posts = await getPosts();
+  const blog = posts.filter((p) => p.type === 'blog');
+  return limit ? blog.slice(0, limit) : blog;
 }
 
-// ─── Defaults ───────────────────────────────────────────────────────────────
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  const posts = await getPosts();
+  return posts.find((p) => p.slug === slug) ?? null;
+}
 
-export const DEFAULT_SOCIALS: SocialLink[] = [
-  { id: 'instagram', url: '', enabled: false },
-  { id: 'tiktok', url: '', enabled: false },
-  { id: 'youtube', url: '', enabled: false },
-  { id: 'twitter', url: '', enabled: false },
-  { id: 'linkedin', url: '', enabled: false },
-  { id: 'facebook', url: '', enabled: false },
-  { id: 'whatsapp', url: '', enabled: false },
-  { id: 'email', url: '', enabled: false },
-];
+export async function getAllSlugs(): Promise<string[]> {
+  const posts = await getPosts();
+  return posts.map((p) => p.slug);
+}
 
-export const DEFAULT_GYM: GymInfo = { name: '', location: 'Malta', offer: '' };
+// ─── Social wall ──────────────────────────────────────────────────────────────
 
-export const DEFAULT_SETTINGS: SiteSettings = {
-  socials: DEFAULT_SOCIALS,
-  gym: DEFAULT_GYM,
-};
+export async function getSocialItems(): Promise<SocialItem[]> {
+  const supabase = await createServerSupabase();
+  if (!supabase) return SAMPLE_SOCIAL;
 
-// ─── Testimonials ───────────────────────────────────────────────────────────
+  const { data, error } = await supabase
+    .from('social_items')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
 
-const TESTIMONIALS = 'testimonials';
+  if (error || !data) return SAMPLE_SOCIAL;
+  return data.map(mapSocial);
+}
 
-/** Live subscription. Calls back with [] when Firebase isn't configured. */
-export const subscribeTestimonials = (
-  cb: (items: CustomTestimonial[]) => void
-): (() => void) => {
-  if (!isFirebaseReady || !db) {
-    cb([]);
-    return () => {};
-  }
-  return onSnapshot(
-    collection(db, TESTIMONIALS),
-    (snap) => {
-      const items = snap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as Omit<CustomTestimonial, 'id'>),
-      }));
-      items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-      cb(items);
-    },
-    () => cb([])
-  );
-};
+// ─── Settings ─────────────────────────────────────────────────────────────────
 
-export const saveTestimonial = async (t: CustomTestimonial): Promise<void> => {
-  if (!db) throw new Error('Firebase yapılandırılmamış.');
-  const { id, ...data } = t;
-  await setDoc(
-    doc(db, TESTIMONIALS, id),
-    { ...data, updatedAt: serverTimestamp() },
-    { merge: true }
-  );
-};
+export async function getSettings(): Promise<SiteSettings> {
+  const supabase = await createServerSupabase();
+  if (!supabase) return SAMPLE_SETTINGS;
 
-export const deleteTestimonial = async (id: string): Promise<void> => {
-  if (!db) return;
-  await deleteDoc(doc(db, TESTIMONIALS, id));
-};
+  const { data, error } = await supabase
+    .from('settings')
+    .select('*')
+    .eq('id', 1)
+    .maybeSingle();
 
-// ─── Site settings (single doc: settings/site) ──────────────────────────────
-
-const SETTINGS_COLLECTION = 'settings';
-const SETTINGS_DOC = 'site';
-
-const mergeSettings = (data?: Partial<SiteSettings>): SiteSettings => ({
-  socials: DEFAULT_SOCIALS.map(
-    (d) => data?.socials?.find((s) => s.id === d.id) ?? d
-  ),
-  gym: { ...DEFAULT_GYM, ...(data?.gym ?? {}) },
-});
-
-export const subscribeSettings = (
-  cb: (settings: SiteSettings) => void
-): (() => void) => {
-  if (!isFirebaseReady || !db) {
-    cb(DEFAULT_SETTINGS);
-    return () => {};
-  }
-  return onSnapshot(
-    doc(db, SETTINGS_COLLECTION, SETTINGS_DOC),
-    (snap) => cb(mergeSettings(snap.data() as Partial<SiteSettings> | undefined)),
-    () => cb(DEFAULT_SETTINGS)
-  );
-};
-
-export const saveSettings = async (settings: SiteSettings): Promise<void> => {
-  if (!db) throw new Error('Firebase yapılandırılmamış.');
-  await setDoc(doc(db, SETTINGS_COLLECTION, SETTINGS_DOC), settings, {
-    merge: true,
-  });
-};
+  if (error || !data) return SAMPLE_SETTINGS;
+  return {
+    whatsappUrl: data.whatsapp_url ?? '',
+    instagramUrl: data.instagram_url ?? '',
+    tiktokUrl: data.tiktok_url ?? '',
+    youtubeUrl: data.youtube_url ?? '',
+  };
+}

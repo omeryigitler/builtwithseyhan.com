@@ -1,47 +1,39 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 
 interface RevealProps {
   children: React.ReactNode;
-  width?: 'fit-content' | '100%';
-  delay?: number; // Delay in seconds (e.g., 0.2)
+  delay?: number; // seconds
   className?: string;
 }
 
-export const Reveal: React.FC<RevealProps> = ({ children, width = '100%', delay = 0, className = '' }) => {
+export const Reveal: React.FC<RevealProps> = ({ children, delay = 0, className = '' }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          // Once visible, we can disconnect to avoid re-animating when scrolling up
-          if (ref.current) observer.unobserve(ref.current);
+          setVisible(true);
+          observer.unobserve(el);
         }
       },
-      {
-        root: null,
-        rootMargin: '0px 0px -50px 0px', // Trigger a bit before the element is fully in view
-        threshold: 0.1,
-      }
+      { rootMargin: '0px 0px -50px 0px', threshold: 0.1 }
     );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) observer.disconnect();
-    };
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   return (
     <div
       ref={ref}
-      style={{ width, transitionDelay: `${delay}s` }}
+      style={{ transitionDelay: `${delay}s` }}
       className={`transition-all duration-500 ease-out motion-reduce:transition-none ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       } ${className}`}
     >
       {children}
