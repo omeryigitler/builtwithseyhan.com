@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const App: React.FC = () => {
+  const [creditHover, setCreditHover] = useState(false);
+
   return (
     <main className="coming-page" aria-label="Built With Seyhan coming soon page">
       <section className="coming-card">
         <img
           className="bws-logo"
-          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=6"
+          src="/Screenshot_2026-06-19_173558-removebg-preview.png?v=7"
           alt="Built With Seyhan BWS logo"
           draggable="false"
         />
@@ -27,7 +29,20 @@ const App: React.FC = () => {
           <span />
         </div>
 
-        <h2 className="coming-title">
+        <h2
+          className="coming-title"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'clamp(16px, 4vw, 80px)',
+            whiteSpace: 'nowrap',
+            textIndent: 0,
+            fontSize: 'clamp(25px, 8vw, 105px)',
+            letterSpacing: 'clamp(0.07em, 1.6vw, 0.32em)',
+            lineHeight: 1,
+          }}
+        >
           <span>COMING</span>
           <span>SOON</span>
         </h2>
@@ -44,6 +59,15 @@ const App: React.FC = () => {
               target="_blank"
               rel="noreferrer"
               aria-label="Visit omeryigitler.com"
+              onMouseEnter={() => setCreditHover(true)}
+              onMouseLeave={() => setCreditHover(false)}
+              style={{
+                color: creditHover ? '#f1d890' : '#cdaa5a',
+                fontWeight: 800,
+                textDecoration: 'none',
+                textShadow: creditHover ? '0 0 10px rgba(205, 170, 90, 0.42)' : 'none',
+                transition: 'color 180ms ease, text-shadow 180ms ease',
+              }}
             >
               Ömer YİĞİTLER
             </a>
