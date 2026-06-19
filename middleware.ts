@@ -35,6 +35,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals, API routes and any file with an extension (assets).
-  matcher: ['/((?!_next|api|.*\\..*).*)'],
+  // Skip Next internals, API/auth routes and any file with an extension (assets).
+  matcher: ['/((?!_next|api|auth|.*\\..*).*)'],
 };

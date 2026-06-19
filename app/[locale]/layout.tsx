@@ -42,6 +42,7 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: { default: title, template: '%s — Built With Seyhan' },
     description,
+    icons: { icon: '/favicon.svg' },
     alternates: {
       canonical: `/${locale}`,
       languages: { tr: '/tr', en: '/en' },
