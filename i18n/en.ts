@@ -104,6 +104,10 @@ export const en = {
     credit: 'Designed & Developed by',
   },
 
+  partners: {
+    title: 'Trusted & featured',
+  },
+
   common: {
     comingSoon: 'Coming soon',
     notFound: 'Page not found',

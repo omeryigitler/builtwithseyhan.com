@@ -8,6 +8,7 @@ import {
   getSettings,
 } from '@/lib/content';
 import { Hero } from '@/components/sections/Hero';
+import { LogoMarquee } from '@/components/LogoMarquee';
 import { FeaturedVideos } from '@/components/sections/FeaturedVideos';
 import { ContentFeed } from '@/components/sections/ContentFeed';
 import { BlogPreview } from '@/components/sections/BlogPreview';
@@ -33,6 +34,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       <Hero locale={locale} dict={dict} settings={settings} />
+      <LogoMarquee dict={dict} />
       <FeaturedVideos videos={videos} locale={locale} dict={dict} />
       <ContentFeed posts={posts} locale={locale} dict={dict} />
       <BlogPreview posts={blog} locale={locale} dict={dict} />

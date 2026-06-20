@@ -106,6 +106,10 @@ export const tr: Dictionary = {
     credit: 'Tasarım & Geliştirme',
   },
 
+  partners: {
+    title: 'Güvenle çalıştıklarımız',
+  },
+
   common: {
     comingSoon: 'Çok yakında',
     notFound: 'Sayfa bulunamadı',

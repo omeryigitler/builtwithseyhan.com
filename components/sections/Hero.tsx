@@ -1,9 +1,15 @@
 import Link from 'next/link';
-import { ArrowRight, Instagram } from 'lucide-react';
+import { ArrowRight, Instagram, ChevronDown } from 'lucide-react';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import type { SiteSettings } from '@/lib/types';
 import { buttonClasses } from '@/components/ui/Button';
+
+// Hero background. Loaded by the browser from Unsplash's CDN (the build sandbox
+// can't fetch it). To use your own photo, drop it in /public/images and set:
+//   const HERO_IMAGE = '/images/hero-gym.jpg';
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2070&q=80';
 
 export function Hero({
   locale,
@@ -15,36 +21,40 @@ export function Hero({
   settings: SiteSettings;
 }) {
   return (
-    <section className="relative overflow-hidden bg-gray-50 px-5 pb-20 pt-36 transition-colors duration-500 dark:bg-gray-950 sm:px-6 sm:pt-44 md:pb-28">
-      {/* Aurora glow */}
-      <div className="pointer-events-none absolute left-1/2 top-0 -z-0 hidden h-full w-full max-w-7xl -translate-x-1/2 opacity-30 dark:opacity-60 md:block">
-        <div className="animate-blob absolute left-10 top-16 h-96 w-96 rounded-full bg-brand opacity-20 mix-blend-screen blur-[120px]" />
-        <div
-          className="animate-blob absolute right-10 top-40 h-96 w-96 rounded-full bg-emerald-500 opacity-20 mix-blend-screen blur-[120px]"
-          style={{ animationDelay: '2s' }}
-        />
-        <div
-          className="animate-blob absolute -bottom-20 left-1/3 h-96 w-96 rounded-full bg-lime-400 opacity-20 mix-blend-screen blur-[120px]"
-          style={{ animationDelay: '4s' }}
-        />
-      </div>
+    <section className="relative flex min-h-[92vh] items-center overflow-hidden">
+      {/* Background photo */}
+      <div
+        className="absolute inset-0 -z-20 bg-cover bg-center"
+        style={{ backgroundImage: `url('${HERO_IMAGE}')` }}
+        aria-hidden="true"
+      />
+      {/* Theme-aware scrim so text stays readable (bright in light, cinematic in dark) */}
+      <div
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-white/85 via-white/55 to-white/90 dark:from-gray-950/88 dark:via-gray-950/60 dark:to-gray-950/95"
+        aria-hidden="true"
+      />
+      {/* Lime glow accent */}
+      <div className="pointer-events-none absolute -right-24 top-24 -z-10 h-80 w-80 rounded-full bg-brand/30 blur-[120px]" />
 
-      <div className="relative z-10 mx-auto max-w-4xl text-center">
-        <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gray-600 shadow-sm dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300">
-          <span className="h-2 w-2 rounded-full bg-brand" />
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-5 py-32 text-center sm:px-6">
+        <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-gray-300/70 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gray-700 backdrop-blur dark:border-white/15 dark:bg-white/10 dark:text-gray-200">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-brand" />
           {dict.hero.eyebrow}
         </span>
 
-        <h1 className="mb-6 text-4xl font-black uppercase leading-[1.02] tracking-tight text-gray-900 dark:text-white sm:text-6xl md:text-7xl lg:text-8xl">
+        <h1 className="mb-6 text-5xl font-black uppercase leading-[0.95] tracking-tight text-gray-900 drop-shadow-sm dark:text-white sm:text-7xl md:text-8xl lg:text-[8.5rem]">
           {dict.hero.title}
         </h1>
 
-        <p className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-500 dark:text-gray-400 sm:text-xl">
+        <p className="mx-auto mb-10 max-w-2xl text-lg font-medium leading-relaxed text-gray-700 dark:text-gray-200 sm:text-xl">
           {dict.hero.subtitle}
         </p>
 
         <div className="mx-auto flex w-full max-w-md flex-col items-center justify-center gap-3 sm:max-w-none sm:flex-row">
-          <Link href={`/${locale}#feed`} className={buttonClasses({ variant: 'primary', size: 'lg', className: 'w-full sm:w-auto' })}>
+          <Link
+            href={`/${locale}#feed`}
+            className={buttonClasses({ variant: 'primary', size: 'lg', className: 'w-full sm:w-auto' })}
+          >
             {dict.hero.ctaExplore}
             <ArrowRight size={18} />
           </Link>
@@ -70,6 +80,15 @@ export function Hero({
           )}
         </div>
       </div>
+
+      {/* Scroll hint */}
+      <Link
+        href={`/${locale}#videos`}
+        aria-label={dict.hero.ctaExplore}
+        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+      >
+        <ChevronDown size={28} className="animate-bounce" />
+      </Link>
     </section>
   );
 }

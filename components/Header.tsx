@@ -39,32 +39,34 @@ export function Header({ locale, dict, settings }: Props) {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-gray-200 bg-white/85 py-3 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/85'
+          ? 'border-b border-gray-200 bg-white/90 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.07)] backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/90'
           : 'border-b border-transparent py-5'
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-6">
-        <Link href={base} className="flex items-center gap-2.5" aria-label={dict.brand}>
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-sm font-black text-brand dark:bg-brand dark:text-black">
+        {/* Logo */}
+        <Link href={base} className="group flex items-center gap-2.5" aria-label={dict.brand}>
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-base font-black text-black shadow-[0_4px_14px_rgba(204,255,0,0.45)] transition-transform group-hover:scale-105">
             B
           </span>
           <span className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white">
-            Built With Seyhan
+            Built With <span className="text-brand-hover dark:text-brand">Seyhan</span>
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-7 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-brand"
+              className="group relative text-sm font-semibold text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
             >
               {l.label}
+              <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-brand transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
-          <div className="flex items-center gap-2 border-l border-gray-200 pl-5 dark:border-gray-800">
+          <div className="flex items-center gap-2.5 border-l border-gray-200 pl-6 dark:border-gray-800">
             <LanguageSwitch locale={locale} />
             <ThemeToggle labels={dict.theme} />
             {settings.whatsappUrl && (
@@ -83,7 +85,7 @@ export function Header({ locale, dict, settings }: Props) {
         {/* Mobile toggle */}
         <button
           type="button"
-          className="text-gray-900 lg:hidden dark:text-white"
+          className="rounded-lg p-1 text-gray-900 lg:hidden dark:text-white"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? dict.nav.menuClose : dict.nav.menuOpen}
           aria-expanded={open}

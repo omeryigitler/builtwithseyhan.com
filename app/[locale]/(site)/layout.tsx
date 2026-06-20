@@ -4,6 +4,7 @@ import { getSettings } from '@/lib/content';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { WhatsAppFloat } from '@/components/WhatsAppFloat';
+import { ScrollProgress } from '@/components/ScrollProgress';
 
 export default async function SiteLayout({
   children,
@@ -19,6 +20,7 @@ export default async function SiteLayout({
 
   return (
     <>
+      <ScrollProgress />
       <Header locale={locale} dict={dict} settings={settings} />
       <main className="min-h-screen">{children}</main>
       <Footer locale={locale} dict={dict} settings={settings} />
