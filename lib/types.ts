@@ -46,6 +46,8 @@ export interface SiteSettings {
   instagramUrl: string;
   tiktokUrl: string;
   youtubeUrl: string;
+  /** Optional full-screen hero background video (mp4 URL). Empty = use image. */
+  heroVideoUrl: string;
 }
 
 /** Pick the right language with a graceful fallback. */

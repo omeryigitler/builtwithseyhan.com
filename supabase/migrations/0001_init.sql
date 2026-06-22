@@ -68,6 +68,7 @@ create table if not exists public.settings (
   instagram_url text default '',
   tiktok_url text default '',
   youtube_url text default '',
+  hero_video_url text default '',
   updated_at timestamptz not null default now(),
   constraint settings_singleton check (id = 1)
 );

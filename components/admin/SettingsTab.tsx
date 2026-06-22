@@ -7,7 +7,13 @@ import { getSettingsAdmin, saveSettings } from '@/lib/admin';
 import type { AdminLabels } from './labels';
 import { TextField } from './fields';
 
-const EMPTY: SiteSettings = { whatsappUrl: '', instagramUrl: '', tiktokUrl: '', youtubeUrl: '' };
+const EMPTY: SiteSettings = {
+  whatsappUrl: '',
+  instagramUrl: '',
+  tiktokUrl: '',
+  youtubeUrl: '',
+  heroVideoUrl: '',
+};
 
 export function SettingsTab({ t }: { t: AdminLabels }) {
   const [form, setForm] = useState<SiteSettings>(EMPTY);
@@ -42,6 +48,7 @@ export function SettingsTab({ t }: { t: AdminLabels }) {
       <TextField label={t.fields.instagram} value={form.instagramUrl} onChange={(v) => setForm((f) => ({ ...f, instagramUrl: v }))} placeholder="https://instagram.com/…" />
       <TextField label={t.fields.tiktok} value={form.tiktokUrl} onChange={(v) => setForm((f) => ({ ...f, tiktokUrl: v }))} placeholder="https://tiktok.com/@…" />
       <TextField label={t.fields.youtube} value={form.youtubeUrl} onChange={(v) => setForm((f) => ({ ...f, youtubeUrl: v }))} placeholder="https://youtube.com/@…" />
+      <TextField label={t.fields.heroVideo} value={form.heroVideoUrl} onChange={(v) => setForm((f) => ({ ...f, heroVideoUrl: v }))} placeholder="https://…/hero.mp4" />
       <button
         onClick={onSave}
         disabled={saving}

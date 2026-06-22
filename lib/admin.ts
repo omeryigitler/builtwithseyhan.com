@@ -207,6 +207,7 @@ export async function getSettingsAdmin(): Promise<SiteSettings> {
     instagramUrl: data?.instagram_url ?? '',
     tiktokUrl: data?.tiktok_url ?? '',
     youtubeUrl: data?.youtube_url ?? '',
+    heroVideoUrl: data?.hero_video_url ?? '',
   };
 }
 
@@ -219,6 +220,7 @@ export async function saveSettings(input: SiteSettings): Promise<void> {
       instagram_url: input.instagramUrl,
       tiktok_url: input.tiktokUrl,
       youtube_url: input.youtubeUrl,
+      hero_video_url: input.heroVideoUrl,
     })
     .eq('id', 1);
   if (error) throw error;

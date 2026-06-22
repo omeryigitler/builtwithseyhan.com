@@ -42,6 +42,7 @@ const en = {
     instagram: 'Instagram link',
     tiktok: 'TikTok link',
     youtube: 'YouTube link',
+    heroVideo: 'Hero video URL (mp4)',
   },
   types: { video: 'Video', image: 'Photo', blog: 'Article' },
   categories: {
@@ -96,6 +97,7 @@ const tr: typeof en = {
     instagram: 'Instagram linki',
     tiktok: 'TikTok linki',
     youtube: 'YouTube linki',
+    heroVideo: 'Hero video adresi (mp4)',
   },
   types: { video: 'Video', image: 'Fotoğraf', blog: 'Yazı' },
   categories: {

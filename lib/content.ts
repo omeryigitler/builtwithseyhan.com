@@ -106,5 +106,6 @@ export async function getSettings(): Promise<SiteSettings> {
     instagramUrl: data.instagram_url ?? '',
     tiktokUrl: data.tiktok_url ?? '',
     youtubeUrl: data.youtube_url ?? '',
+    heroVideoUrl: data.hero_video_url ?? '',
   };
 }

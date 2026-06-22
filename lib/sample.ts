@@ -145,4 +145,5 @@ export const SAMPLE_SETTINGS: SiteSettings = {
   instagramUrl: 'https://instagram.com',
   tiktokUrl: '',
   youtubeUrl: '',
+  heroVideoUrl: '',
 };
