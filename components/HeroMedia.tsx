@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const POSTER = '/images/hero.jpg';
+const POSTER = '/images/hero.png';
 const CLIPS = ['/hero/clip1.mp4', '/hero/clip2.mp4', '/hero/clip3.mp4', '/hero/clip4.mp4'];
 const PHOTO_MS = 4000;
 
