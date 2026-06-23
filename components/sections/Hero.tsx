@@ -154,3 +154,5 @@ export function Hero({
     </section>
   );
 }
+
+/* redeploy: ensure 4s text-hide is live */
