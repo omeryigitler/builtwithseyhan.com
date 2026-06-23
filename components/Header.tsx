@@ -35,6 +35,10 @@ export function Header({ locale, dict, settings }: Props) {
     { label: dict.nav.social, href: `${base}#social` },
   ];
 
+  // At the top the header sits over the dark hero → light text; once scrolled
+  // it's over the page background → theme-aware dark/light text.
+  const onDark = !scrolled;
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -49,8 +53,12 @@ export function Header({ locale, dict, settings }: Props) {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-base font-black text-black shadow-[0_4px_14px_rgba(204,255,0,0.45)] transition-transform group-hover:scale-105">
             B
           </span>
-          <span className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white">
-            Built With <span className="text-brand-hover dark:text-brand">Seyhan</span>
+          <span
+            className={`text-sm font-black uppercase tracking-tight ${
+              onDark ? 'text-white drop-shadow' : 'text-gray-900 dark:text-white'
+            }`}
+          >
+            Built With Seyhan
           </span>
         </Link>
 
@@ -60,15 +68,23 @@ export function Header({ locale, dict, settings }: Props) {
             <Link
               key={l.href}
               href={l.href}
-              className="group relative text-sm font-semibold text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+              className={`group relative text-sm font-semibold transition-colors ${
+                onDark
+                  ? 'text-white/85 hover:text-white'
+                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+              }`}
             >
               {l.label}
               <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-brand transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
-          <div className="flex items-center gap-2.5 border-l border-gray-200 pl-6 dark:border-gray-800">
-            <LanguageSwitch locale={locale} />
-            <ThemeToggle labels={dict.theme} />
+          <div
+            className={`flex items-center gap-2.5 border-l pl-6 ${
+              onDark ? 'border-white/25' : 'border-gray-200 dark:border-gray-800'
+            }`}
+          >
+            <LanguageSwitch locale={locale} onDark={onDark} />
+            <ThemeToggle labels={dict.theme} onDark={onDark} />
             {settings.whatsappUrl && (
               <a
                 href={settings.whatsappUrl}
@@ -85,7 +101,7 @@ export function Header({ locale, dict, settings }: Props) {
         {/* Mobile toggle */}
         <button
           type="button"
-          className="rounded-lg p-1 text-gray-900 lg:hidden dark:text-white"
+          className={`rounded-lg p-1 lg:hidden ${onDark ? 'text-white' : 'text-gray-900 dark:text-white'}`}
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? dict.nav.menuClose : dict.nav.menuOpen}
           aria-expanded={open}

@@ -6,8 +6,10 @@ import { Moon, Sun } from 'lucide-react';
 
 export function ThemeToggle({
   labels,
+  onDark = false,
 }: {
   labels: { toLight: string; toDark: string };
+  onDark?: boolean;
 }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -22,7 +24,11 @@ export function ThemeToggle({
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       aria-label={label}
       title={label}
-      className="flex h-9 w-9 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
+      className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
+        onDark
+          ? 'text-white hover:bg-white/15'
+          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10'
+      }`}
     >
       {mounted && isDark ? <Sun size={18} /> : <Moon size={18} />}
     </button>
