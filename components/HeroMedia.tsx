@@ -9,9 +9,8 @@ const PHOTO_MS = 4000;
 type Phase = 'photo' | number; // 'photo' or a clip index
 
 /**
- * Full-screen hero background collage: the photo holds for ~4s, then the
- * clips play back-to-back, then it loops. Media is shown fully (contain) so
- * the subject isn't cropped/zoomed; a blurred copy fills the screen behind it.
+ * Full-screen hero collage: the (wide, cinematic) photo holds for ~4s, then
+ * the clips play back-to-back, then it loops. Full-bleed cover.
  */
 export function HeroMedia() {
   const [phase, setPhase] = useState<Phase>('photo');
@@ -37,28 +36,21 @@ export function HeroMedia() {
 
   return (
     <div className="absolute inset-0 -z-20 bg-gray-950">
-      {/* Blurred backdrop fills the screen (no empty bars) */}
+      {/* Photo (wide cinematic shot — full-bleed) */}
       <div
-        className="absolute inset-0 scale-110 bg-cover bg-center opacity-35 blur-2xl"
-        style={{ backgroundImage: `url('${POSTER}')` }}
-        aria-hidden="true"
-      />
-
-      {/* Foreground photo — fully visible (contained), not zoomed/cropped */}
-      <div
-        className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-opacity duration-700 ${
+        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${
           phase === 'photo' ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ backgroundImage: `url('${POSTER}')` }}
         aria-hidden="true"
       />
 
-      {/* Active clip — fully visible (contained) */}
+      {/* Active clip (remounts per index so it loads + autoplays) */}
       {typeof phase === 'number' && (
         <video
           ref={videoRef}
           key={phase}
-          className="absolute inset-0 h-full w-full object-contain"
+          className="absolute inset-0 h-full w-full object-cover object-center"
           autoPlay
           muted
           playsInline
