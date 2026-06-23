@@ -40,7 +40,7 @@ export function HeroMedia() {
     <div className="absolute inset-0 -z-20 bg-gray-950">
       {/* Photo */}
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${
+        className={`absolute inset-0 bg-cover bg-[center_22%] transition-opacity duration-700 ${
           phase === 'photo' ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ backgroundImage: `url('${POSTER}')` }}
@@ -52,7 +52,7 @@ export function HeroMedia() {
         <video
           ref={videoRef}
           key={phase}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
           autoPlay
           muted
           playsInline
