@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Instagram } from 'lucide-react';
 import { Reveal } from '@/components/Reveal';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import { localize, type SocialItem, type SiteSettings } from '@/lib/types';
@@ -19,22 +20,24 @@ export function SocialWall({
   return (
     <section id="social" className="bg-gray-50 px-5 py-20 transition-colors duration-500 dark:bg-gray-950 sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center">
-          <h2 className="mb-3 text-3xl font-black uppercase tracking-tight text-gray-900 dark:text-white md:text-4xl">
-            {dict.social.title}
-          </h2>
-          <p className="text-lg text-gray-500 dark:text-gray-400">{dict.social.subtitle}</p>
-          {settings.instagramUrl && (
-            <a
-              href={settings.instagramUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-brand dark:text-white"
-            >
-              <Instagram size={18} /> Instagram
-            </a>
-          )}
-        </div>
+        <SectionHeading
+          kicker={dict.social.eyebrow}
+          title={dict.social.title}
+          subtitle={dict.social.subtitle}
+          flip
+          action={
+            settings.instagramUrl ? (
+              <a
+                href={settings.instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 underline decoration-brand decoration-2 underline-offset-[6px] transition-all hover:decoration-[3px] dark:text-white"
+              >
+                <Instagram size={18} /> Instagram
+              </a>
+            ) : undefined
+          }
+        />
 
         {items.length === 0 ? (
           <p className="py-12 text-center text-sm text-gray-400">{dict.social.empty}</p>

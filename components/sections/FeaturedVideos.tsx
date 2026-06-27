@@ -8,6 +8,7 @@ import type { Dictionary } from '@/i18n/dictionaries';
 import { localize, type Post } from '@/lib/types';
 import { videoThumb } from '@/lib/media';
 import { VideoModal } from '@/components/VideoModal';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 
 export function FeaturedVideos({
   videos,
@@ -25,14 +26,17 @@ export function FeaturedVideos({
   const thumb = (p: Post) => p.imageUrl ?? (p.videoUrl ? videoThumb(p.videoUrl) : null);
 
   return (
-    <section id="videos" className="bg-white px-5 py-20 transition-colors duration-500 dark:bg-gray-950 sm:px-6 md:py-24">
+    <section
+      id="videos"
+      className="bg-white px-5 py-20 transition-colors duration-500 dark:bg-gray-950 sm:px-6 md:py-24"
+    >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-black uppercase tracking-tight text-gray-900 dark:text-white md:text-4xl">
-            {dict.videos.title}
-          </h2>
-          <p className="text-lg text-gray-500 dark:text-gray-400">{dict.videos.subtitle}</p>
-        </div>
+        <SectionHeading
+          kicker={dict.videos.eyebrow}
+          title={dict.videos.title}
+          subtitle={dict.videos.subtitle}
+          flip
+        />
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Main featured video */}
@@ -47,16 +51,16 @@ export function FeaturedVideos({
                 alt={localize(main.title, locale)}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+                className="object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0"
                 priority
               />
             )}
-            <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-            <span className="absolute left-6 top-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand text-black shadow-xl transition-transform group-hover:scale-110">
-              <Play size={28} className="ml-1 fill-black" />
+            <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+            <span className="absolute left-6 top-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand text-black shadow-[0_8px_30px_rgba(204,255,0,0.5)] transition-transform group-hover:scale-110">
+              <Play size={28} className="ml-1" fill="currentColor" />
             </span>
             <span className="absolute bottom-6 left-6 right-6">
-              <span className="text-xl font-black uppercase tracking-tight text-white md:text-2xl">
+              <span className="font-display text-3xl uppercase leading-[0.95] text-white md:text-4xl">
                 {localize(main.title, locale)}
               </span>
             </span>
@@ -77,14 +81,14 @@ export function FeaturedVideos({
                     alt={localize(v.title, locale)}
                     fill
                     sizes="(max-width: 1024px) 50vw, 25vw"
-                    className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0"
                   />
                 )}
-                <span className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <span className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
                 <span className="absolute left-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-brand text-black transition-transform group-hover:scale-110">
-                  <Play size={16} className="ml-0.5 fill-black" />
+                  <Play size={16} className="ml-0.5" fill="currentColor" />
                 </span>
-                <span className="absolute bottom-3 left-3 right-3 line-clamp-2 text-sm font-bold text-white">
+                <span className="absolute bottom-3 left-3 right-3 line-clamp-2 font-display text-lg uppercase leading-tight text-white">
                   {localize(v.title, locale)}
                 </span>
               </button>

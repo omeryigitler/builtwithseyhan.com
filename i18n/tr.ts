@@ -34,6 +34,7 @@ export const tr: Dictionary = {
   },
 
   videos: {
+    eyebrow: 'Kamerada',
     title: 'Öne Çıkan Videolar',
     subtitle: 'Antrenmanlar, analizler ve günlük motivasyon.',
     watch: 'İzle',
@@ -41,6 +42,7 @@ export const tr: Dictionary = {
   },
 
   feed: {
+    eyebrow: 'Güncel',
     title: 'Son İçerikler',
     subtitle: 'Yolculuktan videolar, fotoğraflar ve notlar.',
     all: 'Tümü',
@@ -50,6 +52,7 @@ export const tr: Dictionary = {
   },
 
   blog: {
+    eyebrow: 'Günlük',
     title: 'Blog',
     subtitle: 'Fitness, sağlık ve yaşam tarzı — kısa ve uygulanabilir.',
     readMore: 'Yazıyı oku',
@@ -59,6 +62,7 @@ export const tr: Dictionary = {
   },
 
   social: {
+    eyebrow: 'Sosyal',
     title: 'Yolculuğu Takip Et',
     subtitle: 'Instagram ve diğer platformlardan kareler.',
     viewPost: 'Gönderiye git',

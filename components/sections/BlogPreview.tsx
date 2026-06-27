@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/Reveal';
 import { PostCard } from '@/components/PostCard';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import type { Post } from '@/lib/types';
@@ -16,22 +17,25 @@ export function BlogPreview({
   dict: Dictionary;
 }) {
   return (
-    <section id="blog" className="bg-white px-5 py-20 transition-colors duration-500 dark:bg-gray-950 sm:px-6 md:py-24">
+    <section
+      id="blog"
+      className="bg-white px-5 py-20 transition-colors duration-500 dark:bg-gray-950 sm:px-6 md:py-24"
+    >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <h2 className="mb-3 text-3xl font-black uppercase tracking-tight text-gray-900 dark:text-white md:text-4xl">
-              {dict.blog.title}
-            </h2>
-            <p className="max-w-xl text-lg text-gray-500 dark:text-gray-400">{dict.blog.subtitle}</p>
-          </div>
-          <Link
-            href={`/${locale}/blog`}
-            className="inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-brand dark:text-white"
-          >
-            {dict.blog.viewAll} <ArrowRight size={16} />
-          </Link>
-        </div>
+        <SectionHeading
+          kicker={dict.blog.eyebrow}
+          title={dict.blog.title}
+          subtitle={dict.blog.subtitle}
+          flip
+          action={
+            <Link
+              href={`/${locale}/blog`}
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 underline decoration-brand decoration-2 underline-offset-[6px] transition-all hover:decoration-[3px] dark:text-white"
+            >
+              {dict.blog.viewAll} <ArrowRight size={16} />
+            </Link>
+          }
+        />
 
         {posts.length === 0 ? (
           <p className="py-12 text-center text-sm text-gray-400">{dict.blog.empty}</p>

@@ -20,7 +20,7 @@ export function GuideSection({
           <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-brand/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-brand">
             <Zap size={13} className="fill-brand text-black dark:text-brand" /> {dict.guide.badge}
           </span>
-          <h2 className="mb-2 text-2xl font-black uppercase tracking-tight text-gray-900 dark:text-white md:text-3xl">
+          <h2 className="mb-2 font-display text-3xl uppercase tracking-tight text-gray-900 dark:text-white md:text-4xl">
             {dict.guide.title}
           </h2>
           <p className="text-gray-500 dark:text-gray-400">{dict.guide.subtitle}</p>

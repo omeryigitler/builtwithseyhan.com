@@ -32,6 +32,7 @@ export const en = {
   },
 
   videos: {
+    eyebrow: 'On camera',
     title: 'Featured Videos',
     subtitle: 'Training sessions, breakdowns and everyday motivation.',
     watch: 'Watch',
@@ -39,6 +40,7 @@ export const en = {
   },
 
   feed: {
+    eyebrow: 'Latest',
     title: 'Latest Content',
     subtitle: 'Videos, photos and notes from the journey.',
     all: 'All',
@@ -48,6 +50,7 @@ export const en = {
   },
 
   blog: {
+    eyebrow: 'Journal',
     title: 'From the Blog',
     subtitle: 'Fitness, health and lifestyle — short and practical.',
     readMore: 'Read article',
@@ -57,6 +60,7 @@ export const en = {
   },
 
   social: {
+    eyebrow: 'Social',
     title: 'Follow the Journey',
     subtitle: 'Behind the scenes on Instagram and beyond.',
     viewPost: 'View post',
