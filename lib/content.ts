@@ -1,6 +1,6 @@
 import { createServerSupabase } from './supabase/server';
-import type { Post, SocialItem, SiteSettings } from './types';
-import { SAMPLE_POSTS, SAMPLE_SOCIAL, SAMPLE_SETTINGS } from './sample';
+import type { Post, SocialItem, SiteSettings, Recipe } from './types';
+import { SAMPLE_POSTS, SAMPLE_SOCIAL, SAMPLE_SETTINGS, SAMPLE_RECIPES } from './sample';
 
 // ─── Row mappers (snake_case DB → camelCase app types) ───────────────────────
 
@@ -29,6 +29,22 @@ function mapSocial(r: any): SocialItem {
     socialUrl: r.social_url,
     platform: r.platform ?? 'instagram',
     caption: { tr: r.caption_tr ?? '', en: r.caption_en ?? '' },
+    createdAt: r.created_at ?? new Date().toISOString(),
+  };
+}
+
+function mapRecipe(r: any): Recipe {
+  return {
+    id: String(r.id),
+    category: r.category,
+    title: { tr: r.title_tr ?? '', en: r.title_en ?? '' },
+    description: { tr: r.description_tr ?? '', en: r.description_en ?? '' },
+    kcal: Number(r.kcal ?? 0),
+    protein: Number(r.protein ?? 0),
+    timeMin: Number(r.time_min ?? 0),
+    imageUrl: r.image_url ?? null,
+    youtubeUrl: r.youtube_url ?? null,
+    featured: !!r.featured,
     createdAt: r.created_at ?? new Date().toISOString(),
   };
 }
@@ -70,6 +86,23 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 export async function getAllSlugs(): Promise<string[]> {
   const posts = await getPosts();
   return posts.map((p) => p.slug);
+}
+
+// ─── Recipes (Nutrition) ──────────────────────────────────────────────────────
+
+export async function getRecipes(): Promise<Recipe[]> {
+  const supabase = await createServerSupabase();
+  if (!supabase) return SAMPLE_RECIPES;
+
+  const { data, error } = await supabase
+    .from('recipes')
+    .select('*')
+    .eq('published', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (error || !data) return SAMPLE_RECIPES;
+  return data.map(mapRecipe);
 }
 
 // ─── Social wall ──────────────────────────────────────────────────────────────

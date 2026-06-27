@@ -6,6 +6,7 @@ export const en = {
     home: 'Home',
     videos: 'Videos',
     feed: 'Feed',
+    nutrition: 'Nutrition',
     blog: 'Blog',
     social: 'Social',
     menuOpen: 'Open menu',
@@ -60,6 +61,34 @@ export const en = {
     subtitle: 'Behind the scenes on Instagram and beyond.',
     viewPost: 'View post',
     empty: 'Social posts are coming soon.',
+  },
+
+  nutrition: {
+    eyebrow: 'Fuel the work',
+    title: 'Nutrition',
+    subtitle:
+      'Recipes, smoothies and high-protein meals — simple, repeatable and built around training.',
+    all: 'All',
+    watch: 'Watch recipe',
+    empty: 'Recipes are coming soon.',
+    categories: {
+      smoothie: 'Smoothies',
+      highprotein: 'High-Protein',
+      breakfast: 'Breakfast',
+      snack: 'Snacks',
+    },
+    macros: {
+      kcal: 'kcal',
+      protein: 'g protein',
+      time: 'min',
+    },
+    ebook: {
+      badge: 'Premium',
+      title: 'The Nutrition Playbook',
+      subtitle: 'A full e-book of recipes and meal plans. Unlock it free — dropping soon.',
+      locked: 'Locked',
+      cta: 'Notify me',
+    },
   },
 
   guide: {

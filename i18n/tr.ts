@@ -8,6 +8,7 @@ export const tr: Dictionary = {
     home: 'Ana Sayfa',
     videos: 'Videolar',
     feed: 'Akış',
+    nutrition: 'Beslenme',
     blog: 'Blog',
     social: 'Sosyal',
     menuOpen: 'Menüyü aç',
@@ -62,6 +63,34 @@ export const tr: Dictionary = {
     subtitle: 'Instagram ve diğer platformlardan kareler.',
     viewPost: 'Gönderiye git',
     empty: 'Sosyal gönderiler çok yakında.',
+  },
+
+  nutrition: {
+    eyebrow: 'Antrenmanı besle',
+    title: 'Beslenme',
+    subtitle:
+      'Tarifler, smoothie’ler ve yüksek proteinli öğünler — basit, tekrarlanabilir ve antrenmana göre.',
+    all: 'Tümü',
+    watch: 'Tarifi izle',
+    empty: 'Tarifler çok yakında.',
+    categories: {
+      smoothie: 'Smoothie',
+      highprotein: 'Yüksek Protein',
+      breakfast: 'Kahvaltı',
+      snack: 'Atıştırmalık',
+    },
+    macros: {
+      kcal: 'kcal',
+      protein: 'g protein',
+      time: 'dk',
+    },
+    ebook: {
+      badge: 'Premium',
+      title: 'Beslenme El Kitabı',
+      subtitle: 'Tarifler ve öğün planlarından oluşan e-kitap. Ücretsiz aç — çok yakında.',
+      locked: 'Kilitli',
+      cta: 'Haber ver',
+    },
   },
 
   guide: {

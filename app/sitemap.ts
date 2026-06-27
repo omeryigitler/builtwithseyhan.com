@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const locale of locales) {
     routes.push({ url: `${SITE}/${locale}`, changeFrequency: 'weekly', priority: 1 });
+    routes.push({ url: `${SITE}/${locale}/nutrition`, changeFrequency: 'weekly', priority: 0.8 });
     routes.push({ url: `${SITE}/${locale}/blog`, changeFrequency: 'weekly', priority: 0.8 });
     for (const slug of slugs) {
       routes.push({

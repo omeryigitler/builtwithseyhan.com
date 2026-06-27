@@ -41,6 +41,26 @@ export interface SocialItem {
   createdAt: string;
 }
 
+export type RecipeCategory = 'smoothie' | 'highprotein' | 'breakfast' | 'snack';
+
+export interface Recipe {
+  id: string;
+  category: RecipeCategory;
+  title: LocalizedText;
+  description: LocalizedText;
+  /** Energy in kcal. */
+  kcal: number;
+  /** Protein in grams. */
+  protein: number;
+  /** Prep/cook time in minutes. */
+  timeMin: number;
+  imageUrl: string | null;
+  /** YouTube/Vimeo URL for the recipe video (opens in a lightbox). */
+  youtubeUrl: string | null;
+  featured: boolean;
+  createdAt: string;
+}
+
 export interface SiteSettings {
   whatsappUrl: string;
   instagramUrl: string;

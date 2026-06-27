@@ -1,4 +1,4 @@
-import type { Post, SocialItem, SiteSettings } from './types';
+import type { Post, SocialItem, SiteSettings, Recipe } from './types';
 
 /**
  * Sample content shown until Supabase is configured (and as a graceful
@@ -137,6 +137,105 @@ export const SAMPLE_SOCIAL: SocialItem[] = [
     platform: 'instagram',
     caption: { tr: 'Günlük disiplin', en: 'Everyday discipline' },
     createdAt: '2026-06-04T09:00:00Z',
+  },
+];
+
+export const SAMPLE_RECIPES: Recipe[] = [
+  {
+    id: 'r1',
+    category: 'smoothie',
+    title: { tr: 'Yeşil Güç Smoothie', en: 'Green Power Smoothie' },
+    description: {
+      tr: 'Ispanak, muz, fıstık ezmesi ve whey ile antrenman sonrası toparlanma içeceği.',
+      en: 'Spinach, banana, peanut butter and whey for a post-workout recovery hit.',
+    },
+    kcal: 320,
+    protein: 28,
+    timeMin: 5,
+    imageUrl: null,
+    youtubeUrl: 'https://www.youtube.com/watch?v=2vjPBrBU-TM',
+    featured: true,
+    createdAt: '2026-06-18T09:00:00Z',
+  },
+  {
+    id: 'r2',
+    category: 'highprotein',
+    title: { tr: 'Acılı Tavuk & Pirinç Kasesi', en: 'Spicy Chicken & Rice Bowl' },
+    description: {
+      tr: 'Yüksek protein, düşük yağ. Meal-prep için ideal, 4 porsiyon.',
+      en: 'High protein, low fat. Perfect for meal-prep, makes 4 portions.',
+    },
+    kcal: 540,
+    protein: 46,
+    timeMin: 25,
+    imageUrl: null,
+    youtubeUrl: 'https://www.youtube.com/watch?v=UBMk30rjy0o',
+    featured: false,
+    createdAt: '2026-06-16T09:00:00Z',
+  },
+  {
+    id: 'r3',
+    category: 'breakfast',
+    title: { tr: 'Protein Yulaf Kasesi', en: 'Protein Overnight Oats' },
+    description: {
+      tr: 'Akşamdan hazırla, sabah enerjiyle başla. Yulaf, yoğurt, chia ve meyve.',
+      en: 'Prep at night, wake up to fuel. Oats, yogurt, chia and berries.',
+    },
+    kcal: 410,
+    protein: 32,
+    timeMin: 10,
+    imageUrl: null,
+    youtubeUrl: null,
+    featured: false,
+    createdAt: '2026-06-14T09:00:00Z',
+  },
+  {
+    id: 'r4',
+    category: 'snack',
+    title: { tr: 'Çikolatalı Protein Topları', en: 'Chocolate Protein Bites' },
+    description: {
+      tr: 'Şekersiz, taşınabilir atıştırmalık. Hurma, kakao ve fındık.',
+      en: 'No added sugar, grab-and-go fuel. Dates, cacao and hazelnuts.',
+    },
+    kcal: 180,
+    protein: 12,
+    timeMin: 15,
+    imageUrl: null,
+    youtubeUrl: null,
+    featured: false,
+    createdAt: '2026-06-12T09:00:00Z',
+  },
+  {
+    id: 'r5',
+    category: 'smoothie',
+    title: { tr: 'Yaban Mersinli Antioksidan', en: 'Blueberry Antioxidant Blend' },
+    description: {
+      tr: 'Yaban mersini, pancar ve keten tohumu — toparlanma ve odak için.',
+      en: 'Blueberry, beetroot and flax — built for recovery and focus.',
+    },
+    kcal: 260,
+    protein: 18,
+    timeMin: 5,
+    imageUrl: null,
+    youtubeUrl: null,
+    featured: false,
+    createdAt: '2026-06-10T09:00:00Z',
+  },
+  {
+    id: 'r6',
+    category: 'highprotein',
+    title: { tr: 'Somon & Tatlı Patates', en: 'Salmon & Sweet Potato' },
+    description: {
+      tr: 'Omega-3 ve yavaş karbonhidrat. Fırında 30 dakikada hazır.',
+      en: 'Omega-3 and slow carbs. Oven-ready in 30 minutes.',
+    },
+    kcal: 600,
+    protein: 44,
+    timeMin: 30,
+    imageUrl: null,
+    youtubeUrl: null,
+    featured: false,
+    createdAt: '2026-06-08T09:00:00Z',
   },
 ];
 
