@@ -7,6 +7,7 @@ export const en = {
     videos: 'Videos',
     feed: 'Feed',
     nutrition: 'Nutrition',
+    training: 'Training',
     blog: 'Blog',
     social: 'Social',
     menuOpen: 'Open menu',
@@ -117,6 +118,41 @@ export const en = {
     title: 'Ready to start?',
     subtitle: 'Message directly on WhatsApp — questions, coaching or collabs.',
     button: 'Message on WhatsApp',
+  },
+
+  training: {
+    eyebrow: 'Anatomy',
+    title: 'Train by Muscle',
+    subtitle: 'Tap a muscle group on the figure to see how to train it.',
+    hint: 'Select a muscle group',
+    exercisesLabel: 'Key exercises',
+    muscles: {
+      shoulders: {
+        name: 'Shoulders',
+        desc: 'Three-headed deltoids for width and pressing power. Train every angle for round, capped shoulders.',
+        exercises: ['Overhead Press', 'Lateral Raise', 'Face Pull'],
+      },
+      chest: {
+        name: 'Chest',
+        desc: 'The pectorals drive every push. Work incline, flat and flye angles for full, balanced development.',
+        exercises: ['Bench Press', 'Incline Dumbbell Press', 'Cable Flye'],
+      },
+      arms: {
+        name: 'Arms',
+        desc: 'Biceps and forearms for pulling strength and detail. Control the eccentric and train the full range.',
+        exercises: ['Barbell Curl', 'Hammer Curl', 'Cable Pushdown'],
+      },
+      core: {
+        name: 'Core',
+        desc: 'Abs and deep stabilisers transfer force and protect the spine. Train them braced and under load.',
+        exercises: ['Hanging Leg Raise', 'Cable Crunch', 'Plank'],
+      },
+      legs: {
+        name: 'Legs',
+        desc: 'Quads, hamstrings and calves — the engine. The biggest muscles, the biggest payoff for strength and shape.',
+        exercises: ['Back Squat', 'Romanian Deadlift', 'Leg Press'],
+      },
+    },
   },
 
   categories: {

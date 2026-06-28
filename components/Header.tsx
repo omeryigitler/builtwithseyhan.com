@@ -32,6 +32,7 @@ export function Header({ locale, dict, settings }: Props) {
     { label: dict.nav.videos, href: `${base}#videos` },
     { label: dict.nav.feed, href: `${base}#feed` },
     { label: dict.nav.nutrition, href: `${base}/nutrition` },
+    { label: dict.nav.training, href: `${base}/training` },
     { label: dict.nav.blog, href: `${base}/blog` },
     { label: dict.nav.social, href: `${base}#social` },
   ];

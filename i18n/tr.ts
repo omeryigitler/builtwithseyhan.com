@@ -9,6 +9,7 @@ export const tr: Dictionary = {
     videos: 'Videolar',
     feed: 'Akış',
     nutrition: 'Beslenme',
+    training: 'Antrenman',
     blog: 'Blog',
     social: 'Sosyal',
     menuOpen: 'Menüyü aç',
@@ -119,6 +120,41 @@ export const tr: Dictionary = {
     title: 'Başlamaya hazır mısın?',
     subtitle: 'Doğrudan WhatsApp’tan yaz — sorular, koçluk veya iş birlikleri.',
     button: 'WhatsApp’tan Yaz',
+  },
+
+  training: {
+    eyebrow: 'Anatomi',
+    title: 'Kasına Göre Çalış',
+    subtitle: 'Figürdeki bir kas grubuna dokun, nasıl çalışılacağını gör.',
+    hint: 'Bir kas grubu seç',
+    exercisesLabel: 'Temel hareketler',
+    muscles: {
+      shoulders: {
+        name: 'Omuzlar',
+        desc: 'Genişlik ve itiş gücü için üç başlı deltoidler. Yuvarlak, dolgun omuzlar için her açıyı çalış.',
+        exercises: ['Omuz Press', 'Yana Açış', 'Face Pull'],
+      },
+      chest: {
+        name: 'Göğüs',
+        desc: 'Pektoraller her itişin merkezi. Dolgun ve dengeli gelişim için incline, düz ve flye açıları.',
+        exercises: ['Bench Press', 'Incline Dumbbell Press', 'Cable Flye'],
+      },
+      arms: {
+        name: 'Kollar',
+        desc: 'Çekiş gücü ve detay için biceps ve ön kol. Negatifi kontrol et, tam açıkta çalış.',
+        exercises: ['Barbell Curl', 'Hammer Curl', 'Cable Pushdown'],
+      },
+      core: {
+        name: 'Karın',
+        desc: 'Karın ve derin stabilizatörler kuvveti aktarır, omurgayı korur. Yük altında ve kasılı çalış.',
+        exercises: ['Hanging Leg Raise', 'Cable Crunch', 'Plank'],
+      },
+      legs: {
+        name: 'Bacaklar',
+        desc: 'Quadlar, hamstringler ve baldırlar — motor. En büyük kaslar, kuvvet ve form için en büyük getiri.',
+        exercises: ['Squat', 'Romanian Deadlift', 'Leg Press'],
+      },
+    },
   },
 
   categories: {
