@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Loader, Upload } from 'lucide-react';
+import { Check, ChevronDown, Loader, Upload } from 'lucide-react';
 import { uploadMedia } from '@/lib/admin';
 
 const inputCls =
@@ -74,19 +74,62 @@ export function SelectField({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const current = options.find((o) => o.value === value);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, [open]);
+
   return (
-    <label className="block">
+    <div className="block">
       <span className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-gray-400">
         {label}
       </span>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className={inputCls}>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </label>
+      <div className="relative" ref={ref}>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className={`${inputCls} flex items-center justify-between text-left`}
+        >
+          <span className="truncate">{current?.label ?? ''}</span>
+          <ChevronDown
+            size={16}
+            className={`shrink-0 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
+          />
+        </button>
+
+        {open && (
+          <div className="absolute left-0 right-0 z-30 mt-1 max-h-60 overflow-auto rounded-xl border border-gray-700 bg-gray-800 p-1 shadow-2xl">
+            {options.map((o) => {
+              const active = o.value === value;
+              return (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => {
+                    onChange(o.value);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                    active ? 'bg-brand/15 font-bold text-brand' : 'text-gray-200 hover:bg-white/5'
+                  }`}
+                >
+                  <span className="truncate">{o.label}</span>
+                  {active && <Check size={15} className="shrink-0" />}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
