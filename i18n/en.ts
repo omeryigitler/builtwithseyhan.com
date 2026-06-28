@@ -252,6 +252,9 @@ export const en = {
     exercisesLabel: 'exercises',
     coachProgram: 'Coach',
     adminPanel: 'Admin Panel',
+    progressTitle: 'Progress',
+    recordsTitle: 'Personal Records',
+    volumePerWorkout: 'Volume per workout',
     muscles: {
       chest: 'Chest',
       back: 'Back',

@@ -254,6 +254,9 @@ export const tr: Dictionary = {
     exercisesLabel: 'egzersiz',
     coachProgram: 'Hoca',
     adminPanel: 'Admin Paneli',
+    progressTitle: 'İlerleme',
+    recordsTitle: 'Kişisel Rekorlar',
+    volumePerWorkout: 'Antrenman başına hacim',
     muscles: {
       chest: 'Göğüs',
       back: 'Sırt',

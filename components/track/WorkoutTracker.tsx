@@ -36,6 +36,7 @@ import {
 import { AuthModal } from '@/components/auth/AuthModal';
 import { ActiveWorkout } from './ActiveWorkout';
 import { ProgramBuilder } from './ProgramBuilder';
+import { ProgressPanel } from './ProgressPanel';
 
 type Mode = 'home' | 'active' | 'program';
 
@@ -225,6 +226,8 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
         <Stat icon={<CalendarDays size={16} />} label={t.statWeek} value={String(weekCount)} />
         <Stat icon={<TrendingUp size={16} />} label={t.statVolume} value={totalVolume.toLocaleString()} />
       </div>
+
+      {sessions.length > 0 && <ProgressPanel sessions={sessions} t={t} locale={locale} />}
 
       {/* PART 1 — Programs */}
       <section>
