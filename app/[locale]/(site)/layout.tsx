@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { WhatsAppFloat } from '@/components/WhatsAppFloat';
 import { ScrollProgress } from '@/components/ScrollProgress';
+import { EbookPopup } from '@/components/EbookPopup';
 
 export default async function SiteLayout({
   children,
@@ -25,6 +26,7 @@ export default async function SiteLayout({
       <main className="min-h-screen">{children}</main>
       <Footer locale={locale} dict={dict} settings={settings} />
       <WhatsAppFloat url={settings.whatsappUrl} />
+      <EbookPopup t={dict.nutrition.ebook.popup} />
     </>
   );
 }

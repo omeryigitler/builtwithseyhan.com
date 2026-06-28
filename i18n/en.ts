@@ -92,6 +92,17 @@ export const en = {
       subtitle: 'A full e-book of recipes and meal plans. Unlock it free — dropping soon.',
       locked: 'Locked',
       cta: 'Notify me',
+      popup: {
+        title: 'Unlock the Playbook',
+        subtitle:
+          'Recipes, macros and meal plans — drop your email and it lands in your inbox.',
+        placeholder: 'you@email.com',
+        submit: 'Send it to me',
+        success: 'Done — check your inbox!',
+        error: 'Something went wrong. Please try again.',
+        privacy: 'No spam. Unsubscribe anytime.',
+        dismiss: 'Maybe later',
+      },
     },
   },
 

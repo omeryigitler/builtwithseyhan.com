@@ -94,6 +94,17 @@ export const tr: Dictionary = {
       subtitle: 'Tarifler ve öğün planlarından oluşan e-kitap. Ücretsiz aç — çok yakında.',
       locked: 'Kilitli',
       cta: 'Haber ver',
+      popup: {
+        title: 'El Kitabını Aç',
+        subtitle:
+          'Tarifler, makrolar ve öğün planları — mailini bırak, gelen kutuna düşsün.',
+        placeholder: 'sen@mail.com',
+        submit: 'Bana gönder',
+        success: 'Tamamdır — gelen kutunu kontrol et!',
+        error: 'Bir şeyler ters gitti. Lütfen tekrar dene.',
+        privacy: 'Spam yok. İstediğin an çıkabilirsin.',
+        dismiss: 'Belki sonra',
+      },
     },
   },
 

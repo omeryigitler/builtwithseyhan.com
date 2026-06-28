@@ -5,6 +5,7 @@ import { getDictionary } from '@/i18n/dictionaries';
 import { getRecipes } from '@/lib/content';
 import { FlipText } from '@/components/ui/FlipText';
 import { RecipeIndex } from '@/components/nutrition/RecipeIndex';
+import { EbookUnlockButton } from '@/components/nutrition/EbookUnlockButton';
 
 export const revalidate = 300;
 
@@ -80,9 +81,7 @@ export default async function NutritionPage({
                 {dict.nutrition.ebook.title}
               </h2>
               <p className="mt-3 max-w-lg text-gray-300">{dict.nutrition.ebook.subtitle}</p>
-              <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-sm font-bold uppercase tracking-widest text-white backdrop-blur-xl">
-                <Lock size={15} /> {dict.nutrition.ebook.locked}
-              </span>
+              <EbookUnlockButton label={dict.nutrition.ebook.cta} />
             </div>
           </div>
         </div>
