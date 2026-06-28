@@ -12,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     routes.push({ url: `${SITE}/${locale}`, changeFrequency: 'weekly', priority: 1 });
     routes.push({ url: `${SITE}/${locale}/nutrition`, changeFrequency: 'weekly', priority: 0.8 });
     routes.push({ url: `${SITE}/${locale}/training`, changeFrequency: 'weekly', priority: 0.8 });
+    routes.push({ url: `${SITE}/${locale}/track`, changeFrequency: 'monthly', priority: 0.6 });
     routes.push({ url: `${SITE}/${locale}/blog`, changeFrequency: 'weekly', priority: 0.8 });
     for (const slug of slugs) {
       routes.push({

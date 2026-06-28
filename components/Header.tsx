@@ -34,6 +34,7 @@ export function Header({ locale, dict, settings }: Props) {
     { label: dict.nav.feed, href: `${base}#feed` },
     { label: dict.nav.nutrition, href: `${base}/nutrition` },
     { label: dict.nav.training, href: `${base}/training` },
+    { label: dict.nav.track, href: `${base}/track` },
     { label: dict.nav.blog, href: `${base}/blog` },
     { label: dict.nav.social, href: `${base}#social` },
   ];
@@ -69,7 +70,7 @@ export function Header({ locale, dict, settings }: Props) {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-5 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
