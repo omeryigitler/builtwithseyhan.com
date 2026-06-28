@@ -8,6 +8,8 @@ import {
   Flame,
   Loader,
   LogOut,
+  Pencil,
+  Plus,
   TrendingUp,
   Trash2,
 } from 'lucide-react';
@@ -15,19 +17,27 @@ import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import {
+  deleteProgram,
   deleteSession,
+  listPrograms,
   listSessions,
   onAuthChange,
+  saveProgram,
   saveSession,
   sessionSetCount,
   sessionVolume,
   signInWithEmail,
   signInWithGoogle,
   signOut,
+  type ProgramInput,
   type SessionInput,
+  type WorkoutProgram,
   type WorkoutSession,
 } from '@/lib/workouts';
 import { ActiveWorkout } from './ActiveWorkout';
+import { ProgramBuilder } from './ProgramBuilder';
+
+type Mode = 'home' | 'active' | 'program';
 
 function withinThisWeek(d: string): boolean {
   const dt = new Date(`${d}T00:00:00`).getTime();
@@ -42,30 +52,31 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+  const [programs, setPrograms] = useState<WorkoutProgram[]>([]);
   const [loading, setLoading] = useState(true);
-  const [active, setActive] = useState(false);
+  const [mode, setMode] = useState<Mode>('home');
+  const [activeProgram, setActiveProgram] = useState<WorkoutProgram | null>(null);
+  const [editing, setEditing] = useState<WorkoutProgram | null>(null);
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
 
   useEffect(() => onAuthChange((u) => { setUser(u); setReady(true); }), []);
 
-  useEffect(() => {
-    if (!user) return;
-    setLoading(true);
-    listSessions()
-      .then(setSessions)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [user]);
-
   const reload = async () => {
     setLoading(true);
     try {
-      setSessions(await listSessions());
+      const [s, p] = await Promise.all([listSessions(), listPrograms()]);
+      setSessions(s);
+      setPrograms(p);
+    } catch {
+      /* ignore */
     } finally {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    if (user) reload();
+  }, [user]);
 
   const onFinish = async (s: SessionInput) => {
     try {
@@ -73,16 +84,35 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
     } catch (e) {
       alert(String(e));
     }
-    setActive(false);
+    setActiveProgram(null);
+    setMode('home');
     await reload();
   };
 
-  const onDelete = async (id: string) => {
+  const onSaveProgram = async (input: ProgramInput) => {
+    try {
+      await saveProgram(input);
+    } catch (e) {
+      alert(String(e));
+      return;
+    }
+    setEditing(null);
+    setMode('home');
+    await reload();
+  };
+
+  const removeProgram = async (id: string) => {
+    if (!confirm(t.deleteConfirm)) return;
+    await deleteProgram(id);
+    await reload();
+  };
+  const removeSession = async (id: string) => {
     if (!confirm(t.deleteConfirm)) return;
     await deleteSession(id);
     await reload();
   };
 
+  // ── Gates ──
   if (!isSupabaseConfigured) {
     return (
       <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-8 text-center text-sm text-gray-400">
@@ -90,7 +120,6 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
       </div>
     );
   }
-
   if (!ready) {
     return (
       <div className="flex justify-center py-20">
@@ -98,7 +127,6 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
       </div>
     );
   }
-
   if (!user) {
     return (
       <div className="mx-auto max-w-md rounded-3xl border border-gray-800 bg-gray-900/60 p-8">
@@ -144,12 +172,44 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
     );
   }
 
-  if (active) {
-    return <ActiveWorkout t={t} onFinish={onFinish} onCancel={() => setActive(false)} />;
+  // ── Active workout ──
+  if (mode === 'active') {
+    return (
+      <ActiveWorkout
+        t={t}
+        program={activeProgram}
+        onFinish={onFinish}
+        onCancel={() => {
+          setActiveProgram(null);
+          setMode('home');
+        }}
+      />
+    );
   }
 
+  // ── Program builder ──
+  if (mode === 'program') {
+    return (
+      <ProgramBuilder
+        t={t}
+        initial={editing}
+        onSave={onSaveProgram}
+        onCancel={() => {
+          setEditing(null);
+          setMode('home');
+        }}
+      />
+    );
+  }
+
+  // ── Home ──
   const weekCount = sessions.filter((s) => withinThisWeek(s.performedOn)).length;
   const totalVolume = sessions.reduce((a, s) => a + sessionVolume(s), 0);
+
+  const startProgram = (p: WorkoutProgram | null) => {
+    setActiveProgram(p);
+    setMode('active');
+  };
 
   return (
     <div className="space-y-8">
@@ -169,14 +229,85 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
         <Stat icon={<TrendingUp size={16} />} label={t.statVolume} value={totalVolume.toLocaleString()} />
       </div>
 
-      <button
-        onClick={() => setActive(true)}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-4 font-display text-xl uppercase tracking-wide text-black shadow-[0_8px_30px_rgba(204,255,0,0.35)] transition-colors hover:bg-brand-hover"
-      >
-        <Flame size={20} /> {t.start}
-      </button>
+      {/* PART 1 — Programs */}
+      <section>
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="font-display text-2xl uppercase tracking-tight text-white">{t.programsTitle}</h3>
+          <button
+            onClick={() => {
+              setEditing(null);
+              setMode('program');
+            }}
+            className="flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-xs font-black uppercase tracking-wider text-black hover:bg-brand-hover"
+          >
+            <Plus size={14} /> {t.createProgram}
+          </button>
+        </div>
 
-      <div>
+        {programs.length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-gray-800 px-4 py-8 text-center text-sm text-gray-500">
+            {t.noPrograms}
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {programs.map((p) => (
+              <div key={p.id} className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4">
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0">
+                    <div className="truncate font-display text-lg uppercase tracking-tight text-white">
+                      {p.title}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {p.exercises.length} {t.exercisesLabel}
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 gap-1">
+                    <button
+                      onClick={() => {
+                        setEditing(p);
+                        setMode('program');
+                      }}
+                      className="rounded-lg p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
+                    >
+                      <Pencil size={15} />
+                    </button>
+                    <button
+                      onClick={() => removeProgram(p.id)}
+                      className="rounded-lg p-1.5 text-gray-500 hover:bg-red-500/10 hover:text-red-400"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+                {p.exercises.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-400">
+                    {p.exercises.slice(0, 5).map((e, i) => (
+                      <span key={i}>{e.name}</span>
+                    ))}
+                    {p.exercises.length > 5 && <span className="text-gray-600">+{p.exercises.length - 5}</span>}
+                  </div>
+                )}
+                <button
+                  onClick={() => startProgram(p)}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-sm font-black uppercase tracking-wider text-black hover:bg-brand-hover"
+                >
+                  <Flame size={16} /> {t.startProgram}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          onClick={() => startProgram(null)}
+          className="mt-3 w-full rounded-xl border border-gray-800 py-3 text-sm font-bold uppercase tracking-wider text-gray-400 hover:border-gray-600 hover:text-gray-200"
+        >
+          {t.emptyWorkout}
+        </button>
+      </section>
+
+      {/* PART 2 — History */}
+      <section>
         <h3 className="mb-4 font-display text-2xl uppercase tracking-tight text-white">{t.historyTitle}</h3>
         {loading ? (
           <div className="flex justify-center py-8">
@@ -187,11 +318,11 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
         ) : (
           <div className="space-y-3">
             {sessions.map((s) => (
-              <HistoryCard key={s.id} s={s} t={t} locale={locale} onDelete={() => onDelete(s.id)} />
+              <HistoryCard key={s.id} s={s} t={t} locale={locale} onDelete={() => removeSession(s.id)} />
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

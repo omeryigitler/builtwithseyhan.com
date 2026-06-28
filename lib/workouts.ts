@@ -145,3 +145,65 @@ export function sessionVolume(s: WorkoutSession | SessionInput): number {
 export function sessionSetCount(s: WorkoutSession | SessionInput): number {
   return s.exercises.reduce((tot, ex) => tot + ex.sets.length, 0);
 }
+
+// ─── Programs (reusable routines: target sets / reps / rest per exercise) ──────
+
+export interface ProgramExercise {
+  name: string;
+  muscle: string;
+  sets: number;
+  reps: number;
+  restSec: number;
+}
+
+export interface WorkoutProgram {
+  id: string;
+  title: string;
+  exercises: ProgramExercise[];
+  createdAt: string;
+}
+
+export interface ProgramInput {
+  id?: string;
+  title: string;
+  exercises: ProgramExercise[];
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function fromProgramRow(r: any): WorkoutProgram {
+  return {
+    id: String(r.id),
+    title: r.title ?? '',
+    exercises: Array.isArray(r.exercises) ? r.exercises : [],
+    createdAt: r.created_at ?? '',
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export async function listPrograms(): Promise<WorkoutProgram[]> {
+  const s = db();
+  const { data, error } = await s
+    .from('workout_programs')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(fromProgramRow);
+}
+
+export async function saveProgram(input: ProgramInput): Promise<void> {
+  const s = db();
+  const { data: auth } = await s.auth.getUser();
+  const uid = auth.user?.id;
+  if (!uid) throw new Error('Not signed in.');
+  const row = { user_id: uid, title: input.title, exercises: input.exercises };
+  const { error } = input.id
+    ? await s.from('workout_programs').update(row).eq('id', input.id)
+    : await s.from('workout_programs').insert(row);
+  if (error) throw error;
+}
+
+export async function deleteProgram(id: string): Promise<void> {
+  const s = db();
+  const { error } = await s.from('workout_programs').delete().eq('id', id);
+  if (error) throw error;
+}

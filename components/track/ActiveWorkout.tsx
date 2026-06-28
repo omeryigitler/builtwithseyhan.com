@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Plus, Timer, Trash2 } from 'lucide-react';
 import type { Dictionary } from '@/i18n/dictionaries';
-import type { SessionInput, WorkoutExercise } from '@/lib/workouts';
+import type { SessionInput, WorkoutExercise, WorkoutProgram } from '@/lib/workouts';
 import { ExercisePicker } from './ExercisePicker';
 
 interface ActiveSet {
@@ -14,6 +14,7 @@ interface ActiveSet {
 interface ActiveExercise {
   name: string;
   muscle: string;
+  restSec: number;
   sets: ActiveSet[];
 }
 
@@ -21,17 +22,38 @@ const REST_DEFAULT = 90; // seconds
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
+function initFromProgram(p?: WorkoutProgram | null): { title: string; exercises: ActiveExercise[] } {
+  if (!p) return { title: '', exercises: [] };
+  return {
+    title: p.title,
+    exercises: p.exercises.map((pe) => ({
+      name: pe.name,
+      muscle: pe.muscle,
+      restSec: pe.restSec || REST_DEFAULT,
+      sets: Array.from({ length: Math.max(1, pe.sets || 1) }, () => ({
+        weight: '',
+        reps: pe.reps ? String(pe.reps) : '',
+        done: false,
+      })),
+    })),
+  };
+}
+
 export function ActiveWorkout({
   t,
+  program,
   onFinish,
   onCancel,
 }: {
   t: Dictionary['track'];
+  program?: WorkoutProgram | null;
   onFinish: (s: SessionInput) => void;
   onCancel: () => void;
 }) {
-  const [title, setTitle] = useState('');
-  const [exercises, setExercises] = useState<ActiveExercise[]>([]);
+  const [title, setTitle] = useState(() => initFromProgram(program).title);
+  const [exercises, setExercises] = useState<ActiveExercise[]>(
+    () => initFromProgram(program).exercises
+  );
   const [picker, setPicker] = useState(false);
   const startedAt = useRef(Date.now());
   const [now, setNow] = useState(Date.now());
@@ -49,7 +71,10 @@ export function ActiveWorkout({
   }, [restEndsAt, now]);
 
   const addExercise = (name: string, muscle: string) => {
-    setExercises((ex) => [...ex, { name, muscle, sets: [{ weight: '', reps: '', done: false }] }]);
+    setExercises((ex) => [
+      ...ex,
+      { name, muscle, restSec: REST_DEFAULT, sets: [{ weight: '', reps: '', done: false }] },
+    ]);
     setPicker(false);
   };
   const removeExercise = (i: number) => setExercises((ex) => ex.filter((_, k) => k !== i));
@@ -74,7 +99,7 @@ export function ActiveWorkout({
         k === i ? { ...e, sets: e.sets.map((s, m) => (m === j ? { ...s, done: !s.done } : s)) } : e
       )
     );
-    if (!wasDone) setRestEndsAt(Date.now() + REST_DEFAULT * 1000);
+    if (!wasDone) setRestEndsAt(Date.now() + (exercises[i].restSec || REST_DEFAULT) * 1000);
   };
 
   const finish = () => {
@@ -135,11 +160,13 @@ export function ActiveWorkout({
           <div className="mb-3 flex items-start justify-between">
             <div>
               <div className="font-bold text-white">{e.name}</div>
-              {e.muscle && (
-                <div className="text-[11px] font-bold uppercase tracking-widest text-gray-500">
-                  {t.muscles[e.muscle as keyof typeof t.muscles] ?? ''}
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-500">
+                {e.muscle && <span>{t.muscles[e.muscle as keyof typeof t.muscles] ?? ''}</span>}
+                <span className="flex items-center gap-1 text-gray-600">
+                  <Timer size={11} /> {t.restLabel} {e.restSec}
+                  {t.sec}
+                </span>
+              </div>
             </div>
             <button
               onClick={() => removeExercise(i)}
@@ -168,14 +195,16 @@ export function ActiveWorkout({
                 <input
                   inputMode="decimal"
                   value={s.weight}
+                  placeholder={t.weightPlaceholder}
                   onChange={(ev) => setVal(i, j, 'weight', ev.target.value)}
-                  className="w-full rounded-md border border-gray-700 bg-gray-800 px-2 py-1.5 text-center text-sm text-white focus:border-brand focus:outline-none"
+                  className="w-full rounded-md border border-gray-700 bg-gray-800 px-2 py-1.5 text-center text-sm text-white placeholder:text-gray-600 focus:border-brand focus:outline-none"
                 />
                 <input
                   inputMode="numeric"
                   value={s.reps}
+                  placeholder={t.repsPlaceholder}
                   onChange={(ev) => setVal(i, j, 'reps', ev.target.value)}
-                  className="w-full rounded-md border border-gray-700 bg-gray-800 px-2 py-1.5 text-center text-sm text-white focus:border-brand focus:outline-none"
+                  className="w-full rounded-md border border-gray-700 bg-gray-800 px-2 py-1.5 text-center text-sm text-white placeholder:text-gray-600 focus:border-brand focus:outline-none"
                 />
                 <button
                   onClick={() => onToggle(i, j)}
@@ -212,7 +241,7 @@ export function ActiveWorkout({
         <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-white/10 bg-gray-900 px-4 py-3">
           <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm font-bold text-white">
-              <Timer size={16} className="text-brand" /> {t.rest}
+              <Timer size={16} className="text-brand" /> {t.restLabel}
               <span className="font-display text-2xl">{fmt(restLeft)}</span>
             </div>
             <div className="flex gap-2">
