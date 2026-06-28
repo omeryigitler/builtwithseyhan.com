@@ -8,7 +8,7 @@ const en = {
   notAuthorized: 'This account is not authorized for admin.',
   signOut: 'Sign out',
   loading: 'Loading…',
-  tabs: { posts: 'Posts', social: 'Social Wall', settings: 'Settings' },
+  tabs: { posts: 'Posts', recipes: 'Recipes', social: 'Social Wall', settings: 'Settings' },
   saving: 'Saving…',
   save: 'Save',
   saved: 'Saved',
@@ -17,6 +17,7 @@ const en = {
   remove: 'Delete',
   cancel: 'Cancel',
   newPost: 'New post',
+  newRecipe: 'New recipe',
   confirmDelete: 'Delete this item?',
   empty: 'Nothing yet.',
   fields: {
@@ -29,6 +30,11 @@ const en = {
     excerptEn: 'Excerpt (EN)',
     bodyTr: 'Body (TR)',
     bodyEn: 'Body (EN)',
+    descriptionTr: 'Description (TR)',
+    descriptionEn: 'Description (EN)',
+    kcal: 'Calories (kcal)',
+    protein: 'Protein (g)',
+    time: 'Time (min)',
     image: 'Image / thumbnail',
     video: 'Video URL (YouTube / Vimeo)',
     social: 'Social link (optional)',
@@ -53,6 +59,12 @@ const en = {
     mindset: 'Mindset',
     training: 'Training',
   },
+  recipeCategories: {
+    smoothie: 'Smoothies',
+    highprotein: 'High-Protein',
+    breakfast: 'Breakfast',
+    snack: 'Snacks',
+  },
 };
 
 const tr: typeof en = {
@@ -63,7 +75,7 @@ const tr: typeof en = {
   notAuthorized: 'Bu hesap admin için yetkili değil.',
   signOut: 'Çıkış',
   loading: 'Yükleniyor…',
-  tabs: { posts: 'Gönderiler', social: 'Sosyal Duvar', settings: 'Ayarlar' },
+  tabs: { posts: 'Gönderiler', recipes: 'Tarifler', social: 'Sosyal Duvar', settings: 'Ayarlar' },
   saving: 'Kaydediliyor…',
   save: 'Kaydet',
   saved: 'Kaydedildi',
@@ -72,6 +84,7 @@ const tr: typeof en = {
   remove: 'Sil',
   cancel: 'Vazgeç',
   newPost: 'Yeni gönderi',
+  newRecipe: 'Yeni tarif',
   confirmDelete: 'Bu öğe silinsin mi?',
   empty: 'Henüz içerik yok.',
   fields: {
@@ -84,6 +97,11 @@ const tr: typeof en = {
     excerptEn: 'Özet (EN)',
     bodyTr: 'İçerik (TR)',
     bodyEn: 'İçerik (EN)',
+    descriptionTr: 'Açıklama (TR)',
+    descriptionEn: 'Açıklama (EN)',
+    kcal: 'Kalori (kcal)',
+    protein: 'Protein (g)',
+    time: 'Süre (dk)',
     image: 'Görsel / kapak',
     video: 'Video adresi (YouTube / Vimeo)',
     social: 'Sosyal medya linki (opsiyonel)',
@@ -107,6 +125,12 @@ const tr: typeof en = {
     nutrition: 'Beslenme',
     mindset: 'Motivasyon',
     training: 'Antrenman',
+  },
+  recipeCategories: {
+    smoothie: 'Smoothie',
+    highprotein: 'Yüksek Protein',
+    breakfast: 'Kahvaltı',
+    snack: 'Atıştırmalık',
   },
 };
 

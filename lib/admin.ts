@@ -4,6 +4,8 @@ import type {
   LocalizedText,
   Post,
   PostType,
+  Recipe,
+  RecipeCategory,
   SiteSettings,
   SocialItem,
 } from './types';
@@ -223,5 +225,80 @@ export async function saveSettings(input: SiteSettings): Promise<void> {
       hero_video_url: input.heroVideoUrl,
     })
     .eq('id', 1);
+  if (error) throw error;
+}
+
+// ─── Recipes (Nutrition) ─────────────────────────────────────────────────────────
+
+export interface RecipeInput {
+  id?: string;
+  category: RecipeCategory;
+  title: LocalizedText;
+  description: LocalizedText;
+  kcal: number;
+  protein: number;
+  timeMin: number;
+  imageUrl: string | null;
+  youtubeUrl: string | null;
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function fromRecipeRow(r: any): Recipe {
+  return {
+    id: String(r.id),
+    category: r.category,
+    title: { tr: r.title_tr ?? '', en: r.title_en ?? '' },
+    description: { tr: r.description_tr ?? '', en: r.description_en ?? '' },
+    kcal: Number(r.kcal ?? 0),
+    protein: Number(r.protein ?? 0),
+    timeMin: Number(r.time_min ?? 0),
+    imageUrl: r.image_url ?? null,
+    youtubeUrl: r.youtube_url ?? null,
+    featured: !!r.featured,
+    createdAt: r.created_at ?? '',
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export async function listAllRecipes(): Promise<Recipe[]> {
+  const s = db();
+  const { data, error } = await s
+    .from('recipes')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(fromRecipeRow);
+}
+
+export async function saveRecipe(input: RecipeInput): Promise<void> {
+  const s = db();
+  const row = {
+    category: input.category,
+    title_tr: input.title.tr,
+    title_en: input.title.en,
+    description_tr: input.description.tr,
+    description_en: input.description.en,
+    kcal: input.kcal,
+    protein: input.protein,
+    time_min: input.timeMin,
+    image_url: input.imageUrl,
+    youtube_url: input.youtubeUrl,
+    featured: input.featured,
+    published: input.published,
+    sort_order: input.sortOrder,
+  };
+  const { error } = input.id
+    ? await s.from('recipes').update(row).eq('id', input.id)
+    : await s.from('recipes').insert(row);
+  if (error) throw error;
+}
+
+export async function deleteRecipe(id: string): Promise<void> {
+  const s = db();
+  const { error } = await s.from('recipes').delete().eq('id', id);
   if (error) throw error;
 }

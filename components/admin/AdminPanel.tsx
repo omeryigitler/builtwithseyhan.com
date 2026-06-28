@@ -8,10 +8,11 @@ import { isSupabaseConfigured, isAdminEmail } from '@/lib/supabase/config';
 import { onAuthChange, signInWithGoogle, signOutAdmin } from '@/lib/admin';
 import { getAdminLabels } from './labels';
 import { PostsTab } from './PostsTab';
+import { RecipesTab } from './RecipesTab';
 import { SocialTab } from './SocialTab';
 import { SettingsTab } from './SettingsTab';
 
-type Tab = 'posts' | 'social' | 'settings';
+type Tab = 'posts' | 'recipes' | 'social' | 'settings';
 
 export function AdminPanel({ locale, adminPath }: { locale: Locale; adminPath: string }) {
   const t = getAdminLabels(locale);
@@ -62,7 +63,7 @@ export function AdminPanel({ locale, adminPath }: { locale: Locale; adminPath: s
         ) : (
           <>
             <div className="mb-6 flex gap-1 border-b border-gray-800">
-              {(['posts', 'social', 'settings'] as Tab[]).map((tb) => (
+              {(['posts', 'recipes', 'social', 'settings'] as Tab[]).map((tb) => (
                 <button
                   key={tb}
                   onClick={() => setTab(tb)}
@@ -75,6 +76,7 @@ export function AdminPanel({ locale, adminPath }: { locale: Locale; adminPath: s
               ))}
             </div>
             {tab === 'posts' && <PostsTab t={t} />}
+            {tab === 'recipes' && <RecipesTab t={t} />}
             {tab === 'social' && <SocialTab t={t} />}
             {tab === 'settings' && <SettingsTab t={t} />}
           </>
