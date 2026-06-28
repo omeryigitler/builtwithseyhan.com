@@ -241,30 +241,39 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
               <div key={p.id} className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4">
                 <div className="flex items-start justify-between">
                   <div className="min-w-0">
-                    <div className="truncate font-display text-lg uppercase tracking-tight text-white">
-                      {p.title}
+                    <div className="flex items-center gap-2">
+                      <div className="truncate font-display text-lg uppercase tracking-tight text-white">
+                        {p.title}
+                      </div>
+                      {p.coachAssigned && (
+                        <span className="shrink-0 rounded bg-brand/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand">
+                          {t.coachProgram}
+                        </span>
+                      )}
                     </div>
                     <div className="text-xs text-gray-500">
                       {p.exercises.length} {t.exercisesLabel}
                     </div>
                   </div>
-                  <div className="flex shrink-0 gap-1">
-                    <button
-                      onClick={() => {
-                        setEditing(p);
-                        setMode('program');
-                      }}
-                      className="rounded-lg p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
-                    >
-                      <Pencil size={15} />
-                    </button>
-                    <button
-                      onClick={() => removeProgram(p.id)}
-                      className="rounded-lg p-1.5 text-gray-500 hover:bg-red-500/10 hover:text-red-400"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
+                  {!p.coachAssigned && (
+                    <div className="flex shrink-0 gap-1">
+                      <button
+                        onClick={() => {
+                          setEditing(p);
+                          setMode('program');
+                        }}
+                        className="rounded-lg p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
+                      >
+                        <Pencil size={15} />
+                      </button>
+                      <button
+                        onClick={() => removeProgram(p.id)}
+                        className="rounded-lg p-1.5 text-gray-500 hover:bg-red-500/10 hover:text-red-400"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  )}
                 </div>
                 {p.exercises.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-400">

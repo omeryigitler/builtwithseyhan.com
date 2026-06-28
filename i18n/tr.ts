@@ -251,6 +251,7 @@ export const tr: Dictionary = {
     weightPlaceholder: 'kg',
     repsPlaceholder: 'tekrar',
     exercisesLabel: 'egzersiz',
+    coachProgram: 'Hoca',
     muscles: {
       chest: 'Göğüs',
       back: 'Sırt',

@@ -181,6 +181,7 @@ export interface WorkoutProgram {
   id: string;
   title: string;
   exercises: ProgramExercise[];
+  coachAssigned: boolean;
   createdAt: string;
 }
 
@@ -196,6 +197,7 @@ function fromProgramRow(r: any): WorkoutProgram {
     id: String(r.id),
     title: r.title ?? '',
     exercises: Array.isArray(r.exercises) ? r.exercises : [],
+    coachAssigned: !!r.coach_assigned,
     createdAt: r.created_at ?? '',
   };
 }

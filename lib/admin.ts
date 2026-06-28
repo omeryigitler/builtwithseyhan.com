@@ -11,6 +11,7 @@ import type {
   SocialItem,
 } from './types';
 import type { User } from '@supabase/supabase-js';
+import type { ProgramInput, WorkoutProgram } from './workouts';
 
 function db() {
   const s = createBrowserSupabase();
@@ -340,5 +341,77 @@ export async function setMemberApproved(id: string, approved: boolean): Promise<
 export async function deleteMemberPost(id: string): Promise<void> {
   const s = db();
   const { error } = await s.from('member_posts').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Coach: members + assigned programs ────────────────────────────────────────
+
+export interface Profile {
+  id: string;
+  email: string;
+  fullName: string;
+  createdAt: string;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function fromProfileRow(r: any): Profile {
+  return {
+    id: String(r.id),
+    email: r.email ?? '',
+    fullName: r.full_name ?? '',
+    createdAt: r.created_at ?? '',
+  };
+}
+function fromProgramRowA(r: any): WorkoutProgram {
+  return {
+    id: String(r.id),
+    title: r.title ?? '',
+    exercises: Array.isArray(r.exercises) ? r.exercises : [],
+    coachAssigned: !!r.coach_assigned,
+    createdAt: r.created_at ?? '',
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export async function listProfiles(): Promise<Profile[]> {
+  const s = db();
+  const { data, error } = await s
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(fromProfileRow);
+}
+
+export async function listProgramsForUser(uid: string): Promise<WorkoutProgram[]> {
+  const s = db();
+  const { data, error } = await s
+    .from('workout_programs')
+    .select('*')
+    .eq('user_id', uid)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(fromProgramRowA);
+}
+
+export async function saveCoachProgram(uid: string, input: ProgramInput): Promise<void> {
+  const s = db();
+  const { data: auth } = await s.auth.getUser();
+  const row = {
+    user_id: uid,
+    title: input.title,
+    exercises: input.exercises,
+    coach_assigned: true,
+    assigned_by: auth.user?.id ?? null,
+  };
+  const { error } = input.id
+    ? await s.from('workout_programs').update(row).eq('id', input.id)
+    : await s.from('workout_programs').insert(row);
+  if (error) throw error;
+}
+
+export async function deleteProgramAdmin(id: string): Promise<void> {
+  const s = db();
+  const { error } = await s.from('workout_programs').delete().eq('id', id);
   if (error) throw error;
 }

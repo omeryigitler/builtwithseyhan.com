@@ -249,6 +249,7 @@ export const en = {
     weightPlaceholder: 'kg',
     repsPlaceholder: 'reps',
     exercisesLabel: 'exercises',
+    coachProgram: 'Coach',
     muscles: {
       chest: 'Chest',
       back: 'Back',

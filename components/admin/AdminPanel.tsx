@@ -10,10 +10,11 @@ import { getAdminLabels } from './labels';
 import { PostsTab } from './PostsTab';
 import { RecipesTab } from './RecipesTab';
 import { MembersTab } from './MembersTab';
+import { ClientsTab } from './ClientsTab';
 import { SocialTab } from './SocialTab';
 import { SettingsTab } from './SettingsTab';
 
-type Tab = 'posts' | 'recipes' | 'members' | 'social' | 'settings';
+type Tab = 'posts' | 'recipes' | 'members' | 'clients' | 'social' | 'settings';
 
 export function AdminPanel({ locale, adminPath }: { locale: Locale; adminPath: string }) {
   const t = getAdminLabels(locale);
@@ -64,7 +65,7 @@ export function AdminPanel({ locale, adminPath }: { locale: Locale; adminPath: s
         ) : (
           <>
             <div className="mb-6 flex gap-1 border-b border-gray-800">
-              {(['posts', 'recipes', 'members', 'social', 'settings'] as Tab[]).map((tb) => (
+              {(['posts', 'recipes', 'members', 'clients', 'social', 'settings'] as Tab[]).map((tb) => (
                 <button
                   key={tb}
                   onClick={() => setTab(tb)}
@@ -79,6 +80,7 @@ export function AdminPanel({ locale, adminPath }: { locale: Locale; adminPath: s
             {tab === 'posts' && <PostsTab t={t} />}
             {tab === 'recipes' && <RecipesTab t={t} />}
             {tab === 'members' && <MembersTab t={t} />}
+            {tab === 'clients' && <ClientsTab t={t} locale={locale} />}
             {tab === 'social' && <SocialTab t={t} />}
             {tab === 'settings' && <SettingsTab t={t} />}
           </>
