@@ -26,14 +26,13 @@ import {
   saveSession,
   sessionSetCount,
   sessionVolume,
-  signInWithEmail,
-  signInWithGoogle,
   signOut,
   type ProgramInput,
   type SessionInput,
   type WorkoutProgram,
   type WorkoutSession,
 } from '@/lib/workouts';
+import { AuthModal } from '@/components/auth/AuthModal';
 import { ActiveWorkout } from './ActiveWorkout';
 import { ProgramBuilder } from './ProgramBuilder';
 
@@ -57,8 +56,7 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
   const [mode, setMode] = useState<Mode>('home');
   const [activeProgram, setActiveProgram] = useState<WorkoutProgram | null>(null);
   const [editing, setEditing] = useState<WorkoutProgram | null>(null);
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | null>(null);
 
   useEffect(() => onAuthChange((u) => { setUser(u); setReady(true); }), []);
 
@@ -129,46 +127,35 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
   }
   if (!user) {
     return (
-      <div className="mx-auto max-w-md rounded-3xl border border-gray-800 bg-gray-900/60 p-8">
-        <h3 className="font-display text-2xl uppercase tracking-tight text-white">{t.signInTitle}</h3>
-        <p className="mt-2 text-sm text-gray-400">{t.signInSubtitle}</p>
-        <button
-          onClick={() => signInWithGoogle(nextPath)}
-          className="mt-6 w-full rounded-xl bg-white py-3 text-sm font-bold text-gray-900 hover:bg-gray-100"
-        >
-          {t.google}
-        </button>
-        <div className="my-4 flex items-center gap-3 text-[10px] uppercase tracking-widest text-gray-600">
-          <span className="h-px flex-1 bg-gray-800" /> or <span className="h-px flex-1 bg-gray-800" />
-        </div>
-        {sent ? (
-          <p className="rounded-xl bg-brand/15 px-4 py-3 text-sm font-bold text-brand">{t.emailSent}</p>
-        ) : (
-          <div className="space-y-2">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t.emailPlaceholder}
-              className="w-full rounded-xl border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:border-brand focus:outline-none"
-            />
+      <>
+        <div className="mx-auto max-w-md rounded-3xl border border-gray-800 bg-gray-900/60 p-8 text-center">
+          <h3 className="font-display text-2xl uppercase tracking-tight text-white">{t.signInTitle}</h3>
+          <p className="mt-2 text-sm text-gray-400">{t.signInSubtitle}</p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
-              onClick={async () => {
-                try {
-                  await signInWithEmail(email, nextPath);
-                  setSent(true);
-                } catch (e) {
-                  alert(String(e));
-                }
-              }}
-              disabled={!email.trim()}
-              className="w-full rounded-xl border border-gray-700 py-3 text-sm font-bold text-gray-200 hover:border-gray-500 disabled:opacity-40"
+              onClick={() => setAuthMode('signin')}
+              className="rounded-xl bg-brand px-6 py-3 text-sm font-black uppercase tracking-widest text-black hover:bg-brand-hover"
             >
-              {t.emailButton}
+              {dict.auth.signIn}
+            </button>
+            <button
+              onClick={() => setAuthMode('signup')}
+              className="rounded-xl border border-gray-700 px-6 py-3 text-sm font-bold uppercase tracking-widest text-gray-200 hover:border-gray-500"
+            >
+              {dict.auth.createAccount}
             </button>
           </div>
+        </div>
+        {authMode && (
+          <AuthModal
+            t={dict.auth}
+            locale={locale}
+            nextPath={nextPath}
+            initialMode={authMode}
+            onClose={() => setAuthMode(null)}
+          />
         )}
-      </div>
+      </>
     );
   }
 

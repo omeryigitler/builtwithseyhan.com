@@ -182,6 +182,25 @@ export const en = {
     },
   },
 
+  auth: {
+    signInTitle: 'Welcome back',
+    signUpTitle: 'Join the crew',
+    signIn: 'Sign in',
+    signUp: 'Sign up',
+    createAccount: 'Create account',
+    namePlaceholder: 'Your name',
+    emailPlaceholder: 'Email',
+    passwordPlaceholder: 'Password',
+    google: 'Continue with Google',
+    or: 'or',
+    welcomeBackText: 'Log your workouts, follow your program, join the community.',
+    joinText: 'Create your free account and start training with the crew.',
+    haveAccount: 'Already a member?',
+    noAccount: 'New here?',
+    confirmEmail: 'Almost there — check your email to confirm your account.',
+    close: 'Close',
+  },
+
   track: {
     eyebrow: 'Workout tracker',
     title: 'Track',

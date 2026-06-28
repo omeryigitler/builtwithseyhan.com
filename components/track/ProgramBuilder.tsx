@@ -30,12 +30,16 @@ export function ProgramBuilder({
   const setNum = (i: number, key: 'sets' | 'reps' | 'restSec', v: string) =>
     setExercises((e) => e.map((x, k) => (k === i ? { ...x, [key]: Math.max(0, Number(v) || 0) } : x)));
 
-  const canSave = title.trim().length > 0 && exercises.length > 0;
+  const canSave = exercises.length > 0;
   const save = async () => {
     if (!canSave) return;
     setSaving(true);
     try {
-      await onSave({ id: initial?.id, title: title.trim(), exercises });
+      await onSave({
+        id: initial?.id,
+        title: title.trim() || exercises[0]?.name || 'Program',
+        exercises,
+      });
     } finally {
       setSaving(false);
     }

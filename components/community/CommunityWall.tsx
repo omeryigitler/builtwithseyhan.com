@@ -10,8 +10,9 @@ import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import type { MemberPost } from '@/lib/types';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
-import { onAuthChange, signInWithGoogle } from '@/lib/workouts';
+import { onAuthChange } from '@/lib/workouts';
 import { submitMemberPost, uploadMemberImage } from '@/lib/community';
+import { AuthModal } from '@/components/auth/AuthModal';
 
 function igUrl(s: string): string {
   if (!s) return '#';
@@ -31,13 +32,14 @@ export function CommunityWall({
   const t = dict.community;
   const [user, setUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   useEffect(() => onAuthChange(setUser), []);
 
   const onShare = () => {
     if (!isSupabaseConfigured) return;
     if (user) setOpen(true);
-    else signInWithGoogle(`/${locale}`);
+    else setAuthOpen(true);
   };
 
   return (
@@ -114,6 +116,15 @@ export function CommunityWall({
       </div>
 
       {open && <SubmitModal t={t} onClose={() => setOpen(false)} />}
+      {authOpen && (
+        <AuthModal
+          t={dict.auth}
+          locale={locale}
+          nextPath={`/${locale}`}
+          initialMode="signup"
+          onClose={() => setAuthOpen(false)}
+        />
+      )}
     </section>
   );
 }

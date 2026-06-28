@@ -184,6 +184,25 @@ export const tr: Dictionary = {
     },
   },
 
+  auth: {
+    signInTitle: 'Tekrar hoş geldin',
+    signUpTitle: 'Aramıza katıl',
+    signIn: 'Giriş yap',
+    signUp: 'Kaydol',
+    createAccount: 'Hesap oluştur',
+    namePlaceholder: 'Adın',
+    emailPlaceholder: 'E-posta',
+    passwordPlaceholder: 'Şifre',
+    google: 'Google ile devam et',
+    or: 'veya',
+    welcomeBackText: 'Antrenmanını kaydet, programını takip et, topluluğa katıl.',
+    joinText: 'Ücretsiz hesabını oluştur, ekiple antrenmana başla.',
+    haveAccount: 'Zaten üye misin?',
+    noAccount: 'Yeni misin?',
+    confirmEmail: 'Az kaldı — hesabını onaylamak için e-postanı kontrol et.',
+    close: 'Kapat',
+  },
+
   track: {
     eyebrow: 'Antrenman takibi',
     title: 'Takip',

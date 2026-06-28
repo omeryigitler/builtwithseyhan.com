@@ -30,6 +30,27 @@ export async function signInWithEmail(email: string, nextPath: string) {
   if (error) throw error;
 }
 
+export async function signInWithPassword(email: string, password: string) {
+  const s = db();
+  const { error } = await s.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+}
+
+/** Returns { needsConfirm } — true when Supabase requires email confirmation. */
+export async function signUpWithPassword(email: string, password: string, name: string) {
+  const s = db();
+  const { data, error } = await s.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { full_name: name },
+      emailRedirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  if (error) throw error;
+  return { needsConfirm: !data.session };
+}
+
 export async function signOut() {
   const s = createBrowserSupabase();
   if (s) await s.auth.signOut();
