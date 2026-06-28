@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Dumbbell,
   Flame,
+  LayoutDashboard,
   Loader,
   LogOut,
   Pencil,
@@ -15,7 +16,7 @@ import {
 } from 'lucide-react';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
-import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { isSupabaseConfigured, isAdminEmail } from '@/lib/supabase/config';
 import {
   deleteProgram,
   deleteSession,
@@ -209,6 +210,15 @@ export function WorkoutTracker({ locale, dict }: { locale: Locale; dict: Diction
           <LogOut size={14} /> {t.signOut}
         </button>
       </div>
+
+      {isAdminEmail(user.email) && (
+        <a
+          href={`/${locale}/admin`}
+          className="flex items-center justify-center gap-2 rounded-2xl border-2 border-brand bg-brand/10 py-3 text-sm font-black uppercase tracking-widest text-gray-900 transition-colors hover:bg-brand/20 dark:text-brand"
+        >
+          <LayoutDashboard size={16} /> {t.adminPanel}
+        </a>
+      )}
 
       <div className="grid grid-cols-3 gap-3">
         <Stat icon={<Dumbbell size={16} />} label={t.statWorkouts} value={String(sessions.length)} />

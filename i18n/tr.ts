@@ -200,6 +200,7 @@ export const tr: Dictionary = {
     haveAccount: 'Zaten üye misin?',
     noAccount: 'Yeni misin?',
     confirmEmail: 'Az kaldı — hesabını onaylamak için e-postanı kontrol et.',
+    rateLimitHint: 'E-posta limiti doldu — bunun yerine “Google ile devam et”i kullan.',
     close: 'Kapat',
   },
 
@@ -252,6 +253,7 @@ export const tr: Dictionary = {
     repsPlaceholder: 'tekrar',
     exercisesLabel: 'egzersiz',
     coachProgram: 'Hoca',
+    adminPanel: 'Admin Paneli',
     muscles: {
       chest: 'Göğüs',
       back: 'Sırt',

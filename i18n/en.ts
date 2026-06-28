@@ -198,6 +198,7 @@ export const en = {
     haveAccount: 'Already a member?',
     noAccount: 'New here?',
     confirmEmail: 'Almost there — check your email to confirm your account.',
+    rateLimitHint: 'Email limit reached — use “Continue with Google” instead.',
     close: 'Close',
   },
 
@@ -250,6 +251,7 @@ export const en = {
     repsPlaceholder: 'reps',
     exercisesLabel: 'exercises',
     coachProgram: 'Coach',
+    adminPanel: 'Admin Panel',
     muscles: {
       chest: 'Chest',
       back: 'Back',

@@ -53,7 +53,8 @@ export function AuthModal({
         else onClose();
       }
     } catch (e2: unknown) {
-      setErr(e2 instanceof Error ? e2.message : String(e2));
+      const msg = e2 instanceof Error ? e2.message : String(e2);
+      setErr(/rate limit/i.test(msg) ? t.rateLimitHint : msg);
     } finally {
       setBusy(false);
     }
