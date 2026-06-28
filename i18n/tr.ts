@@ -97,9 +97,11 @@ export const tr: Dictionary = {
       locked: 'Kilitli',
       cta: 'Haber ver',
       popup: {
+        badge: 'Ücretsiz PDF rehber',
         title: 'El Kitabını Aç',
         subtitle:
           'Tarifler, makrolar ve öğün planları — mailini bırak, gelen kutuna düşsün.',
+        perks: ['40+ yüksek proteinli tarif', 'Makro dengeli öğün planları', 'Haftalık market listesi'],
         placeholder: 'sen@mail.com',
         submit: 'Bana gönder',
         success: 'Tamamdır — gelen kutunu kontrol et!',

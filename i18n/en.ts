@@ -95,9 +95,11 @@ export const en = {
       locked: 'Locked',
       cta: 'Notify me',
       popup: {
+        badge: 'Free PDF guide',
         title: 'Unlock the Playbook',
         subtitle:
           'Recipes, macros and meal plans — drop your email and it lands in your inbox.',
+        perks: ['40+ high-protein recipes', 'Macro-balanced meal plans', 'Weekly grocery shortlist'],
         placeholder: 'you@email.com',
         submit: 'Send it to me',
         success: 'Done — check your inbox!',

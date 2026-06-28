@@ -61,7 +61,7 @@ export function Showcase3D({ locale, dict }: { locale: Locale; dict: Dictionary 
 
               {/* hero tile */}
               <div className="relative mx-4 mt-4 aspect-[4/5] overflow-hidden rounded-2xl">
-                <Image src="/images/mustafa-2.jpg" alt="" fill sizes="300px" className="object-cover grayscale" />
+                <Image src="/images/hero.png" alt="" fill sizes="300px" className="object-cover object-top" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <span className="absolute left-3 top-3 text-[10px] font-bold uppercase tracking-widest text-white">
                   <span className="border-b-2 border-brand pb-0.5">{dict.categories.training}</span>
