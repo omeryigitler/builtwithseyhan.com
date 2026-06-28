@@ -13,6 +13,11 @@ export const Reveal: React.FC<RevealProps> = ({ children, delay = 0, className =
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Respect reduced-motion: show content immediately, no scroll-in animation.
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setVisible(true);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
@@ -37,9 +38,12 @@ export function Header({ locale, dict, settings }: Props) {
     { label: dict.nav.social, href: `${base}#social` },
   ];
 
-  // At the top the header sits over the dark hero → light text; once scrolled
-  // it's over the page background → theme-aware dark/light text.
-  const onDark = !scrolled;
+  // Only the homepage has a dark full-screen hero behind the header. There the
+  // header uses light text until scrolled; on every other page (light masthead)
+  // it stays theme-aware dark text so it's readable at the top too.
+  const pathname = usePathname();
+  const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
+  const onDark = isHome && !scrolled;
 
   return (
     <header
