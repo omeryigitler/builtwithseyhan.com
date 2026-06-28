@@ -10,6 +10,7 @@ import {
 import { Hero } from '@/components/sections/Hero';
 import { LogoMarquee } from '@/components/LogoMarquee';
 import { FeaturedVideos } from '@/components/sections/FeaturedVideos';
+import { Showcase3D } from '@/components/sections/Showcase3D';
 import { ContentFeed } from '@/components/sections/ContentFeed';
 import { BlogPreview } from '@/components/sections/BlogPreview';
 import { GuideSection } from '@/components/sections/GuideSection';
@@ -36,6 +37,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <Hero locale={locale} dict={dict} settings={settings} />
       <LogoMarquee dict={dict} />
       <FeaturedVideos videos={videos} locale={locale} dict={dict} />
+      <Showcase3D locale={locale} dict={dict} />
       <ContentFeed posts={posts} locale={locale} dict={dict} />
       <BlogPreview posts={blog} locale={locale} dict={dict} />
       <GuideSection dict={dict} settings={settings} />

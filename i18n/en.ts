@@ -107,6 +107,13 @@ export const en = {
     },
   },
 
+  showcase: {
+    eyebrow: 'The experience',
+    title: 'Everything in one screen',
+    subtitle: 'Videos, recipes and training — a single, fast, mobile-first home for the work.',
+    cta: 'Explore the content',
+  },
+
   guide: {
     badge: 'Free',
     title: 'Free Starter Guide',

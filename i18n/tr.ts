@@ -109,6 +109,13 @@ export const tr: Dictionary = {
     },
   },
 
+  showcase: {
+    eyebrow: 'Deneyim',
+    title: 'Hepsi tek ekranda',
+    subtitle: 'Videolar, tarifler ve antrenman — hızlı, mobil öncelikli tek bir merkez.',
+    cta: 'İçerikleri keşfet',
+  },
+
   guide: {
     badge: 'Ücretsiz',
     title: 'Ücretsiz Başlangıç Rehberi',
