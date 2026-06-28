@@ -63,7 +63,7 @@ export async function getPosts(): Promise<Post[]> {
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
 
-  if (error || !data) return SAMPLE_POSTS;
+  if (error || !data || data.length === 0) return SAMPLE_POSTS;
   return data.map(mapPost);
 }
 
@@ -101,7 +101,7 @@ export async function getRecipes(): Promise<Recipe[]> {
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
 
-  if (error || !data) return SAMPLE_RECIPES;
+  if (error || !data || data.length === 0) return SAMPLE_RECIPES;
   return data.map(mapRecipe);
 }
 
@@ -117,7 +117,7 @@ export async function getSocialItems(): Promise<SocialItem[]> {
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
 
-  if (error || !data) return SAMPLE_SOCIAL;
+  if (error || !data || data.length === 0) return SAMPLE_SOCIAL;
   return data.map(mapSocial);
 }
 
@@ -134,11 +134,16 @@ export async function getSettings(): Promise<SiteSettings> {
     .maybeSingle();
 
   if (error || !data) return SAMPLE_SETTINGS;
-  return {
+  const s: SiteSettings = {
     whatsappUrl: data.whatsapp_url ?? '',
     instagramUrl: data.instagram_url ?? '',
     tiktokUrl: data.tiktok_url ?? '',
     youtubeUrl: data.youtube_url ?? '',
     heroVideoUrl: data.hero_video_url ?? '',
   };
+  // Default (untouched) settings row → show sample links so the WhatsApp /
+  // social buttons aren't missing before the admin fills them in.
+  const allEmpty =
+    !s.whatsappUrl && !s.instagramUrl && !s.tiktokUrl && !s.youtubeUrl && !s.heroVideoUrl;
+  return allEmpty ? SAMPLE_SETTINGS : s;
 }
