@@ -301,6 +301,12 @@ export const tr: Dictionary = {
     title: 'Güvenle çalıştıklarımız',
   },
 
+  legal: {
+    updated: 'Son güncelleme',
+    privacy: 'Gizlilik',
+    terms: 'Kullanım Şartları',
+  },
+
   common: {
     comingSoon: 'Çok yakında',
     notFound: 'Sayfa bulunamadı',

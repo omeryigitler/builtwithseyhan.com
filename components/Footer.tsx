@@ -15,6 +15,9 @@ export function Footer({ locale, dict, settings }: Props) {
   const links = [
     { label: dict.nav.videos, href: `${base}#videos` },
     { label: dict.nav.feed, href: `${base}#feed` },
+    { label: dict.nav.nutrition, href: `${base}/nutrition` },
+    { label: dict.nav.training, href: `${base}/training` },
+    { label: dict.nav.track, href: `${base}/track` },
     { label: dict.nav.blog, href: `${base}/blog` },
     { label: dict.nav.social, href: `${base}#social` },
   ];
@@ -59,6 +62,14 @@ export function Footer({ locale, dict, settings }: Props) {
         </div>
         <div className="mt-2 text-center text-xs text-gray-600">
           © {new Date().getFullYear()} Built With Seyhan. {dict.footer.rights}
+        </div>
+        <div className="mt-3 flex justify-center gap-5 text-xs text-gray-500">
+          <Link href={`${base}/privacy`} className="transition-colors hover:text-gray-300">
+            {dict.legal.privacy}
+          </Link>
+          <Link href={`${base}/terms`} className="transition-colors hover:text-gray-300">
+            {dict.legal.terms}
+          </Link>
         </div>
       </div>
     </footer>

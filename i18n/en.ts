@@ -299,6 +299,12 @@ export const en = {
     title: 'Trusted & featured',
   },
 
+  legal: {
+    updated: 'Last updated',
+    privacy: 'Privacy',
+    terms: 'Terms',
+  },
+
   common: {
     comingSoon: 'Coming soon',
     notFound: 'Page not found',
