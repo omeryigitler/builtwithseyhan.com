@@ -1,5 +1,5 @@
 import { createServerSupabase } from './supabase/server';
-import type { Post, SocialItem, SiteSettings, Recipe } from './types';
+import type { Post, SocialItem, SiteSettings, Recipe, MemberPost } from './types';
 import { SAMPLE_POSTS, SAMPLE_SOCIAL, SAMPLE_SETTINGS, SAMPLE_RECIPES } from './sample';
 
 // ─── Row mappers (snake_case DB → camelCase app types) ───────────────────────
@@ -29,6 +29,18 @@ function mapSocial(r: any): SocialItem {
     socialUrl: r.social_url,
     platform: r.platform ?? 'instagram',
     caption: { tr: r.caption_tr ?? '', en: r.caption_en ?? '' },
+    createdAt: r.created_at ?? new Date().toISOString(),
+  };
+}
+
+function mapMemberPost(r: any): MemberPost {
+  return {
+    id: String(r.id),
+    authorName: r.author_name ?? '',
+    instagram: r.instagram ?? '',
+    caption: r.caption ?? '',
+    imageUrl: r.image_url ?? null,
+    approved: !!r.approved,
     createdAt: r.created_at ?? new Date().toISOString(),
   };
 }
@@ -103,6 +115,23 @@ export async function getRecipes(): Promise<Recipe[]> {
 
   if (error || !data || data.length === 0) return SAMPLE_RECIPES;
   return data.map(mapRecipe);
+}
+
+// ─── Member posts (community, public = approved only) ─────────────────────────
+
+export async function getMemberPosts(limit = 12): Promise<MemberPost[]> {
+  const supabase = await createServerSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('member_posts')
+    .select('*')
+    .eq('approved', true)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error || !data) return [];
+  return data.map(mapMemberPost);
 }
 
 // ─── Social wall ──────────────────────────────────────────────────────────────

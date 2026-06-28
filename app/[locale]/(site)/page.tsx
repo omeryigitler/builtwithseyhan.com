@@ -6,6 +6,7 @@ import {
   getBlogPosts,
   getSocialItems,
   getSettings,
+  getMemberPosts,
 } from '@/lib/content';
 import { Hero } from '@/components/sections/Hero';
 import { LogoMarquee } from '@/components/LogoMarquee';
@@ -15,6 +16,7 @@ import { ContentFeed } from '@/components/sections/ContentFeed';
 import { BlogPreview } from '@/components/sections/BlogPreview';
 import { GuideSection } from '@/components/sections/GuideSection';
 import { SocialWall } from '@/components/sections/SocialWall';
+import { CommunityWall } from '@/components/community/CommunityWall';
 import { WhatsAppCTA } from '@/components/sections/WhatsAppCTA';
 
 export const revalidate = 300;
@@ -24,12 +26,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
 
-  const [posts, videos, blog, social, settings] = await Promise.all([
+  const [posts, videos, blog, social, settings, community] = await Promise.all([
     getPosts(),
     getFeaturedVideos(),
     getBlogPosts(6),
     getSocialItems(),
     getSettings(),
+    getMemberPosts(),
   ]);
 
   return (
@@ -42,6 +45,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <BlogPreview posts={blog} locale={locale} dict={dict} />
       <GuideSection dict={dict} settings={settings} />
       <SocialWall items={social} settings={settings} locale={locale} dict={dict} />
+      <CommunityWall posts={community} locale={locale} dict={dict} />
       <WhatsAppCTA dict={dict} settings={settings} />
     </>
   );

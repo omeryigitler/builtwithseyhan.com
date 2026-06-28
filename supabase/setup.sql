@@ -264,3 +264,37 @@ create policy "workout_programs_own" on public.workout_programs
   for all to authenticated
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+-- Member-submitted content ("From the community"), moderated by admins.
+create table if not exists public.member_posts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  author_name text not null default '',
+  instagram text not null default '',
+  caption text not null default '',
+  image_url text,
+  approved boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index if not exists member_posts_approved_idx
+  on public.member_posts (approved, created_at desc);
+alter table public.member_posts enable row level security;
+drop policy if exists "member_posts read approved" on public.member_posts;
+create policy "member_posts read approved" on public.member_posts
+  for select using (approved = true);
+drop policy if exists "member_posts read own" on public.member_posts;
+create policy "member_posts read own" on public.member_posts
+  for select to authenticated using (auth.uid() = user_id);
+drop policy if exists "member_posts insert own" on public.member_posts;
+create policy "member_posts insert own" on public.member_posts
+  for insert to authenticated with check (auth.uid() = user_id and approved = false);
+drop policy if exists "member_posts delete own" on public.member_posts;
+create policy "member_posts delete own" on public.member_posts
+  for delete to authenticated using (auth.uid() = user_id);
+drop policy if exists "member_posts admin all" on public.member_posts;
+create policy "member_posts admin all" on public.member_posts
+  for all using (public.is_admin()) with check (public.is_admin());
+drop policy if exists "media member insert" on storage.objects;
+create policy "media member insert" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'media' and (storage.foldername(name))[1] = 'members');

@@ -124,6 +124,25 @@ export const tr: Dictionary = {
     cta: "WhatsApp'tan Al",
   },
 
+  community: {
+    eyebrow: 'Topluluktan',
+    title: 'Üyelerin paylaşımları',
+    subtitle: 'Üyelerden gelen ilerleme, rekor ve kareler.',
+    share: 'Sen de paylaş',
+    empty: 'İlk paylaşan sen ol.',
+    signInFirst: 'Paylaşmak için (Takip sayfasından) giriş yap.',
+    submitTitle: 'Gönderini paylaş',
+    namePlaceholder: 'Adın',
+    captionPlaceholder: 'Bir şeyler yaz…',
+    instagramPlaceholder: 'Instagram (opsiyonel) — örn. @sen',
+    image: 'Fotoğraf',
+    pasteUrl: 'veya bir görsel adresi yapıştır',
+    submit: 'Onaya gönder',
+    submitting: 'Gönderiliyor…',
+    thanks: 'Teşekkürler! Gönderin onay bekliyor.',
+    viewInstagram: 'Instagram',
+  },
+
   whatsappCta: {
     title: 'Başlamaya hazır mısın?',
     subtitle: 'Doğrudan WhatsApp’tan yaz — sorular, koçluk veya iş birlikleri.',

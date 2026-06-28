@@ -122,6 +122,25 @@ export const en = {
     cta: 'Get it on WhatsApp',
   },
 
+  community: {
+    eyebrow: 'From the community',
+    title: 'Built by the crew',
+    subtitle: 'Progress, PRs and wins shared by members.',
+    share: 'Share yours',
+    empty: 'Be the first to share your progress.',
+    signInFirst: 'Sign in (on the Track page) to share a post.',
+    submitTitle: 'Share your post',
+    namePlaceholder: 'Your name',
+    captionPlaceholder: 'Say something…',
+    instagramPlaceholder: 'Instagram (optional) — e.g. @you',
+    image: 'Photo',
+    pasteUrl: 'or paste an image URL',
+    submit: 'Submit for review',
+    submitting: 'Submitting…',
+    thanks: 'Thanks! Your post is pending review.',
+    viewInstagram: 'Instagram',
+  },
+
   whatsappCta: {
     title: 'Ready to start?',
     subtitle: 'Message directly on WhatsApp — questions, coaching or collabs.',

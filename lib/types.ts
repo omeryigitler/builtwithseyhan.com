@@ -41,6 +41,16 @@ export interface SocialItem {
   createdAt: string;
 }
 
+export interface MemberPost {
+  id: string;
+  authorName: string;
+  instagram: string;
+  caption: string;
+  imageUrl: string | null;
+  approved: boolean;
+  createdAt: string;
+}
+
 export type RecipeCategory = 'smoothie' | 'highprotein' | 'breakfast' | 'snack';
 
 export interface Recipe {

@@ -2,6 +2,7 @@ import { createBrowserSupabase } from './supabase/client';
 import type {
   Category,
   LocalizedText,
+  MemberPost,
   Post,
   PostType,
   Recipe,
@@ -300,5 +301,44 @@ export async function saveRecipe(input: RecipeInput): Promise<void> {
 export async function deleteRecipe(id: string): Promise<void> {
   const s = db();
   const { error } = await s.from('recipes').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// ─── Member posts (moderation) ────────────────────────────────────────────────
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function fromMemberRow(r: any): MemberPost {
+  return {
+    id: String(r.id),
+    authorName: r.author_name ?? '',
+    instagram: r.instagram ?? '',
+    caption: r.caption ?? '',
+    imageUrl: r.image_url ?? null,
+    approved: !!r.approved,
+    createdAt: r.created_at ?? '',
+  };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export async function listAllMemberPosts(): Promise<MemberPost[]> {
+  const s = db();
+  const { data, error } = await s
+    .from('member_posts')
+    .select('*')
+    .order('approved', { ascending: true })
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(fromMemberRow);
+}
+
+export async function setMemberApproved(id: string, approved: boolean): Promise<void> {
+  const s = db();
+  const { error } = await s.from('member_posts').update({ approved }).eq('id', id);
+  if (error) throw error;
+}
+
+export async function deleteMemberPost(id: string): Promise<void> {
+  const s = db();
+  const { error } = await s.from('member_posts').delete().eq('id', id);
   if (error) throw error;
 }
