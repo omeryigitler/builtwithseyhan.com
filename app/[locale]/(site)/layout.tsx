@@ -6,6 +6,8 @@ import { Footer } from '@/components/Footer';
 import { WhatsAppFloat } from '@/components/WhatsAppFloat';
 import { ScrollProgress } from '@/components/ScrollProgress';
 import { EbookPopup } from '@/components/EbookPopup';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { organizationLd } from '@/lib/seo';
 
 export default async function SiteLayout({
   children,
@@ -21,6 +23,13 @@ export default async function SiteLayout({
 
   return (
     <>
+      <JsonLd
+        data={organizationLd([
+          settings.instagramUrl,
+          settings.tiktokUrl,
+          settings.youtubeUrl,
+        ])}
+      />
       <ScrollProgress />
       <Header locale={locale} dict={dict} settings={settings} />
       <main className="min-h-screen">{children}</main>

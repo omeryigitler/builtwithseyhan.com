@@ -8,6 +8,10 @@ import { getDictionary } from '@/i18n/dictionaries';
 import { getPostBySlug, getAllSlugs } from '@/lib/content';
 import { localize } from '@/lib/types';
 import { toEmbedUrl } from '@/lib/media';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { articleLd } from '@/lib/seo';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://builtwithseyhan.com';
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -62,6 +66,15 @@ export default async function PostPage({
 
   return (
     <article className="px-5 pb-20 pt-32 sm:px-6 sm:pt-40">
+      <JsonLd
+        data={articleLd({
+          title,
+          description: localize(post.excerpt, locale),
+          url: `${SITE_URL}/${locale}/blog/${slug}`,
+          image: post.imageUrl,
+          datePublished: post.createdAt,
+        })}
+      />
       <div className="mx-auto max-w-3xl">
         <Link
           href={`/${locale}/blog`}
