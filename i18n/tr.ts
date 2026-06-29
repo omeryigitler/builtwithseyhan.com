@@ -413,4 +413,11 @@ export const tr: Dictionary = {
     all: 'Tümü',
     empty: 'Videolar çok yakında.',
   },
+
+  consent: {
+    text: 'Siteyi geliştirmek için gizlilik dostu analitik kullanıyoruz. Takip çerezi yok.',
+    accept: 'Kabul et',
+    reject: 'Reddet',
+    privacy: 'Gizlilik',
+  },
 };

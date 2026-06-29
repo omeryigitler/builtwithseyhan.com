@@ -411,6 +411,13 @@ export const en = {
     all: 'All',
     empty: 'Videos are coming soon.',
   },
+
+  consent: {
+    text: 'We use privacy-friendly analytics to improve the site. No tracking cookies.',
+    accept: 'Accept',
+    reject: 'Reject',
+    privacy: 'Privacy',
+  },
 };
 
 export type Dictionary = typeof en;

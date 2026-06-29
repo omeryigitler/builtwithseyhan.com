@@ -6,6 +6,7 @@ import { Footer } from '@/components/Footer';
 import { WhatsAppFloat } from '@/components/WhatsAppFloat';
 import { ScrollProgress } from '@/components/ScrollProgress';
 import { EbookPopup } from '@/components/EbookPopup';
+import { ConsentAnalytics } from '@/components/ConsentAnalytics';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { organizationLd } from '@/lib/seo';
 
@@ -36,6 +37,7 @@ export default async function SiteLayout({
       <Footer locale={locale} dict={dict} settings={settings} />
       <WhatsAppFloat url={settings.whatsappUrl} />
       <EbookPopup t={dict.nutrition.ebook.popup} locale={locale} />
+      <ConsentAnalytics locale={locale} t={dict.consent} />
     </>
   );
 }
