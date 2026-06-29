@@ -55,9 +55,15 @@ export type RecipeCategory = 'smoothie' | 'highprotein' | 'breakfast' | 'snack';
 
 export interface Recipe {
   id: string;
+  /** URL slug for the detail page (falls back to id when unset). */
+  slug: string;
   category: RecipeCategory;
   title: LocalizedText;
   description: LocalizedText;
+  /** Multiline (one per line) ingredients, localized. */
+  ingredients: LocalizedText;
+  /** Multiline (one per line) preparation steps, localized. */
+  steps: LocalizedText;
   /** Energy in kcal. */
   kcal: number;
   /** Protein in grams. */
@@ -69,6 +75,14 @@ export interface Recipe {
   youtubeUrl: string | null;
   featured: boolean;
   createdAt: string;
+}
+
+/** Split a multiline localized field into trimmed, non-empty lines. */
+export function lines(text: string): string[] {
+  return text
+    .split('\n')
+    .map((l) => l.replace(/^[-•*\d.)\s]+/, '').trim())
+    .filter(Boolean);
 }
 
 export interface SiteSettings {

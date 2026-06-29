@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Play,
   Flame,
   Dumbbell,
   Clock,
   X,
+  ArrowRight,
   GlassWater,
   Egg,
   Coffee,
@@ -192,15 +194,23 @@ function RecipeRow({
           </span>
         </div>
 
-        {hasVideo && (
-          <button
-            type="button"
-            onClick={() => onPlay(recipe)}
-            className="mt-6 inline-flex items-center gap-2 self-start text-sm font-bold uppercase tracking-wider text-gray-900 underline decoration-brand decoration-2 underline-offset-[6px] transition-all hover:decoration-[3px] dark:text-white"
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link
+            href={`/${locale}/nutrition/${recipe.slug}`}
+            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 underline decoration-brand decoration-2 underline-offset-[6px] transition-all hover:decoration-[3px] dark:text-white"
           >
-            <Play size={14} fill="currentColor" /> {dict.nutrition.watch}
-          </button>
-        )}
+            {dict.nutrition.viewRecipe} <ArrowRight size={14} />
+          </Link>
+          {hasVideo && (
+            <button
+              type="button"
+              onClick={() => onPlay(recipe)}
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
+            >
+              <Play size={14} fill="currentColor" /> {dict.nutrition.watch}
+            </button>
+          )}
+        </div>
       </div>
     </article>
   );

@@ -76,7 +76,15 @@ export const en = {
       'Recipes, smoothies and high-protein meals — simple, repeatable and built around training.',
     all: 'All',
     watch: 'Watch recipe',
+    viewRecipe: 'View recipe',
     empty: 'Recipes are coming soon.',
+    detail: {
+      back: 'Back to nutrition',
+      ingredients: 'Ingredients',
+      steps: 'Preparation',
+      print: 'Print',
+      watchVideo: 'Watch the video',
+    },
     categories: {
       smoothie: 'Smoothies',
       highprotein: 'High-Protein',

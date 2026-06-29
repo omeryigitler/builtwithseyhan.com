@@ -48,9 +48,12 @@ function mapMemberPost(r: any): MemberPost {
 function mapRecipe(r: any): Recipe {
   return {
     id: String(r.id),
+    slug: r.slug || String(r.id),
     category: r.category,
     title: { tr: r.title_tr ?? '', en: r.title_en ?? '' },
     description: { tr: r.description_tr ?? '', en: r.description_en ?? '' },
+    ingredients: { tr: r.ingredients_tr ?? '', en: r.ingredients_en ?? '' },
+    steps: { tr: r.steps_tr ?? '', en: r.steps_en ?? '' },
     kcal: Number(r.kcal ?? 0),
     protein: Number(r.protein ?? 0),
     timeMin: Number(r.time_min ?? 0),
@@ -115,6 +118,16 @@ export async function getRecipes(): Promise<Recipe[]> {
 
   if (error || !data || data.length === 0) return SAMPLE_RECIPES;
   return data.map(mapRecipe);
+}
+
+export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
+  const recipes = await getRecipes();
+  return recipes.find((r) => r.slug === slug || r.id === slug) ?? null;
+}
+
+export async function getAllRecipeSlugs(): Promise<string[]> {
+  const recipes = await getRecipes();
+  return recipes.map((r) => r.slug);
 }
 
 // ─── Member posts (community, public = approved only) ─────────────────────────

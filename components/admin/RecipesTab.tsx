@@ -8,9 +8,12 @@ import type { AdminLabels } from './labels';
 import { TextField, TextArea, SelectField, Toggle, ImageField } from './fields';
 
 const EMPTY: RecipeInput = {
+  slug: '',
   category: 'smoothie',
   title: { tr: '', en: '' },
   description: { tr: '', en: '' },
+  ingredients: { tr: '', en: '' },
+  steps: { tr: '', en: '' },
   kcal: 0,
   protein: 0,
   timeMin: 0,
@@ -47,9 +50,12 @@ export function RecipesTab({ t }: { t: AdminLabels }) {
   const startEdit = (r: Recipe) =>
     setForm({
       id: r.id,
+      slug: r.slug,
       category: r.category,
       title: r.title,
       description: r.description,
+      ingredients: r.ingredients,
+      steps: r.steps,
       kcal: r.kcal,
       protein: r.protein,
       timeMin: r.timeMin,
@@ -110,9 +116,21 @@ export function RecipesTab({ t }: { t: AdminLabels }) {
           <TextField label={t.fields.titleEn} value={form.title.en} onChange={(v) => setForm((f) => ({ ...f, title: { ...f.title, en: v } }))} />
         </div>
 
+        <TextField label={t.fields.slug} value={form.slug} onChange={(v) => set('slug', v)} placeholder="protein-yulaf-kasesi" />
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextArea label={t.fields.descriptionTr} value={form.description.tr} onChange={(v) => setForm((f) => ({ ...f, description: { ...f.description, tr: v } }))} />
           <TextArea label={t.fields.descriptionEn} value={form.description.en} onChange={(v) => setForm((f) => ({ ...f, description: { ...f.description, en: v } }))} />
+        </div>
+
+        <p className="-mb-2 text-[11px] text-gray-500">{t.fields.lineHint}</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextArea label={t.fields.ingredientsTr} value={form.ingredients.tr} onChange={(v) => setForm((f) => ({ ...f, ingredients: { ...f.ingredients, tr: v } }))} />
+          <TextArea label={t.fields.ingredientsEn} value={form.ingredients.en} onChange={(v) => setForm((f) => ({ ...f, ingredients: { ...f.ingredients, en: v } }))} />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextArea label={t.fields.stepsTr} value={form.steps.tr} onChange={(v) => setForm((f) => ({ ...f, steps: { ...f.steps, tr: v } }))} />
+          <TextArea label={t.fields.stepsEn} value={form.steps.en} onChange={(v) => setForm((f) => ({ ...f, steps: { ...f.steps, en: v } }))} />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

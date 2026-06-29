@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
-import { getAllSlugs } from '@/lib/content';
+import { getAllSlugs, getAllRecipeSlugs } from '@/lib/content';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://builtwithseyhan.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllSlugs();
+  const recipeSlugs = await getAllRecipeSlugs();
   const routes: MetadataRoute.Sitemap = [];
 
   for (const locale of locales) {
@@ -21,6 +22,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${SITE}/${locale}/blog/${slug}`,
         changeFrequency: 'monthly',
         priority: 0.6,
+      });
+    }
+    for (const slug of recipeSlugs) {
+      routes.push({
+        url: `${SITE}/${locale}/nutrition/${slug}`,
+        changeFrequency: 'monthly',
+        priority: 0.7,
       });
     }
   }

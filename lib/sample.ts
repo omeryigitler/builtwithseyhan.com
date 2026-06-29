@@ -143,11 +143,20 @@ export const SAMPLE_SOCIAL: SocialItem[] = [
 export const SAMPLE_RECIPES: Recipe[] = [
   {
     id: 'r1',
+    slug: 'green-power-smoothie',
     category: 'smoothie',
     title: { tr: 'Yeşil Güç Smoothie', en: 'Green Power Smoothie' },
     description: {
       tr: 'Ispanak, muz, fıstık ezmesi ve whey ile antrenman sonrası toparlanma içeceği.',
       en: 'Spinach, banana, peanut butter and whey for a post-workout recovery hit.',
+    },
+    ingredients: {
+      tr: '1 avuç ıspanak\n1 muz\n1 yemek kaşığı fıstık ezmesi\n1 ölçek whey protein\n250 ml süt veya su\nbuz',
+      en: '1 handful spinach\n1 banana\n1 tbsp peanut butter\n1 scoop whey protein\n250 ml milk or water\nice',
+    },
+    steps: {
+      tr: 'Tüm malzemeleri blendera koy.\nPürüzsüz olana kadar çek.\nBardağa al ve hemen iç.',
+      en: 'Add everything to a blender.\nBlend until smooth.\nPour and drink right away.',
     },
     kcal: 320,
     protein: 28,
@@ -159,11 +168,20 @@ export const SAMPLE_RECIPES: Recipe[] = [
   },
   {
     id: 'r2',
+    slug: 'spicy-chicken-rice-bowl',
     category: 'highprotein',
     title: { tr: 'Acılı Tavuk & Pirinç Kasesi', en: 'Spicy Chicken & Rice Bowl' },
     description: {
       tr: 'Yüksek protein, düşük yağ. Meal-prep için ideal, 4 porsiyon.',
       en: 'High protein, low fat. Perfect for meal-prep, makes 4 portions.',
+    },
+    ingredients: {
+      tr: '200 g tavuk göğsü\n1 su bardağı pirinç\n1 tatlı kaşığı pul biber\nzeytinyağı\ntuz, karabiber\nyeşillik',
+      en: '200 g chicken breast\n1 cup rice\n1 tsp chili flakes\nolive oil\nsalt, pepper\ngreens',
+    },
+    steps: {
+      tr: 'Pirinci haşla.\nTavuğu baharatla ve tavada pişir.\nKaseye pirinç, tavuk ve yeşillik ekle.\n4 porsiyona böl.',
+      en: 'Cook the rice.\nSeason and pan-cook the chicken.\nBuild the bowl with rice, chicken and greens.\nSplit into 4 portions.',
     },
     kcal: 540,
     protein: 46,
@@ -175,11 +193,20 @@ export const SAMPLE_RECIPES: Recipe[] = [
   },
   {
     id: 'r3',
+    slug: 'protein-overnight-oats',
     category: 'breakfast',
     title: { tr: 'Protein Yulaf Kasesi', en: 'Protein Overnight Oats' },
     description: {
       tr: 'Akşamdan hazırla, sabah enerjiyle başla. Yulaf, yoğurt, chia ve meyve.',
       en: 'Prep at night, wake up to fuel. Oats, yogurt, chia and berries.',
+    },
+    ingredients: {
+      tr: '1/2 su bardağı yulaf\n150 g yoğurt\n1 yemek kaşığı chia\n1 ölçek protein tozu\nmeyve',
+      en: '1/2 cup oats\n150 g yogurt\n1 tbsp chia\n1 scoop protein powder\nberries',
+    },
+    steps: {
+      tr: 'Tüm malzemeleri kavanozda karıştır.\nGece boyu buzdolabında beklet.\nSabah meyveyle servis et.',
+      en: 'Mix everything in a jar.\nRefrigerate overnight.\nTop with berries in the morning.',
     },
     kcal: 410,
     protein: 32,
@@ -191,11 +218,20 @@ export const SAMPLE_RECIPES: Recipe[] = [
   },
   {
     id: 'r4',
+    slug: 'chocolate-protein-bites',
     category: 'snack',
     title: { tr: 'Çikolatalı Protein Topları', en: 'Chocolate Protein Bites' },
     description: {
       tr: 'Şekersiz, taşınabilir atıştırmalık. Hurma, kakao ve fındık.',
       en: 'No added sugar, grab-and-go fuel. Dates, cacao and hazelnuts.',
+    },
+    ingredients: {
+      tr: '8 hurma\n2 yemek kaşığı kakao\n1 avuç fındık\n1 ölçek protein tozu',
+      en: '8 dates\n2 tbsp cacao\n1 handful hazelnuts\n1 scoop protein powder',
+    },
+    steps: {
+      tr: 'Malzemeleri rondoda çek.\nToplar yap.\nBuzdolabında 30 dakika dinlendir.',
+      en: 'Blitz in a food processor.\nRoll into bites.\nChill for 30 minutes.',
     },
     kcal: 180,
     protein: 12,
@@ -207,11 +243,20 @@ export const SAMPLE_RECIPES: Recipe[] = [
   },
   {
     id: 'r5',
+    slug: 'blueberry-antioxidant-blend',
     category: 'smoothie',
     title: { tr: 'Yaban Mersinli Antioksidan', en: 'Blueberry Antioxidant Blend' },
     description: {
       tr: 'Yaban mersini, pancar ve keten tohumu — toparlanma ve odak için.',
       en: 'Blueberry, beetroot and flax — built for recovery and focus.',
+    },
+    ingredients: {
+      tr: '1 su bardağı yaban mersini\n1/2 küçük pancar\n1 yemek kaşığı keten tohumu\n250 ml su',
+      en: '1 cup blueberries\n1/2 small beetroot\n1 tbsp flaxseed\n250 ml water',
+    },
+    steps: {
+      tr: 'Hepsini blendera koy.\nPürüzsüz çek.\nSoğuk servis et.',
+      en: 'Add all to a blender.\nBlend smooth.\nServe cold.',
     },
     kcal: 260,
     protein: 18,
@@ -223,11 +268,20 @@ export const SAMPLE_RECIPES: Recipe[] = [
   },
   {
     id: 'r6',
+    slug: 'salmon-sweet-potato',
     category: 'highprotein',
     title: { tr: 'Somon & Tatlı Patates', en: 'Salmon & Sweet Potato' },
     description: {
       tr: 'Omega-3 ve yavaş karbonhidrat. Fırında 30 dakikada hazır.',
       en: 'Omega-3 and slow carbs. Oven-ready in 30 minutes.',
+    },
+    ingredients: {
+      tr: '1 somon fileto\n1 tatlı patates\nzeytinyağı\ntuz, karabiber\nlimon',
+      en: '1 salmon fillet\n1 sweet potato\nolive oil\nsalt, pepper\nlemon',
+    },
+    steps: {
+      tr: "Fırını 200°C'ye ısıt.\nTatlı patatesi dilimle ve yağla.\nSomonu ekle, 25-30 dk pişir.\nLimonla servis et.",
+      en: 'Heat oven to 200°C.\nSlice and oil the sweet potato.\nAdd the salmon, bake 25-30 min.\nServe with lemon.',
     },
     kcal: 600,
     protein: 44,

@@ -78,7 +78,15 @@ export const tr: Dictionary = {
       'Tarifler, smoothie’ler ve yüksek proteinli öğünler — basit, tekrarlanabilir ve antrenmana göre.',
     all: 'Tümü',
     watch: 'Tarifi izle',
+    viewRecipe: 'Tarifi gör',
     empty: 'Tarifler çok yakında.',
+    detail: {
+      back: 'Beslenmeye dön',
+      ingredients: 'Malzemeler',
+      steps: 'Hazırlanış',
+      print: 'Yazdır',
+      watchVideo: 'Videoyu izle',
+    },
     categories: {
       smoothie: 'Smoothie',
       highprotein: 'Yüksek Protein',

@@ -234,9 +234,12 @@ export async function saveSettings(input: SiteSettings): Promise<void> {
 
 export interface RecipeInput {
   id?: string;
+  slug: string;
   category: RecipeCategory;
   title: LocalizedText;
   description: LocalizedText;
+  ingredients: LocalizedText;
+  steps: LocalizedText;
   kcal: number;
   protein: number;
   timeMin: number;
@@ -251,9 +254,12 @@ export interface RecipeInput {
 function fromRecipeRow(r: any): Recipe {
   return {
     id: String(r.id),
+    slug: r.slug || String(r.id),
     category: r.category,
     title: { tr: r.title_tr ?? '', en: r.title_en ?? '' },
     description: { tr: r.description_tr ?? '', en: r.description_en ?? '' },
+    ingredients: { tr: r.ingredients_tr ?? '', en: r.ingredients_en ?? '' },
+    steps: { tr: r.steps_tr ?? '', en: r.steps_en ?? '' },
     kcal: Number(r.kcal ?? 0),
     protein: Number(r.protein ?? 0),
     timeMin: Number(r.time_min ?? 0),
@@ -279,11 +285,16 @@ export async function listAllRecipes(): Promise<Recipe[]> {
 export async function saveRecipe(input: RecipeInput): Promise<void> {
   const s = db();
   const row = {
+    slug: input.slug || null,
     category: input.category,
     title_tr: input.title.tr,
     title_en: input.title.en,
     description_tr: input.description.tr,
     description_en: input.description.en,
+    ingredients_tr: input.ingredients.tr,
+    ingredients_en: input.ingredients.en,
+    steps_tr: input.steps.tr,
+    steps_en: input.steps.en,
     kcal: input.kcal,
     protein: input.protein,
     time_min: input.timeMin,

@@ -79,12 +79,17 @@ insert into public.settings (id) values (1) on conflict (id) do nothing;
 -- ─── Recipes (Nutrition) ──────────────────────────────────────────────────────
 create table if not exists public.recipes (
   id uuid primary key default gen_random_uuid(),
+  slug text unique,
   category text not null
     check (category in ('smoothie','highprotein','breakfast','snack')),
   title_tr text default '',
   title_en text default '',
   description_tr text default '',
   description_en text default '',
+  ingredients_tr text default '',
+  ingredients_en text default '',
+  steps_tr text default '',
+  steps_en text default '',
   kcal int not null default 0,
   protein int not null default 0,
   time_min int not null default 0,
@@ -95,6 +100,13 @@ create table if not exists public.recipes (
   sort_order int not null default 0,
   created_at timestamptz not null default now()
 );
+-- Recipe detail columns (safe to re-run on an existing table)
+alter table public.recipes add column if not exists slug text;
+alter table public.recipes add column if not exists ingredients_tr text default '';
+alter table public.recipes add column if not exists ingredients_en text default '';
+alter table public.recipes add column if not exists steps_tr text default '';
+alter table public.recipes add column if not exists steps_en text default '';
+create unique index if not exists recipes_slug_key on public.recipes (slug) where slug is not null;
 
 -- ─── updated_at trigger ───────────────────────────────────────────────────────
 create or replace function public.touch_updated_at()
