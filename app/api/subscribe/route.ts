@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase/server';
+import { sendEmail } from '@/lib/email';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Plain notification emailed to the site owner on every new subscriber. */
+function notifyHtml(email: string, source: string): string {
+  return `
+  <div style="font-family:Helvetica,Arial,sans-serif;color:#111;padding:16px">
+    <h2 style="margin:0 0 8px">Yeni abone 🎉</h2>
+    <p style="margin:0 0 4px"><b>E-posta:</b> ${email}</p>
+    <p style="margin:0 0 4px"><b>Kaynak:</b> ${source}</p>
+    <p style="margin:0;color:#666;font-size:12px">${new Date().toISOString()}</p>
+  </div>`;
+}
 
 /** Public URL of the e-book PDF. Override with EBOOK_URL (e.g. a Supabase
  * Storage link) for a stable address; otherwise fall back to the file shipped
@@ -93,31 +105,22 @@ export async function POST(request: Request) {
     /* ignore storage errors — still try to send */
   }
 
-  // Email the e-book download link when an email provider is configured.
-  const key = process.env.RESEND_API_KEY;
-  if (key) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://builtwithseyhan.com';
-    try {
-      const res = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from: process.env.RESEND_FROM || 'Built With Seyhan <onboarding@resend.dev>',
-          to: [email],
-          subject: COPY[locale].subject,
-          html: welcomeHtml(locale, resolveEbookUrl(), siteUrl),
-        }),
-      });
-      // Surface Resend rejections (bad from-address, unverified domain, quota…)
-      // in the Vercel function logs so delivery issues are debuggable. The lead
-      // is already stored, so a mail error never fails the request.
-      if (!res.ok) {
-        console.error('[subscribe] Resend rejected the email', res.status, await res.text());
-      }
-    } catch (err) {
-      console.error('[subscribe] Resend request failed', err);
-    }
-  }
+  // Email the e-book download link to the subscriber, and notify the owner.
+  // sendEmail no-ops when RESEND_API_KEY is unset and logs any delivery error.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://builtwithseyhan.com';
+  await sendEmail({
+    to: email,
+    subject: COPY[locale].subject,
+    html: welcomeHtml(locale, resolveEbookUrl(), siteUrl),
+  });
+
+  const notifyTo = process.env.SUBSCRIBE_NOTIFY_TO || 'contact@builtwithseyhan.com';
+  await sendEmail({
+    to: notifyTo,
+    subject: 'Built With Seyhan — yeni abone 🎉',
+    html: notifyHtml(email, source),
+    replyTo: email,
+  });
 
   return NextResponse.json({ ok: true });
 }

@@ -49,6 +49,13 @@ export function AuthModal({
         onClose();
       } else {
         const { needsConfirm } = await signUpWithPassword(email.trim(), password, name.trim());
+        // Fire the localized welcome email. When confirmation is required there
+        // is no session yet, so the no-op here is covered by /auth/callback.
+        fetch('/api/account-welcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ locale }),
+        }).catch(() => {});
         if (needsConfirm) setConfirm(true);
         else onClose();
       }
