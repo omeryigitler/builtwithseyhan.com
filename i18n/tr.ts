@@ -13,6 +13,10 @@ export const tr: Dictionary = {
     track: 'Takip',
     blog: 'Blog',
     social: 'Sosyal',
+    coaching: 'Koçluk',
+    contact: 'İletişim',
+    search: 'Ara',
+    videosPage: 'Videolar',
     menuOpen: 'Menüyü aç',
     menuClose: 'Menüyü kapat',
   },
@@ -321,5 +325,92 @@ export const tr: Dictionary = {
     comingSoon: 'Çok yakında',
     notFound: 'Sayfa bulunamadı',
     backHome: 'Ana sayfaya dön',
+  },
+
+  contact: {
+    eyebrow: 'İletişime geç',
+    title: 'İletişim',
+    subtitle: 'Soru, iş birliği ya da geri bildirim — yaz, en kısa sürede döneyim.',
+    form: {
+      name: 'İsim',
+      email: 'E-posta',
+      message: 'Mesaj',
+      submit: 'Mesajı gönder',
+      success: 'Teşekkürler! Mesajın yola çıktı.',
+      error: 'Bir şeyler ters gitti. Lütfen tekrar dene.',
+    },
+  },
+
+  coaching: {
+    eyebrow: 'Benimle çalış',
+    title: 'Birebir Koçluk',
+    subtitle:
+      'Hedefine göre kişiselleştirilmiş antrenman ve beslenme — her hafta gözden geçirilir.',
+    perks: [
+      'Takip sisteminde sana özel program',
+      'Beslenme rehberliği ve tarifler',
+      'Haftalık kontrol ve güncelleme',
+    ],
+    applyTitle: 'Hemen başvur',
+    form: {
+      name: 'İsim',
+      email: 'E-posta',
+      goal: 'Ana hedefin',
+      goals: [
+        { value: 'muscle', label: 'Kas kazanmak' },
+        { value: 'fatloss', label: 'Yağ yakmak' },
+        { value: 'strength', label: 'Güçlenmek' },
+        { value: 'health', label: 'Sağlık & alışkanlık' },
+      ],
+      experience: 'Deneyim',
+      experiences: [
+        { value: 'beginner', label: 'Başlangıç' },
+        { value: 'intermediate', label: 'Orta' },
+        { value: 'advanced', label: 'İleri' },
+      ],
+      message: 'Kendinden bahset',
+      submit: 'Başvuruyu gönder',
+      success: 'Aldım! Başvurunu inceleyip sana döneceğim.',
+      error: 'Bir şeyler ters gitti. Lütfen tekrar dene.',
+    },
+  },
+
+  faq: {
+    eyebrow: 'Bilmekte fayda var',
+    title: 'Sık sorulanlar',
+    items: [
+      {
+        q: 'Antrenman takibi ücretsiz mi?',
+        a: 'Evet. Ücretsiz hesap aç; program oluşturabilir, antrenman kaydedebilir ve ilerlemeni takip edebilirsin.',
+      },
+      {
+        q: 'Birebir koçluk nasıl işliyor?',
+        a: 'Koçluk formundan başvur. Hedefini belirleriz, programını takip sisteminde oluştururum ve her hafta kontrol ederiz.',
+      },
+      {
+        q: 'Ekipman gerekli mi?',
+        a: 'Programlar elindekine göre hazırlanır — tam spor salonu, ev düzeni veya sadece vücut ağırlığı.',
+      },
+      {
+        q: 'Hangi diller destekleniyor?',
+        a: 'Tüm site, tarifler ve mailler Türkçe ve İngilizce olarak mevcut.',
+      },
+    ],
+  },
+
+  search: {
+    title: 'Ara',
+    placeholder: 'Video, tarif, yazı ara…',
+    empty: 'Sonuç yok. Farklı bir kelime dene.',
+    prompt: 'Sitede aramak için yaz.',
+    results: 'sonuç',
+  },
+
+  videosPage: {
+    eyebrow: 'İzle',
+    title: 'Videolar',
+    subtitle: 'Antrenman seansları, analizler ve günlük motivasyon.',
+    all: 'Tümü',
+    empty: 'Videolar çok yakında.',
   },
 };

@@ -30,13 +30,13 @@ export function Header({ locale, dict, settings }: Props) {
 
   const base = `/${locale}`;
   const links = [
-    { label: dict.nav.videos, href: `${base}#videos` },
-    { label: dict.nav.feed, href: `${base}#feed` },
+    { label: dict.nav.videosPage, href: `${base}/videos` },
     { label: dict.nav.nutrition, href: `${base}/nutrition` },
     { label: dict.nav.training, href: `${base}/training` },
     { label: dict.nav.track, href: `${base}/track` },
     { label: dict.nav.blog, href: `${base}/blog` },
-    { label: dict.nav.social, href: `${base}#social` },
+    { label: dict.nav.coaching, href: `${base}/coaching` },
+    { label: dict.nav.contact, href: `${base}/contact` },
   ];
 
   // Only the homepage has a dark full-screen hero behind the header. There the

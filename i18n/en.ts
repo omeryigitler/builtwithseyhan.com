@@ -11,6 +11,10 @@ export const en = {
     track: 'Track',
     blog: 'Blog',
     social: 'Social',
+    coaching: 'Coaching',
+    contact: 'Contact',
+    search: 'Search',
+    videosPage: 'Videos',
     menuOpen: 'Open menu',
     menuClose: 'Close menu',
   },
@@ -319,6 +323,93 @@ export const en = {
     comingSoon: 'Coming soon',
     notFound: 'Page not found',
     backHome: 'Back home',
+  },
+
+  contact: {
+    eyebrow: 'Get in touch',
+    title: 'Contact',
+    subtitle: 'Questions, collaborations or feedback — drop a line and I’ll get back to you.',
+    form: {
+      name: 'Name',
+      email: 'Email',
+      message: 'Message',
+      submit: 'Send message',
+      success: 'Thanks! Your message is on its way.',
+      error: 'Something went wrong. Please try again.',
+    },
+  },
+
+  coaching: {
+    eyebrow: 'Work with me',
+    title: '1-on-1 Coaching',
+    subtitle:
+      'Personalized training and nutrition, built around your goal and reviewed every week.',
+    perks: [
+      'Custom training program in the tracker',
+      'Nutrition guidance and recipes',
+      'Weekly check-ins and adjustments',
+    ],
+    applyTitle: 'Apply now',
+    form: {
+      name: 'Name',
+      email: 'Email',
+      goal: 'Your main goal',
+      goals: [
+        { value: 'muscle', label: 'Build muscle' },
+        { value: 'fatloss', label: 'Lose fat' },
+        { value: 'strength', label: 'Get stronger' },
+        { value: 'health', label: 'Health & habits' },
+      ],
+      experience: 'Experience',
+      experiences: [
+        { value: 'beginner', label: 'Beginner' },
+        { value: 'intermediate', label: 'Intermediate' },
+        { value: 'advanced', label: 'Advanced' },
+      ],
+      message: 'Tell me about yourself',
+      submit: 'Send application',
+      success: 'Got it! I’ll review your application and reach out.',
+      error: 'Something went wrong. Please try again.',
+    },
+  },
+
+  faq: {
+    eyebrow: 'Good to know',
+    title: 'Frequently asked',
+    items: [
+      {
+        q: 'Is the workout tracker free?',
+        a: 'Yes. Create a free account and you can build programs, log workouts and track your progress.',
+      },
+      {
+        q: 'How does 1-on-1 coaching work?',
+        a: 'Apply through the coaching form. We agree on your goal, I build your program in the tracker and we check in every week.',
+      },
+      {
+        q: 'Do I need equipment?',
+        a: 'Programs are tailored to what you have — full gym, home setup or bodyweight only.',
+      },
+      {
+        q: 'Which languages are supported?',
+        a: 'The whole site, recipes and emails are available in Turkish and English.',
+      },
+    ],
+  },
+
+  search: {
+    title: 'Search',
+    placeholder: 'Search videos, recipes, articles…',
+    empty: 'No results. Try a different keyword.',
+    prompt: 'Type to search across the site.',
+    results: 'results',
+  },
+
+  videosPage: {
+    eyebrow: 'Watch',
+    title: 'Videos',
+    subtitle: 'Training sessions, breakdowns and everyday motivation.',
+    all: 'All',
+    empty: 'Videos are coming soon.',
   },
 };
 
