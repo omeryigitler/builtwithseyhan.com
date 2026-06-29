@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Bebas_Neue } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { ServiceWorker } from '@/components/ServiceWorker';
 import { isLocale, locales, type Locale } from '@/i18n/config';
 import '../globals.css';
 
@@ -42,7 +43,7 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: { default: title, template: '%s — Built With Seyhan' },
     description,
-    icons: { icon: '/favicon.svg' },
+    icons: { icon: '/favicon.svg', apple: '/apple-touch-icon.png' },
     alternates: {
       canonical: `/${locale}`,
       languages: { tr: '/tr', en: '/en' },
@@ -74,6 +75,7 @@ export default async function LocaleLayout({
     <html lang={loc} suppressHydrationWarning className={`${inter.variable} ${bebas.variable}`}>
       <body className="bg-gray-50 font-sans text-gray-900 antialiased transition-colors duration-300 dark:bg-gray-950 dark:text-white">
         <ThemeProvider>{children}</ThemeProvider>
+        <ServiceWorker />
       </body>
     </html>
   );
