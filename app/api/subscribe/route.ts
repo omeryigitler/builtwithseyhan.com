@@ -54,7 +54,7 @@ export async function POST(request: Request) {
   const key = process.env.RESEND_API_KEY;
   if (key) {
     try {
-      await fetch('https://api.resend.com/emails', {
+      const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -64,8 +64,14 @@ export async function POST(request: Request) {
           html: welcomeHtml(),
         }),
       });
-    } catch {
-      /* ignore email errors — the lead is already stored */
+      // Surface Resend rejections (bad from-address, unverified domain, quota…)
+      // in the Vercel function logs so delivery issues are debuggable. The lead
+      // is already stored, so a mail error never fails the request.
+      if (!res.ok) {
+        console.error('[subscribe] Resend rejected the email', res.status, await res.text());
+      }
+    } catch (err) {
+      console.error('[subscribe] Resend request failed', err);
     }
   }
 
