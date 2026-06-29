@@ -10,6 +10,7 @@ import type {
   SiteSettings,
   SocialItem,
 } from './types';
+import { NAV_KEYS, ALL_NAV_VISIBLE } from './types';
 import type { User } from '@supabase/supabase-js';
 import type { ProgramInput, WorkoutProgram } from './workouts';
 
@@ -206,12 +207,16 @@ export async function deleteSocial(id: string): Promise<void> {
 export async function getSettingsAdmin(): Promise<SiteSettings> {
   const s = db();
   const { data } = await s.from('settings').select('*').eq('id', 1).maybeSingle();
+  const raw = (data?.nav_visibility ?? {}) as Record<string, unknown>;
+  const nav = { ...ALL_NAV_VISIBLE };
+  for (const k of NAV_KEYS) nav[k] = raw[k] !== false;
   return {
     whatsappUrl: data?.whatsapp_url ?? '',
     instagramUrl: data?.instagram_url ?? '',
     tiktokUrl: data?.tiktok_url ?? '',
     youtubeUrl: data?.youtube_url ?? '',
     heroVideoUrl: data?.hero_video_url ?? '',
+    nav,
   };
 }
 
@@ -225,6 +230,7 @@ export async function saveSettings(input: SiteSettings): Promise<void> {
       tiktok_url: input.tiktokUrl,
       youtube_url: input.youtubeUrl,
       hero_video_url: input.heroVideoUrl,
+      nav_visibility: input.nav,
     })
     .eq('id', 1);
   if (error) throw error;

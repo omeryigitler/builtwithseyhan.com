@@ -71,9 +71,11 @@ create table if not exists public.settings (
   tiktok_url text default '',
   youtube_url text default '',
   hero_video_url text default '',
+  nav_visibility jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now(),
   constraint settings_singleton check (id = 1)
 );
+alter table public.settings add column if not exists nav_visibility jsonb not null default '{}'::jsonb;
 insert into public.settings (id) values (1) on conflict (id) do nothing;
 
 -- ─── Recipes (Nutrition) ──────────────────────────────────────────────────────

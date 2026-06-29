@@ -1,5 +1,6 @@
 import { createServerSupabase } from './supabase/server';
 import type { Post, SocialItem, SiteSettings, Recipe, MemberPost } from './types';
+import { NAV_KEYS, ALL_NAV_VISIBLE } from './types';
 import { SAMPLE_POSTS, SAMPLE_SOCIAL, SAMPLE_SETTINGS, SAMPLE_RECIPES } from './sample';
 
 // ─── Row mappers (snake_case DB → camelCase app types) ───────────────────────
@@ -181,16 +182,24 @@ export async function getSettings(): Promise<SiteSettings> {
     .maybeSingle();
 
   if (error || !data) return SAMPLE_SETTINGS;
+
+  // Nav visibility (JSONB). Missing key defaults to visible.
+  const raw = (data.nav_visibility ?? {}) as Record<string, unknown>;
+  const nav = { ...ALL_NAV_VISIBLE };
+  for (const k of NAV_KEYS) nav[k] = raw[k] !== false;
+
   const s: SiteSettings = {
     whatsappUrl: data.whatsapp_url ?? '',
     instagramUrl: data.instagram_url ?? '',
     tiktokUrl: data.tiktok_url ?? '',
     youtubeUrl: data.youtube_url ?? '',
     heroVideoUrl: data.hero_video_url ?? '',
+    nav,
   };
-  // Default (untouched) settings row → show sample links so the WhatsApp /
-  // social buttons aren't missing before the admin fills them in.
-  const allEmpty =
+  // Default (untouched) social links → show sample links so the WhatsApp /
+  // social buttons aren't missing before the admin fills them in. Keep the
+  // real nav visibility either way.
+  const socialEmpty =
     !s.whatsappUrl && !s.instagramUrl && !s.tiktokUrl && !s.youtubeUrl && !s.heroVideoUrl;
-  return allEmpty ? SAMPLE_SETTINGS : s;
+  return socialEmpty ? { ...SAMPLE_SETTINGS, nav } : s;
 }

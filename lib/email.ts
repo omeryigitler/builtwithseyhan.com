@@ -1,15 +1,9 @@
 /**
  * Where owner notifications (contact, coaching, new subscriber) are delivered.
- * Defaults to the first admin email so messages land in a monitored inbox and
- * avoid a contact@ → contact@ self-send (which providers tend to spam-filter).
- * Override per-route with a specific address.
+ * Defaults to contact@builtwithseyhan.com; override per-route with an env var.
  */
 export function notifyAddress(specific?: string): string {
-  return (
-    (specific && specific.trim()) ||
-    process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0]?.trim() ||
-    'contact@builtwithseyhan.com'
-  );
+  return (specific && specific.trim()) || 'contact@builtwithseyhan.com';
 }
 
 /**

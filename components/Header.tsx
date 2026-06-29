@@ -30,14 +30,14 @@ export function Header({ locale, dict, settings }: Props) {
 
   const base = `/${locale}`;
   const links = [
-    { label: dict.nav.videosPage, href: `${base}/videos` },
-    { label: dict.nav.nutrition, href: `${base}/nutrition` },
-    { label: dict.nav.training, href: `${base}/training` },
-    { label: dict.nav.track, href: `${base}/track` },
-    { label: dict.nav.blog, href: `${base}/blog` },
-    { label: dict.nav.coaching, href: `${base}/coaching` },
-    { label: dict.nav.contact, href: `${base}/contact` },
-  ];
+    { key: 'videos' as const, label: dict.nav.videosPage, href: `${base}/videos` },
+    { key: 'nutrition' as const, label: dict.nav.nutrition, href: `${base}/nutrition` },
+    { key: 'training' as const, label: dict.nav.training, href: `${base}/training` },
+    { key: 'track' as const, label: dict.nav.track, href: `${base}/track` },
+    { key: 'blog' as const, label: dict.nav.blog, href: `${base}/blog` },
+    { key: 'coaching' as const, label: dict.nav.coaching, href: `${base}/coaching` },
+    { key: 'contact' as const, label: dict.nav.contact, href: `${base}/contact` },
+  ].filter((l) => settings.nav[l.key]);
 
   // Only the homepage has a dark full-screen hero behind the header. There the
   // header uses light text until scrolled; on every other page (light masthead)

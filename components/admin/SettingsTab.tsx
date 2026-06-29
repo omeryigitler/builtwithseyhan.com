@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle, Loader } from 'lucide-react';
 import type { SiteSettings } from '@/lib/types';
+import { NAV_KEYS, ALL_NAV_VISIBLE } from '@/lib/types';
 import { getSettingsAdmin, saveSettings } from '@/lib/admin';
 import type { AdminLabels } from './labels';
-import { TextField } from './fields';
+import { TextField, Toggle } from './fields';
 
 const EMPTY: SiteSettings = {
   whatsappUrl: '',
@@ -13,6 +14,7 @@ const EMPTY: SiteSettings = {
   tiktokUrl: '',
   youtubeUrl: '',
   heroVideoUrl: '',
+  nav: { ...ALL_NAV_VISIBLE },
 };
 
 export function SettingsTab({ t }: { t: AdminLabels }) {
@@ -49,6 +51,22 @@ export function SettingsTab({ t }: { t: AdminLabels }) {
       <TextField label={t.fields.tiktok} value={form.tiktokUrl} onChange={(v) => setForm((f) => ({ ...f, tiktokUrl: v }))} placeholder="https://tiktok.com/@…" />
       <TextField label={t.fields.youtube} value={form.youtubeUrl} onChange={(v) => setForm((f) => ({ ...f, youtubeUrl: v }))} placeholder="https://youtube.com/@…" />
       <TextField label={t.fields.heroVideo} value={form.heroVideoUrl} onChange={(v) => setForm((f) => ({ ...f, heroVideoUrl: v }))} placeholder="https://…/hero.mp4" />
+
+      <div className="space-y-3 rounded-2xl border border-gray-800 bg-gray-900/60 p-5">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-white">{t.navVisibility.title}</h3>
+        <p className="text-xs text-gray-500">{t.navVisibility.hint}</p>
+        <div className="grid grid-cols-2 gap-3 pt-1">
+          {NAV_KEYS.map((k) => (
+            <Toggle
+              key={k}
+              label={t.navVisibility[k]}
+              checked={form.nav[k]}
+              onChange={(v) => setForm((f) => ({ ...f, nav: { ...f.nav, [k]: v } }))}
+            />
+          ))}
+        </div>
+      </div>
+
       <button
         onClick={onSave}
         disabled={saving}

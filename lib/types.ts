@@ -87,6 +87,28 @@ export function lines(text: string): string[] {
     .filter(Boolean);
 }
 
+/** Navbar / homepage areas the admin can toggle on/off. */
+export const NAV_KEYS = [
+  'videos',
+  'nutrition',
+  'training',
+  'track',
+  'blog',
+  'coaching',
+  'contact',
+] as const;
+export type NavKey = (typeof NAV_KEYS)[number];
+export type NavVisibility = Record<NavKey, boolean>;
+export const ALL_NAV_VISIBLE: NavVisibility = {
+  videos: true,
+  nutrition: true,
+  training: true,
+  track: true,
+  blog: true,
+  coaching: true,
+  contact: true,
+};
+
 export interface SiteSettings {
   whatsappUrl: string;
   instagramUrl: string;
@@ -94,6 +116,8 @@ export interface SiteSettings {
   youtubeUrl: string;
   /** Optional full-screen hero background video (mp4 URL). Empty = use image. */
   heroVideoUrl: string;
+  /** Which navbar/homepage areas are visible. */
+  nav: NavVisibility;
 }
 
 /** Pick the right language with a graceful fallback. */

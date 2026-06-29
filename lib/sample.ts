@@ -1,4 +1,5 @@
 import type { Post, SocialItem, SiteSettings, Recipe } from './types';
+import { ALL_NAV_VISIBLE } from './types';
 
 /**
  * Sample content shown until Supabase is configured (and as a graceful
@@ -299,4 +300,5 @@ export const SAMPLE_SETTINGS: SiteSettings = {
   tiktokUrl: '',
   youtubeUrl: '',
   heroVideoUrl: '',
+  nav: { ...ALL_NAV_VISIBLE },
 };

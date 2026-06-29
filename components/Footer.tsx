@@ -12,15 +12,17 @@ interface Props {
 
 export function Footer({ locale, dict, settings }: Props) {
   const base = `/${locale}`;
-  const links = [
-    { label: dict.nav.videos, href: `${base}#videos` },
-    { label: dict.nav.feed, href: `${base}#feed` },
-    { label: dict.nav.nutrition, href: `${base}/nutrition` },
-    { label: dict.nav.training, href: `${base}/training` },
-    { label: dict.nav.track, href: `${base}/track` },
-    { label: dict.nav.blog, href: `${base}/blog` },
-    { label: dict.nav.social, href: `${base}#social` },
-  ];
+  const links = (
+    [
+      { key: 'videos' as const, label: dict.nav.videosPage, href: `${base}/videos` },
+      { key: 'nutrition' as const, label: dict.nav.nutrition, href: `${base}/nutrition` },
+      { key: 'training' as const, label: dict.nav.training, href: `${base}/training` },
+      { key: 'track' as const, label: dict.nav.track, href: `${base}/track` },
+      { key: 'blog' as const, label: dict.nav.blog, href: `${base}/blog` },
+      { key: 'coaching' as const, label: dict.nav.coaching, href: `${base}/coaching` },
+      { key: 'contact' as const, label: dict.nav.contact, href: `${base}/contact` },
+    ] as const
+  ).filter((l) => settings.nav[l.key]);
 
   return (
     <footer className="mt-12 rounded-t-[3rem] bg-gray-900 px-6 pb-6 pt-20 text-white dark:rounded-none dark:border-t dark:border-gray-900 dark:bg-gray-950">

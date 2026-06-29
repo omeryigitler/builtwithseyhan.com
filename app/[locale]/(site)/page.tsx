@@ -39,10 +39,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     <>
       <Hero locale={locale} dict={dict} settings={settings} />
       <LogoMarquee dict={dict} />
-      <FeaturedVideos videos={videos} locale={locale} dict={dict} />
+      {settings.nav.videos && <FeaturedVideos videos={videos} locale={locale} dict={dict} />}
       <Showcase3D locale={locale} dict={dict} />
       <ContentFeed posts={posts} locale={locale} dict={dict} />
-      <BlogPreview posts={blog} locale={locale} dict={dict} />
+      {settings.nav.blog && <BlogPreview posts={blog} locale={locale} dict={dict} />}
       <GuideSection dict={dict} settings={settings} />
       <SocialWall items={social} settings={settings} locale={locale} dict={dict} />
       <CommunityWall posts={community} locale={locale} dict={dict} />
