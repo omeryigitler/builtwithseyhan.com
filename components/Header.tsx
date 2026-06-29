@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import type { SiteSettings } from '@/lib/types';
@@ -90,6 +90,15 @@ export function Header({ locale, dict, settings }: Props) {
               onDark ? 'border-white/25' : 'border-gray-200 dark:border-gray-800'
             }`}
           >
+            <Link
+              href={`${base}/search`}
+              aria-label={dict.nav.search}
+              className={`transition-colors ${
+                onDark ? 'text-white/85 hover:text-white' : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+              }`}
+            >
+              <Search size={18} />
+            </Link>
             <LanguageSwitch locale={locale} onDark={onDark} />
             <ThemeToggle labels={dict.theme} onDark={onDark} />
             {settings.whatsappUrl && (
@@ -131,6 +140,13 @@ export function Header({ locale, dict, settings }: Props) {
                 {l.label}
               </Link>
             ))}
+            <Link
+              href={`${base}/search`}
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-100"
+            >
+              <Search size={18} /> {dict.nav.search}
+            </Link>
             <div className="mt-2 flex items-center justify-between border-t border-gray-200 pt-4 dark:border-gray-800">
               <LanguageSwitch locale={locale} />
               <ThemeToggle labels={dict.theme} />

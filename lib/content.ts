@@ -93,6 +93,11 @@ export async function getBlogPosts(limit?: number): Promise<Post[]> {
   return limit ? blog.slice(0, limit) : blog;
 }
 
+export async function getVideoPosts(): Promise<Post[]> {
+  const posts = await getPosts();
+  return posts.filter((p) => p.type === 'video' && p.videoUrl);
+}
+
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const posts = await getPosts();
   return posts.find((p) => p.slug === slug) ?? null;
