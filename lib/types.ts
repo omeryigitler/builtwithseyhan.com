@@ -77,11 +77,13 @@ export interface Recipe {
   createdAt: string;
 }
 
-/** Split a multiline localized field into trimmed, non-empty lines. */
+/** Split a multiline localized field into trimmed, non-empty lines. Strips a
+ * leading list marker ("- ", "• ", "1. ", "1) ") but keeps quantities like
+ * "1/2 cup" or "150 g". */
 export function lines(text: string): string[] {
   return text
     .split('\n')
-    .map((l) => l.replace(/^[-•*\d.)\s]+/, '').trim())
+    .map((l) => l.replace(/^\s*(?:[-•*]\s+|\d+[.)]\s+)/, '').trim())
     .filter(Boolean);
 }
 
