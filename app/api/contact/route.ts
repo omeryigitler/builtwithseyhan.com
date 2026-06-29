@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sendEmail } from '@/lib/email';
+import { sendEmail, notifyAddress } from '@/lib/email';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'invalid' }, { status: 400 });
   }
 
-  const to = process.env.CONTACT_TO || 'contact@builtwithseyhan.com';
+  const to = notifyAddress(process.env.CONTACT_TO);
   await sendEmail({
     to,
     replyTo: email,

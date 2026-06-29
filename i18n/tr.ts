@@ -420,4 +420,9 @@ export const tr: Dictionary = {
     reject: 'Reddet',
     privacy: 'Gizlilik',
   },
+
+  forms: {
+    required: 'Bu alan zorunlu.',
+    invalidEmail: 'Geçerli bir e-posta adresi gir.',
+  },
 };

@@ -67,6 +67,7 @@ export default async function CoachingPage({
             submitLabel={c.form.submit}
             successText={c.form.success}
             errorText={c.form.error}
+            messages={dict.forms}
             fields={[
               { name: 'name', label: c.form.name, required: true },
               { name: 'email', label: c.form.email, type: 'email', required: true },

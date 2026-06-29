@@ -418,6 +418,11 @@ export const en = {
     reject: 'Reject',
     privacy: 'Privacy',
   },
+
+  forms: {
+    required: 'This field is required.',
+    invalidEmail: 'Please enter a valid email address.',
+  },
 };
 
 export type Dictionary = typeof en;

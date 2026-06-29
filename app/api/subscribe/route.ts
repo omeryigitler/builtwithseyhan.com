@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase/server';
-import { sendEmail } from '@/lib/email';
+import { sendEmail, notifyAddress } from '@/lib/email';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -114,7 +114,7 @@ export async function POST(request: Request) {
     html: welcomeHtml(locale, resolveEbookUrl(), siteUrl),
   });
 
-  const notifyTo = process.env.SUBSCRIBE_NOTIFY_TO || 'contact@builtwithseyhan.com';
+  const notifyTo = notifyAddress(process.env.SUBSCRIBE_NOTIFY_TO);
   await sendEmail({
     to: notifyTo,
     subject: 'Built With Seyhan — yeni abone 🎉',

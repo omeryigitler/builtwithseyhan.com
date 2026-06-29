@@ -1,4 +1,18 @@
 /**
+ * Where owner notifications (contact, coaching, new subscriber) are delivered.
+ * Defaults to the first admin email so messages land in a monitored inbox and
+ * avoid a contact@ → contact@ self-send (which providers tend to spam-filter).
+ * Override per-route with a specific address.
+ */
+export function notifyAddress(specific?: string): string {
+  return (
+    (specific && specific.trim()) ||
+    process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0]?.trim() ||
+    'contact@builtwithseyhan.com'
+  );
+}
+
+/**
  * Minimal Resend email sender. No-ops (returns false) when RESEND_API_KEY is
  * unset, so the app works without an email provider. Failures are logged to the
  * server function logs and never throw.
