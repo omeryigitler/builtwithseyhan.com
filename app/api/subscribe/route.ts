@@ -3,23 +3,64 @@ import { createServerSupabase } from '@/lib/supabase/server';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function welcomeHtml(): string {
+/** Public URL of the e-book PDF. Override with EBOOK_URL (e.g. a Supabase
+ * Storage link) for a stable address; otherwise fall back to the file shipped
+ * in /public on the current deployment so it works on preview and production. */
+function resolveEbookUrl(): string {
+  if (process.env.EBOOK_URL) return process.env.EBOOK_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}/ebook.pdf`;
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return `${process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')}/ebook.pdf`;
+  }
+  return 'https://builtwithseyhan.com/ebook.pdf';
+}
+
+const COPY = {
+  tr: {
+    subject: 'Sağlıklı tarif e-kitabın hazır 💪',
+    heading: 'Tarif kitabın hazır',
+    intro:
+      'Aramıza katıldığın için teşekkürler. Söz verdiğimiz sağlıklı tarifler e-kitabı hazır — aşağıdaki butondan hemen indir.',
+    inside: 'Yüksek proteinli tarifler, makro dengeli öğün planları ve market listesi.',
+    button: 'E-kitabı indir (PDF)',
+    site: 'Siteyi keşfet',
+    footer: 'Bu maili builtwithseyhan.com’a kaydolduğun için aldın.',
+  },
+  en: {
+    subject: 'Your healthy-recipes e-book is ready 💪',
+    heading: 'Your recipe book is ready',
+    intro:
+      'Thanks for joining. The healthy-recipes e-book we promised is ready — grab it from the button below.',
+    inside: 'High-protein recipes, macro-balanced meal plans and a grocery shortlist.',
+    button: 'Download the e-book (PDF)',
+    site: 'Explore the site',
+    footer: 'You received this because you signed up at builtwithseyhan.com.',
+  },
+};
+
+function welcomeHtml(locale: 'tr' | 'en', ebookUrl: string, siteUrl: string): string {
+  const c = COPY[locale];
   return `
   <div style="background:#0b0f17;padding:32px;font-family:Helvetica,Arial,sans-serif;color:#e5e7eb">
-    <div style="max-width:520px;margin:0 auto">
+    <div style="max-width:520px;margin:0 auto;background:#0f1420;border:1px solid #1f2937;border-radius:20px;padding:32px">
       <div style="font-size:13px;font-weight:800;letter-spacing:2px;color:#9ca3af;text-transform:uppercase">Built With Seyhan</div>
-      <h1 style="font-size:30px;margin:12px 0 8px;color:#ffffff;text-transform:uppercase">Welcome to the crew</h1>
-      <p style="font-size:15px;line-height:1.6;color:#cbd5e1">
-        Thanks for joining. Your starter guide is on the way — meanwhile, explore videos,
-        recipes and the workout tracker on the site.
-      </p>
-      <a href="https://builtwithseyhan.com"
-         style="display:inline-block;margin-top:20px;background:#CCFF00;color:#000;font-weight:800;
-                text-transform:uppercase;letter-spacing:1px;text-decoration:none;padding:12px 22px;border-radius:999px">
-        Open the site
+      <h1 style="font-size:30px;margin:12px 0 10px;color:#ffffff;text-transform:uppercase;line-height:1.05">${c.heading}</h1>
+      <p style="font-size:15px;line-height:1.6;color:#cbd5e1;margin:0 0 18px">${c.intro}</p>
+
+      <a href="${ebookUrl}"
+         style="display:block;text-align:center;background:#CCFF00;color:#000;font-weight:800;font-size:15px;
+                text-transform:uppercase;letter-spacing:1px;text-decoration:none;padding:16px 22px;border-radius:999px">
+        ${c.button}
       </a>
-      <p style="font-size:12px;color:#6b7280;margin-top:28px">
-        You received this because you signed up at builtwithseyhan.com.
+
+      <p style="font-size:13px;line-height:1.6;color:#9ca3af;margin:18px 0 0">${c.inside}</p>
+
+      <p style="margin:22px 0 0">
+        <a href="${siteUrl}" style="color:#CCFF00;font-size:13px;font-weight:700;text-decoration:none">${c.site} →</a>
+      </p>
+
+      <p style="font-size:12px;color:#6b7280;margin-top:26px;border-top:1px solid #1f2937;padding-top:16px">
+        ${c.footer}
       </p>
     </div>
   </div>`;
@@ -28,10 +69,12 @@ function welcomeHtml(): string {
 export async function POST(request: Request) {
   let email = '';
   let source = 'ebook-popup';
+  let locale: 'tr' | 'en' = 'en';
   try {
     const body = await request.json();
     email = String(body.email ?? '').trim().toLowerCase();
     source = String(body.source ?? 'ebook-popup');
+    locale = body.locale === 'tr' ? 'tr' : 'en';
   } catch {
     /* ignore */
   }
@@ -50,9 +93,10 @@ export async function POST(request: Request) {
     /* ignore storage errors — still try to send */
   }
 
-  // Send the welcome email when an email provider is configured.
+  // Email the e-book download link when an email provider is configured.
   const key = process.env.RESEND_API_KEY;
   if (key) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://builtwithseyhan.com';
     try {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -60,8 +104,8 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           from: process.env.RESEND_FROM || 'Built With Seyhan <onboarding@resend.dev>',
           to: [email],
-          subject: 'Built With Seyhan — welcome 💪',
-          html: welcomeHtml(),
+          subject: COPY[locale].subject,
+          html: welcomeHtml(locale, resolveEbookUrl(), siteUrl),
         }),
       });
       // Surface Resend rejections (bad from-address, unverified domain, quota…)

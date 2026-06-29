@@ -26,7 +26,7 @@ export default async function SiteLayout({
       <main className="min-h-screen">{children}</main>
       <Footer locale={locale} dict={dict} settings={settings} />
       <WhatsAppFloat url={settings.whatsappUrl} />
-      <EbookPopup t={dict.nutrition.ebook.popup} />
+      <EbookPopup t={dict.nutrition.ebook.popup} locale={locale} />
     </>
   );
 }

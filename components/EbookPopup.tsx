@@ -10,7 +10,7 @@ type PopupLabels = Dictionary['nutrition']['ebook']['popup'];
 const KEY = 'bws_ebook_popup';
 const DELAY = 10_000; // show after 10s on site
 
-export function EbookPopup({ t }: { t: PopupLabels }) {
+export function EbookPopup({ t, locale = 'en' }: { t: PopupLabels; locale?: string }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
@@ -60,7 +60,7 @@ export function EbookPopup({ t }: { t: PopupLabels }) {
     if (status === 'loading') return;
     setStatus('loading');
     try {
-      await subscribeEmail(email);
+      await subscribeEmail(email, locale);
       try {
         localStorage.setItem(KEY, 'subscribed');
       } catch {
